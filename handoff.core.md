@@ -66,12 +66,14 @@ For each store — what belongs in it, and what must stay out.
   next action (e.g. "resume planning the task"); pure session-ephemeral state recorded
   nowhere else and not worth keeping permanently (uncommitted working state, "stopped
   mid-step 3", a transient session quirk described generically — no usernames, absolute
-  local paths, hostnames, IPs, or env values); pointers to where everything else lives.
+  local paths, hostnames, IPs, or env values); pointers to **commonly accessible** homes —
+  the tracker / work item, repo files, or public URLs — reachable by anyone who pulls the repo.
 - OUT: any task-specific content (requirements, plans, findings, file lists, copied
   next-steps); anything already in project docs or memory; reusable lessons; task
   references that belong on the task; restated workflow / how-tos; **secrets and
   user-/machine-private data** (per §3 step 1 — usernames, home or absolute local paths,
-  hostnames, IP/MAC addresses, local env values, copied local-memory contents).
+  hostnames, IP/MAC addresses, local env values, copied local-memory contents); **pointers
+  that resolve only to agent-private memory**, and anything that lives only in local memory.
 
 **Task docs**
 
@@ -125,10 +127,18 @@ both get written, at their own altitude).
      project docs if shareable; else drop.
 4. **Pure session-ephemeral state**, recorded nowhere else and not worth keeping? →
    **handoff file**.
-5. **Otherwise it already has a home** → in the handoff, only **point** to it.
+5. **Otherwise it already has a home** → in the handoff, only **point** to it — provided
+   that home is reachable by whoever resumes (see *Portable references*). If the sole home
+   is agent-private memory, the handoff can't rely on it: promote the shareable facet to
+   task or project docs (per step 3) and point there, or omit it.
 
 The golden rule: **the handoff points, it does not store.** If a fact has any durable
 home (task, project, memory), it goes there; the handoff at most references it.
+
+**Portable references:** a handoff is cross-agent, cross-user, and cross-session — every
+pointer in it must resolve for anyone who pulls the repo (the tracker / work item, repo
+files, or public URLs). It must never point at, or depend on, an agent's local / private
+memory; memory may still hold private lessons, but resuming must not require them.
 
 ### Redacting secrets
 
@@ -207,7 +217,8 @@ session continue — **without** copying anything that has a durable home.
 3. **Write the handoff file** (`handoff_file`) with only:
    - the work item to resume (pointer / id / reference) and the intended next action;
    - pure session-ephemeral state per §2 (what isn't, and shouldn't be, recorded elsewhere);
-   - pointers to the relevant homes (task, plan, project docs) — by reference, not copied.
+   - pointers to the relevant homes (task, plan, project docs) — by reference to a commonly
+     accessible home, not copied, and never to agent-private memory (see *Portable references*).
 
    Keep it short; if it's getting long, you're probably storing things that belong in a
    durable home — go back to step 2.

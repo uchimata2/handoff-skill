@@ -16,8 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Project board automation: a GitHub Projects kanban auto-synced from issue `status:` labels
   (`.github/workflows/sync-status-to-project.yml`), documented in `PROJECT_BOARD.md` and linked
   from `README.md` / `CONTRIBUTING.md`.
-
-### Added
 - Concrete secret-redaction method in the core (`handoff.core.md` §3, *Redacting secrets*):
   omit the value, reference by location/name, use placeholders not partial values, and store it
   nowhere. `SECURITY.md` cross-references it (#7).
@@ -27,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   secrets, user-/machine-private data, and copied local-memory contents; the shipped core now
   carries a pre-write / commit checklist (`handoff.core.md` §3 step 1, §5). `SECURITY.md`
   references it instead of holding a separate copy (#5).
+- Handoff references must now resolve to commonly accessible homes (tracker / work item, repo
+  files, public URLs) and must never point at or depend on agent-private memory; added a
+  *Portable references* principle and qualified the §3 routing so resuming never requires local
+  memory (`handoff.core.md` §2, §3, §5) (#4).
 
 ## [0.1.0] - 2026-06-21
 

@@ -12,7 +12,10 @@ and across agents.
 
 ## What's in here
 
-- `handoff.core.md` — the agent- and project-neutral workflow (the authoritative body).
+- `handoff.core.md` — the always-loaded **spine**: configuration, the routing model, detection,
+  session types, and the binding contract.
+- `flows/` — the two on-demand flow files the spine loads per run: `create.md` (Create / Close)
+  and `resume.md` (Resume / Status).
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`).
@@ -37,11 +40,15 @@ Nothing here is project-specific; all specifics live in the config you create.
    - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke
      it with `/handoff` (or just say "handoff" / "resume" — its description lets Claude
      trigger it automatically), and the core's §4 detection routes to Create (§5), Resume
-     (§6), or Status (§6.5, a read-only preview). *Optional:* to expose distinct commands,
-     add separate skills `.claude/skills/handoff-create/SKILL.md`,
-     `.claude/skills/handoff-resume/SKILL.md`, and `.claude/skills/handoff-status/SKILL.md`
-     (each pointing at the relevant section) → `/handoff-create`, `/handoff-resume`, and
-     `/handoff-status`.
+     (§6), Status (§6.5, a read-only preview), or Close (§5 *Close*, wrap up with no
+     handoff), then loads the matching on-demand flow file (`flows/create.md` or
+     `flows/resume.md`). *Optional:* to expose distinct commands, add separate skills
+     `.claude/skills/handoff-create/SKILL.md`, `.claude/skills/handoff-resume/SKILL.md`,
+     `.claude/skills/handoff-status/SKILL.md`, and `.claude/skills/handoff-close/SKILL.md`
+     (each pointing straight at its flow file) → `/handoff-create`, `/handoff-resume`,
+     `/handoff-status`, and `/handoff-close`. *Optional reminders:* wire Claude Code hooks to
+     nudge you to handoff/close at session start or before a compaction — see
+     [`agents/claude.hooks.md`](agents/claude.hooks.md).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).

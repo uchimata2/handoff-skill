@@ -14,6 +14,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   status triggers and the resume-vs-status disambiguation (non-mutating default) to §4, an
   `EXAMPLES.md` walkthrough, and an optional `handoff-status` split skill in the Claude stub
   and README (#9).
+- Close mode — wrap up a session cleanly **without** leaving a handoff. Close does all of
+  Create's durable-homes routing (§3) but writes no handoff file; if a live handoff exists it
+  is archived (`processed_<timestamp>`) so no resume pointer remains. Added a `### Close`
+  subsection under core §5, close triggers and the create-vs-close disambiguation to §4, the
+  ad-hoc edge (declined specifics have no fallback — surfaced, not dropped silently), an
+  `EXAMPLES.md` walkthrough, and an optional `handoff-close` split skill (#12).
+- Optional Claude Code hook reminders — a new `agents/claude.hooks.md` documents soft, opt-in,
+  non-mutating wiring for `SessionStart` (nudge to resume/preview when a handoff is waiting) and
+  `PreCompact` (nudge to handoff/close before a compaction, via a non-blocking `systemMessage`).
+  Cross-platform examples (PowerShell + POSIX `sh`); the core stays agent-neutral, and the Claude
+  stub and README §4 carry only a one-line pointer (#11).
+
+### Changed
+- Split the monolithic core for **progressive disclosure**: `handoff.core.md` is now the
+  always-loaded **spine** (§0 config, §1–§3 routing model, §4 detection, §7 session types, §8
+  binding contract), and each consumption flow moved to an on-demand file — `flows/create.md`
+  (§5 Create + Close) and `flows/resume.md` (§6 Resume + §6.5 Status). §4 directs each run to
+  load the spine plus one flow, never both; the routing model stays single-sourced in the spine
+  and the flows reference it. Sections keep their numbers and anchors (relocate, don't renumber).
+  The agent stubs, `README.md`, `CONTRIBUTING.md`, and `scripts/build-skill.ps1` were updated to
+  bundle and point at the flow files (#20).
+
+### Fixed
+- Agent stub templates no longer carry a bare `../README.md` link that dangles once the stub is
+  copied to its install location (`.claude/skills/handoff/SKILL.md` /
+  `.github/agents/handoff.agent.md`). The reference now goes through the existing `{{package}}`
+  substitution (`{{package}}/README.md`), consistent with the templates' other links, so it
+  resolves to the real package README after install (#25).
 
 ## [0.2.0] - 2026-06-21
 

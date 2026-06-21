@@ -10,11 +10,18 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed three ways:
+This core is consumed four ways:
 
 - **Create** a handoff when wrapping up or switching agents (§5).
 - **Resume** from an existing handoff when starting fresh (§6).
 - **Status** — preview the current handoff without changing anything (§6.5).
+- **Close** — wrap up a session cleanly without leaving a handoff (§5, *Close*).
+
+This core is split for **progressive disclosure**: this file is the always-loaded **spine**
+(§0–§4, §7–§8 — configuration, the routing model, detection, session types, and the binding
+contract). Each mode's *steps* live in an on-demand **flow file** that §4 directs you to load:
+`flows/create.md` (Create / Close) and `flows/resume.md` (Resume / Status). A run loads the
+spine plus one flow, never both.
 
 ---
 
@@ -195,16 +202,36 @@ Activate when the user says things like: "handoff", "hand off", "pass this to",
 "continue later", "pick up where", "transfer context", "save state", "resume",
 "take over". Read-only previews also activate: "what's in the handoff", "show /
 preview / summarize the handoff", "status of the handoff", "is there a handoff".
+Closing words also activate: "handoff close", "close out", "wrap up — no handoff",
+"done for good".
 
-### Create, resume, or status
+### Create, resume, status, or close
 
 - User is **wrapping up**, stopping, or switching agents → **Create** (§5).
 - User is **starting fresh** and a handoff exists at `handoff_file` → **Resume** (§6).
 - User wants to **see what's in the handoff** without consuming it (preview / show /
   summarize / status) → **Status** (§6.5) — read-only, no changes.
+- User wants to **wrap up without leaving a handoff** (explicit "close out", "done for
+  good", "wrap up — no handoff") → **Close** (§5, *Close*).
 
 When intent is ambiguous between resume and status, default to the **non-mutating**
 path: summarize (Status), then offer to resume — never archive on a maybe.
+
+A bare "wrap up" or "I'm done" is ambiguous between Create and Close — they leave
+different end states (a resume pointer vs none), so **ask** ("leave a resume pointer
+(handoff), or close out with none?") rather than guess.
+
+### Load the relevant flow
+
+Each mode's steps live in an on-demand flow file. Once you've picked the mode, load **only**
+that file and follow it — a Create/Close run never needs the Resume/Status flow, and
+vice-versa:
+
+- **Create** (§5) or **Close** (§5, *Close*) → `flows/create.md`.
+- **Resume** (§6) or **Status** (§6.5) → `flows/resume.md`.
+
+The routing model (§1–§3), session types (§7), and binding contract (§8) stay here in the
+spine; the flow files reference them, never restate them.
 
 ### Proactive suggestion
 
@@ -213,115 +240,6 @@ Consider offering a handoff when: the user signals they're stopping ("I need to 
 lot of context; a context compaction is near; or the session has idled for a while.
 
 Ask: "Want me to create a handoff so you (or another agent) can continue later?"
-
----
-
-## 5. Create
-
-Goal: leave the project state consistent and produce a handoff that lets ANY next
-session continue — **without** copying anything that has a durable home.
-
-### Process
-
-1. If a handoff already exists at `handoff_file`, show its summary and ask: overwrite it
-   with the current handoff, or keep the existing one and stop. If keep → stop.
-2. **Route every session discovery through §3 first.** This is the important step:
-   - task-specific facets → task docs (via the active binding);
-   - generic facets → project docs and / or memory;
-   - update statuses, decisions, results, and references in their proper homes so they
-     are not undocumented progress.
-
-   Do this *before* writing the handoff, so the handoff can simply point to the updated
-   homes.
-3. **Write the handoff file** (`handoff_file`) with only:
-   - the work item to resume (pointer / id / reference) and the intended next action;
-   - pure session-ephemeral state per §2 (what isn't, and shouldn't be, recorded elsewhere);
-   - pointers to the relevant homes (task, plan, project docs) — by reference to a commonly
-     accessible home, not copied, and never to agent-private memory (see *Portable references*).
-
-   Keep it short; if it's getting long, you're probably storing things that belong in a
-   durable home — go back to step 2.
-4. **Scan the handoff before saving or committing it.** Re-read what you wrote and strip
-   anything caught by the §3 step-1 exclusion gate. Pre-write / commit checklist:
-   - [ ] No secrets (API keys, tokens, passwords, connection strings, credential-bearing URLs).
-   - [ ] No OS usernames or home directories.
-   - [ ] No absolute / local paths outside the repo — use repo-relative paths instead.
-   - [ ] No hostnames, IP, or MAC addresses.
-   - [ ] No local environment-variable values or machine / OS specifics.
-   - [ ] No contents copied from a local / private memory store — reference shared homes instead.
-   - [ ] Ephemeral notes are generic, with no identifiers (§2).
-
-   If the project ships a security policy with its own handoff checklist, apply that too
-   (if present).
-5. If the session was **ad-hoc** (no task), follow §7.1 first (offer to create a tracked
-   item; only if declined may task-like specifics live in the handoff snapshot).
-
-### What a good handoff looks like
-
-- Reads in under a minute.
-- Names *where* to continue, not *what the task is*.
-- Contains nothing a reader could already get from the task docs or project docs.
-
----
-
-## 6. Resume
-
-### 6.1 Find and read
-
-Look for the handoff at `handoff_file`. If absent, tell the user there's no prepared
-session to continue. Read it fully.
-
-### 6.2 Summarize
-
-Give a brief summary (not the whole file):
-
-```text
-Resuming from handoff: <title>
-
-<short summary>
-```
-
-### 6.3 Confirm
-
-Ask: "Resume / Keep it for later / Discard?".
-
-- **Resume** → §6.4.
-- **Keep** → leave it untouched.
-- **Discard** → archive it (rename to a `discarded_<timestamp>` form alongside the file).
-
-### 6.4 Continue
-
-1. Open the pointed-to homes (task docs via the active binding, plan, project docs) and
-   read them — the handoff intentionally does **not** duplicate them.
-2. Archive the handoff (rename to a `processed_<timestamp>` form) so it isn't resumed twice.
-3. Start the work as described.
-4. If the handoff is unclear on something critical, ask the user rather than guess.
-
-### 6.5 Status (read-only)
-
-Answer *"what's in the current handoff?"* without consuming it — a non-mutating preview
-alongside Create (§5) and Resume (§6).
-
-1. **Find and read** the handoff at `handoff_file` (as §6.1). If none exists, say so and
-   stop.
-2. **Print a short summary** — title + short summary + the pointers it references (work
-   item, plan, project docs):
-
-   ```text
-   Handoff present: <title>
-
-   <short summary>
-
-   Points to: <homes/pointers the handoff references>
-   ```
-3. **Stop. Make no changes.** Status does not archive (no `processed_` / `discarded_`
-   rename), does not open or read the pointed-to homes, does not route or update task /
-   project docs or memory, and does not overwrite the handoff. It may end with a one-line
-   hint that the user can say *resume* to continue or *discard* to archive — but takes no
-   such action unprompted.
-
-Status reads only the handoff file — **no tracker / binding interaction** — which keeps it
-cheap and side-effect-free.
 
 ---
 

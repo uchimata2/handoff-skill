@@ -7,7 +7,10 @@ support for another agent.
 
 ## What's in here
 
-- `handoff.core.md` — the authoritative workflow (the heart of the skill).
+- `handoff.core.md` — the always-loaded spine (config, routing model, detection, session types,
+  binding contract) — the heart of the skill.
+- `flows/` — the two on-demand flow files: `create.md` (Create / Close) and `resume.md`
+  (Resume / Status).
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
 - `agents/` — per-agent stub templates.

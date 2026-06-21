@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   subsection under core §5, close triggers and the create-vs-close disambiguation to §4, the
   ad-hoc edge (declined specifics have no fallback — surfaced, not dropped silently), an
   `EXAMPLES.md` walkthrough, and an optional `handoff-close` split skill (#12).
+- Optional Claude Code hook reminders — a new `agents/claude.hooks.md` documents soft, opt-in,
+  non-mutating wiring for `SessionStart` (nudge to resume/preview when a handoff is waiting) and
+  `PreCompact` (nudge to handoff/close before a compaction, via a non-blocking `systemMessage`).
+  Cross-platform examples (PowerShell + POSIX `sh`); the core stays agent-neutral, and the Claude
+  stub and README §4 carry only a one-line pointer (#11).
 
 ## [0.2.0] - 2026-06-21
 

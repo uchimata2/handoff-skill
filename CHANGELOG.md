@@ -26,6 +26,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Cross-platform examples (PowerShell + POSIX `sh`); the core stays agent-neutral, and the Claude
   stub and README §4 carry only a one-line pointer (#11).
 
+### Changed
+- Split the monolithic core for **progressive disclosure**: `handoff.core.md` is now the
+  always-loaded **spine** (§0 config, §1–§3 routing model, §4 detection, §7 session types, §8
+  binding contract), and each consumption flow moved to an on-demand file — `flows/create.md`
+  (§5 Create + Close) and `flows/resume.md` (§6 Resume + §6.5 Status). §4 directs each run to
+  load the spine plus one flow, never both; the routing model stays single-sourced in the spine
+  and the flows reference it. Sections keep their numbers and anchors (relocate, don't renumber).
+  The agent stubs, `README.md`, `CONTRIBUTING.md`, and `scripts/build-skill.ps1` were updated to
+  bundle and point at the flow files (#20).
+
 ## [0.2.0] - 2026-06-21
 
 Portability & security hardening, plus docs and packaging polish.

@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README: Mermaid diagrams of the four-store routing procedure and the create/resume flows,
   plus a link to `EXAMPLES.md` (#2).
 - CONTRIBUTING: a "Working the backlog" guide (issues, specify-before-build, labels).
+- Project board automation: a GitHub Projects kanban auto-synced from issue `status:` labels
+  (`.github/workflows/sync-status-to-project.yml`), documented in `PROJECT_BOARD.md` and linked
+  from `README.md` / `CONTRIBUTING.md`.
 
 ## [0.1.0] - 2026-06-21
 

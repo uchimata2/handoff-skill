@@ -16,6 +16,7 @@ and across agents.
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`).
+- `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
 - `README.md` — this file.
 
 Nothing here is project-specific; all specifics live in the config you create.
@@ -63,6 +64,45 @@ task docs, project docs, agent memory — using a short routing procedure (core 
 handoff file holds only a pointer to what to resume plus pure session-ephemeral state;
 everything durable goes to its real home. Trackers are reached through a binding; memory
 is whatever your agent supplies (or none).
+
+## The routing model (visual)
+
+Every piece of session information runs through the routing procedure (core §3). A single
+discovery can split into several facets — each is written to its own home — while the handoff
+keeps only a pointer plus pure ephemeral state:
+
+```mermaid
+flowchart TD
+  start(["Each piece of session info"]) --> q1{"Secret / sensitive?"}
+  q1 -- yes --> drop["Redact — store nowhere"]
+  q1 -- no --> q2{"Task-specific facet?"}
+  q2 -- yes --> td[("Task docs<br/>via tracker binding")]
+  q2 -- no --> q3{"Generic / reusable facet?"}
+  td --> q3
+  q3 -- "project-scoped & shareable" --> pd[("Project docs")]
+  q3 -- "cross-project / private" --> mem[("Agent memory<br/>else project docs")]
+  q3 -- no --> q4{"Pure ephemeral,<br/>recorded nowhere else?"}
+  pd --> q4
+  mem --> q4
+  q4 -- yes --> ho[["Handoff file"]]
+  q4 -- no --> pt["Already has a home —<br/>handoff only points to it"]
+```
+
+The two flows that consume this model — **Create** (§5) and **Resume** (§6):
+
+```mermaid
+flowchart LR
+  subgraph Create
+    direction TB
+    c1["Route every discovery<br/>through §3 to its home"] --> c2["Write handoff:<br/>pointer + ephemeral state only"]
+  end
+  subgraph Resume
+    direction TB
+    r1["Read handoff"] --> r2["Summarize and confirm"] --> r3["Open the pointed-to homes"] --> r4["Archive handoff, then continue"]
+  end
+```
+
+See [`EXAMPLES.md`](EXAMPLES.md) for annotated good-vs-bad handoffs that put this into practice.
 
 ## Degrades gracefully
 

@@ -36,6 +36,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The agent stubs, `README.md`, `CONTRIBUTING.md`, and `scripts/build-skill.ps1` were updated to
   bundle and point at the flow files (#20).
 
+### Fixed
+- Agent stub templates no longer carry a bare `../README.md` link that dangles once the stub is
+  copied to its install location (`.claude/skills/handoff/SKILL.md` /
+  `.github/agents/handoff.agent.md`). The reference now goes through the existing `{{package}}`
+  substitution (`{{package}}/README.md`), consistent with the templates' other links, so it
+  resolves to the real package README after install (#25).
+
 ## [0.2.0] - 2026-06-21
 
 Portability & security hardening, plus docs and packaging polish.

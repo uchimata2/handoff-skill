@@ -4,7 +4,7 @@ description: "Transfers working context between AI sessions — any work, not ju
 ---
 
 > Template — copy to `.github/agents/handoff.agent.md` in your project and replace the
-> `{{...}}` placeholders. See `../README.md` for the full install steps.
+> `{{...}}` placeholders. See `{{package}}/README.md` for the full install steps.
 
 Transfers working context between sessions. The authoritative workflow is the portable
 core at `{{package}}/handoff.core.md` — the always-loaded spine; open and follow it, reading

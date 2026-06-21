@@ -33,6 +33,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   broadened §2 OUT, added a *Reference, don't restate* principle and a worked example
   (`handoff.core.md` §2–§3), with a matching good-vs-bad example in `EXAMPLES.md` (#6).
 
+### Fixed
+- Claude Code install instructions: the documented `.claude/skills/handoff/commands/*.md`
+  pointers never registered as `/handoff:create` / `/handoff:resume` (a skill's subfolder holds
+  on-demand supporting files, not slash commands). Documented the working setup — the single
+  `handoff` skill plus the core's §4 detection — and the correct optional path (separate
+  `handoff-create` / `handoff-resume` skills) (#21).
+
 ## [0.1.0] - 2026-06-21
 
 Initial public release of the portable Handoff skill.

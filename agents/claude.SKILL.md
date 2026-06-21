@@ -7,7 +7,7 @@ argument-hint: "What will the next session be used for?"
 # Handoff
 
 > Template — copy to `.claude/skills/handoff/SKILL.md` in your project and replace the
-> `{{...}}` placeholders. See `../README.md` for the full install steps.
+> `{{...}}` placeholders. See `{{package}}/README.md` for the full install steps.
 
 The authoritative workflow is the portable core at `{{package}}/handoff.core.md` — the
 always-loaded spine. Open and follow it, reading the project config at `{{config}}` for the
@@ -28,4 +28,4 @@ expose distinct commands instead, add separate `handoff-create`, `handoff-resume
 `handoff-status`, and `handoff-close` skills — each pointing straight at its flow file for an
 even leaner load (`handoff-create` / `handoff-close` → `{{package}}/flows/create.md`;
 `handoff-resume` / `handoff-status` → `{{package}}/flows/resume.md`) → `/handoff-create`,
-`/handoff-resume`, `/handoff-status`, and `/handoff-close`; see `../README.md`.
+`/handoff-resume`, `/handoff-status`, and `/handoff-close`; see `{{package}}/README.md`.

@@ -21,6 +21,7 @@ $out  = Join-Path $dist 'handoff.skill'
 # Files and directories that make up the distributable package.
 $items = @(
     'handoff.core.md',
+    'flows',
     'config.example.md',
     'bindings',
     'agents',

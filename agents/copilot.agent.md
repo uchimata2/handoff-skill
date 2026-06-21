@@ -7,8 +7,10 @@ description: "Transfers working context between AI sessions — any work, not ju
 > `{{...}}` placeholders. See `../README.md` for the full install steps.
 
 Transfers working context between sessions. The authoritative workflow is the portable
-core at `{{package}}/handoff.core.md` — open and follow it, reading the project config at
-`{{config}}` (handoff-file path, tracker, project docs).
+core at `{{package}}/handoff.core.md` — the always-loaded spine; open and follow it, reading
+the project config at `{{config}}` (handoff-file path, tracker, project docs). Its §4
+detection then points you to the on-demand flow file for the chosen mode
+(`{{package}}/flows/create.md` or `{{package}}/flows/resume.md`); load just that one.
 
 - **memory:** `none` — GitHub Copilot CLI has no persistent memory store, so memory-bound
   items fall back to project docs per the core's rules.

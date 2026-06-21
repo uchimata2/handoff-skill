@@ -11,6 +11,7 @@ support for another agent.
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
 - `agents/` — per-agent stub templates.
+- `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
 - `README.md` — install + overview.
 
 The package is plain Markdown — there is no build step for the package itself.

@@ -24,6 +24,7 @@ $items = @(
     'config.example.md',
     'bindings',
     'agents',
+    'EXAMPLES.md',
     'README.md',
     'LICENSE'
 )

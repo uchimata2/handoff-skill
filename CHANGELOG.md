@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workflow / how-to knowledge owned by another skill or doc must be referenced, not restated:
   broadened §2 OUT, added a *Reference, don't restate* principle and a worked example
   (`handoff.core.md` §2–§3), with a matching good-vs-bad example in `EXAMPLES.md` (#6).
+- Tidied §2 Handoff-file *OUT* into a de-duplicated sub-list that points to the §3 step-1
+  exclusion gate instead of restating its categories (`handoff.core.md` §2).
 
 ### Fixed
 - Claude Code install instructions: the documented `.claude/skills/handoff/commands/*.md`
@@ -39,6 +41,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   on-demand supporting files, not slash commands). Documented the working setup — the single
   `handoff` skill plus the core's §4 detection — and the correct optional path (separate
   `handoff-create` / `handoff-resume` skills) (#21).
+- The built `handoff.skill` artifact now bundles `EXAMPLES.md`, which the packaged README
+  links to but the build script previously omitted; listed it in the CONTRIBUTING package
+  manifest too.
+- README routing diagram now matches the broadened gate — "Secret / sensitive / user-private?"
+  and "Exclude — store nowhere" (was the pre-#5 "Secret / sensitive?" / "Redact").
 
 ## [0.1.0] - 2026-06-21
 

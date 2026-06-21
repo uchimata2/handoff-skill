@@ -68,14 +68,13 @@ For each store — what belongs in it, and what must stay out.
   mid-step 3", a transient session quirk described generically — no usernames, absolute
   local paths, hostnames, IPs, or env values); pointers to **commonly accessible** homes —
   the tracker / work item, repo files, or public URLs — reachable by anyone who pulls the repo.
-- OUT: any task-specific content (requirements, plans, findings, file lists, copied
-  next-steps); anything already in project docs or memory; reusable lessons; task
-  references that belong on the task; **restated workflow / how-tos — including a procedure
-  another skill or doc already defines** (point to that authoritative source, don't describe
-  it); **secrets and
-  user-/machine-private data** (per §3 step 1 — usernames, home or absolute local paths,
-  hostnames, IP/MAC addresses, local env values, copied local-memory contents); **pointers
-  that resolve only to agent-private memory**, and anything that lives only in local memory.
+- OUT — never goes in the handoff:
+  - task-specific content (requirements, plans, findings, file lists, copied next-steps);
+  - anything that already has a durable home — reusable lessons, task references, and
+    **restated workflow / how-tos, including a procedure another skill or doc already
+    defines** (point to the authoritative source, don't describe it);
+  - **secrets and user-/machine-private data** — the §3 step-1 exclusion gate;
+  - **pointers that resolve only to agent-private memory**, and anything that lives only there.
 
 **Task docs**
 

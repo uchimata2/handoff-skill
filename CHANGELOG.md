@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   files, public URLs) and must never point at or depend on agent-private memory; added a
   *Portable references* principle and qualified the §3 routing so resuming never requires local
   memory (`handoff.core.md` §2, §3, §5) (#4).
+- Workflow / how-to knowledge owned by another skill or doc must be referenced, not restated:
+  broadened §2 OUT, added a *Reference, don't restate* principle and a worked example
+  (`handoff.core.md` §2–§3), with a matching good-vs-bad example in `EXAMPLES.md` (#6).
 
 ## [0.1.0] - 2026-06-21
 

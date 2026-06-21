@@ -107,7 +107,8 @@ both get written, at their own altitude).
 1. **Secret, sensitive, or user-/machine-private?** → **exclude it; store it nowhere.**
    This single gate covers three things that must never enter a handoff (or any durable
    home it points to):
-   - **Secrets** — API keys, tokens / JWTs, passwords, connection strings, credential-bearing URLs.
+   - **Secrets** — API keys, tokens / JWTs, passwords, connection strings, credential-bearing
+     URLs. How to strip them safely: *Redacting secrets*, below.
    - **User-/machine-identifying data** — OS usernames, home directories, absolute or local
      paths outside the repo, hostnames, IP / MAC addresses, local environment-variable values,
      machine / OS specifics.
@@ -128,6 +129,22 @@ both get written, at their own altitude).
 
 The golden rule: **the handoff points, it does not store.** If a fact has any durable
 home (task, project, memory), it goes there; the handoff at most references it.
+
+### Redacting secrets
+
+When step 1 catches a **secret**, redacting it is not masking — it means the value lives
+**nowhere** (not in the handoff, task docs, project docs, or memory):
+
+- **Omit the value.** If the secret's *existence* matters for continuity, reference its
+  **location or name** — "the deploy token, kept in the team vault" — never the value itself.
+- **If structure must be shown, use an obvious placeholder** (`<REDACTED>`, `<API_KEY>`).
+  Never paste a partial or truncated real value — a prefix still leaks.
+- **Don't park it "temporarily"** in a scratch note, comment, or commit message on the way
+  to somewhere else — that is still storing it.
+
+This applies to every secret category in step 1 (API keys, tokens / JWTs, passwords,
+connection strings, credential-bearing URLs). Before saving or sharing, the §5 pre-write
+checklist scans for exactly these.
 
 ### Worked examples
 

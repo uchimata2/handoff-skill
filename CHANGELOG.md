@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Status mode — a read-only "what's in the current handoff?" preview alongside Create and
+  Resume. It finds and summarizes the handoff (title + short summary + the pointers it
+  references) and stops: no archive, no routing, no tracker interaction. Added core §6.5,
+  status triggers and the resume-vs-status disambiguation (non-mutating default) to §4, an
+  `EXAMPLES.md` walkthrough, and an optional `handoff-status` split skill in the Claude stub
+  and README (#9).
+
 ## [0.2.0] - 2026-06-21
 
 Portability & security hardening, plus docs and packaging polish.

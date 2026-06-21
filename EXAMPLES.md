@@ -140,3 +140,23 @@ Heads-up: uncommitted edits and a preview process are left over from the previou
 Then: **Resume / Keep it for later / Discard?** On resume, the agent opens the pointed-to homes
 (the item in `BACKLOG.md`, plus project docs), archives the handoff so it isn't resumed twice,
 and starts the work. The substance comes from the item — the handoff just said *where* to look.
+
+---
+
+## 6. Previewing a handoff (status)
+
+Status answers *"what's in the handoff?"* without consuming it (core §6.5). It reads **only**
+the handoff file — no archive, no opening the pointed-to homes, no tracker calls — and prints a
+short, distinct preview:
+
+```text
+Handoff present: ITEM-7
+
+Continue implementation — finish step 3 of 5 (extract the parser), then run the tests.
+
+Points to: ITEM-7 (BACKLOG.md), project docs (AGENTS.md).
+```
+
+Note the `Handoff present:` header — not Resume's `Resuming from handoff:` — so a preview never
+reads as a resume in progress. Nothing changes; the agent may add a one-line hint that you can
+say *resume* to continue or *discard* to archive, but takes no action unprompted.

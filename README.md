@@ -36,10 +36,12 @@ Nothing here is project-specific; all specifics live in the config you create.
    path):
    - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke
      it with `/handoff` (or just say "handoff" / "resume" — its description lets Claude
-     trigger it automatically), and the core's §4 detection routes to Create (§5) or Resume
-     (§6). *Optional:* to expose distinct commands, add separate skills
-     `.claude/skills/handoff-create/SKILL.md` and `.claude/skills/handoff-resume/SKILL.md`
-     (each pointing at the relevant section) → `/handoff-create` and `/handoff-resume`.
+     trigger it automatically), and the core's §4 detection routes to Create (§5), Resume
+     (§6), or Status (§6.5, a read-only preview). *Optional:* to expose distinct commands,
+     add separate skills `.claude/skills/handoff-create/SKILL.md`,
+     `.claude/skills/handoff-resume/SKILL.md`, and `.claude/skills/handoff-status/SKILL.md`
+     (each pointing at the relevant section) → `/handoff-create`, `/handoff-resume`, and
+     `/handoff-status`.
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).

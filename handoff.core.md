@@ -10,10 +10,11 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed two ways:
+This core is consumed three ways:
 
 - **Create** a handoff when wrapping up or switching agents (§5).
 - **Resume** from an existing handoff when starting fresh (§6).
+- **Status** — preview the current handoff without changing anything (§6.5).
 
 ---
 
@@ -192,12 +193,18 @@ skill / doc already defines.
 
 Activate when the user says things like: "handoff", "hand off", "pass this to",
 "continue later", "pick up where", "transfer context", "save state", "resume",
-"take over".
+"take over". Read-only previews also activate: "what's in the handoff", "show /
+preview / summarize the handoff", "status of the handoff", "is there a handoff".
 
-### Create vs resume
+### Create, resume, or status
 
 - User is **wrapping up**, stopping, or switching agents → **Create** (§5).
 - User is **starting fresh** and a handoff exists at `handoff_file` → **Resume** (§6).
+- User wants to **see what's in the handoff** without consuming it (preview / show /
+  summarize / status) → **Status** (§6.5) — read-only, no changes.
+
+When intent is ambiguous between resume and status, default to the **non-mutating**
+path: summarize (Status), then offer to resume — never archive on a maybe.
 
 ### Proactive suggestion
 
@@ -289,6 +296,32 @@ Ask: "Resume / Keep it for later / Discard?".
 2. Archive the handoff (rename to a `processed_<timestamp>` form) so it isn't resumed twice.
 3. Start the work as described.
 4. If the handoff is unclear on something critical, ask the user rather than guess.
+
+### 6.5 Status (read-only)
+
+Answer *"what's in the current handoff?"* without consuming it — a non-mutating preview
+alongside Create (§5) and Resume (§6).
+
+1. **Find and read** the handoff at `handoff_file` (as §6.1). If none exists, say so and
+   stop.
+2. **Print a short summary** — title + short summary + the pointers it references (work
+   item, plan, project docs):
+
+   ```text
+   Handoff present: <title>
+
+   <short summary>
+
+   Points to: <homes/pointers the handoff references>
+   ```
+3. **Stop. Make no changes.** Status does not archive (no `processed_` / `discarded_`
+   rename), does not open or read the pointed-to homes, does not route or update task /
+   project docs or memory, and does not overwrite the handoff. It may end with a one-line
+   hint that the user can say *resume* to continue or *discard* to archive — but takes no
+   such action unprompted.
+
+Status reads only the handoff file — **no tracker / binding interaction** — which keeps it
+cheap and side-effect-free.
 
 ---
 

@@ -42,7 +42,9 @@ Nothing here is project-specific; all specifics live in the config you create.
      `.claude/skills/handoff-create/SKILL.md`, `.claude/skills/handoff-resume/SKILL.md`,
      `.claude/skills/handoff-status/SKILL.md`, and `.claude/skills/handoff-close/SKILL.md`
      (each pointing at the relevant section) → `/handoff-create`, `/handoff-resume`,
-     `/handoff-status`, and `/handoff-close`.
+     `/handoff-status`, and `/handoff-close`. *Optional reminders:* wire Claude Code hooks to
+     nudge you to handoff/close at session start or before a compaction — see
+     [`agents/claude.hooks.md`](agents/claude.hooks.md).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).

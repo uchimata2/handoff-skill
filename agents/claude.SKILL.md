@@ -15,6 +15,8 @@ and project docs.
 
 - **memory:** `claude` — Claude Code has a persistent user-level memory store; use it as
   the "agent memory" store in the core's routing rules (§1–§3).
+- **Proactive reminders (optional):** wire Claude Code hooks to nudge you to handoff or close
+  at session start and before a compaction — see `{{package}}/agents/claude.hooks.md`.
 
 This single skill exposes every mode: invoke it with `/handoff` (or let Claude trigger it
 from the description above), and the core's §4 detection picks Create (§5), Resume (§6),

@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`.github/workflows/sync-status-to-project.yml`), documented in `PROJECT_BOARD.md` and linked
   from `README.md` / `CONTRIBUTING.md`.
 
+### Changed
+- Handoff exclusion rule broadened from secrets-only to a single consolidated gate covering
+  secrets, user-/machine-private data, and copied local-memory contents; the shipped core now
+  carries a pre-write / commit checklist (`handoff.core.md` §3 step 1, §5). `SECURITY.md`
+  references it instead of holding a separate copy (#5).
+
 ## [0.1.0] - 2026-06-21
 
 Initial public release of the portable Handoff skill.

@@ -65,10 +65,13 @@ For each store — what belongs in it, and what must stay out.
 - IN: which work item to pick up next (a pointer / id / reference only); the intended
   next action (e.g. "resume planning the task"); pure session-ephemeral state recorded
   nowhere else and not worth keeping permanently (uncommitted working state, "stopped
-  mid-step 3", a transient machine/session quirk); pointers to where everything else lives.
+  mid-step 3", a transient session quirk described generically — no usernames, absolute
+  local paths, hostnames, IPs, or env values); pointers to where everything else lives.
 - OUT: any task-specific content (requirements, plans, findings, file lists, copied
   next-steps); anything already in project docs or memory; reusable lessons; task
-  references that belong on the task; restated workflow / how-tos.
+  references that belong on the task; restated workflow / how-tos; **secrets and
+  user-/machine-private data** (per §3 step 1 — usernames, home or absolute local paths,
+  hostnames, IP/MAC addresses, local env values, copied local-memory contents).
 
 **Task docs**
 
@@ -101,7 +104,19 @@ discovery can match more than one step — when it does, write **each facet** to
 (e.g. a bug you hit may yield a task-specific fix note *and* a reusable project rule;
 both get written, at their own altitude).
 
-1. **Secret / sensitive?** → redact; store nowhere.
+1. **Secret, sensitive, or user-/machine-private?** → **exclude it; store it nowhere.**
+   This single gate covers three things that must never enter a handoff (or any durable
+   home it points to):
+   - **Secrets** — API keys, tokens / JWTs, passwords, connection strings, credential-bearing URLs.
+   - **User-/machine-identifying data** — OS usernames, home directories, absolute or local
+     paths outside the repo, hostnames, IP / MAC addresses, local environment-variable values,
+     machine / OS specifics.
+   - **Contents of a local or private memory store** — don't copy them in; a *reference* to a
+     shared, publicly reachable home is fine.
+
+   *Allowed* (generic, non-identifying ephemeral state): "stopped mid-step 3 of 5",
+   "uncommitted changes in the working tree", "a local preview process is still running";
+   repo-relative paths; branch names; port numbers.
 2. **Has a task-specific facet?** → write it to the **task docs** (via the active binding).
 3. **Has a generic / reusable facet?** →
    - project-scoped and shareable → **project docs**;
@@ -177,9 +192,21 @@ session continue — **without** copying anything that has a durable home.
    - pure session-ephemeral state per §2 (what isn't, and shouldn't be, recorded elsewhere);
    - pointers to the relevant homes (task, plan, project docs) — by reference, not copied.
 
-   Redact secrets. Keep it short; if it's getting long, you're probably storing things
-   that belong in a durable home — go back to step 2.
-4. If the session was **ad-hoc** (no task), follow §7.1 first (offer to create a tracked
+   Keep it short; if it's getting long, you're probably storing things that belong in a
+   durable home — go back to step 2.
+4. **Scan the handoff before saving or committing it.** Re-read what you wrote and strip
+   anything caught by the §3 step-1 exclusion gate. Pre-write / commit checklist:
+   - [ ] No secrets (API keys, tokens, passwords, connection strings, credential-bearing URLs).
+   - [ ] No OS usernames or home directories.
+   - [ ] No absolute / local paths outside the repo — use repo-relative paths instead.
+   - [ ] No hostnames, IP, or MAC addresses.
+   - [ ] No local environment-variable values or machine / OS specifics.
+   - [ ] No contents copied from a local / private memory store — reference shared homes instead.
+   - [ ] Ephemeral notes are generic, with no identifiers (§2).
+
+   If the project ships a security policy with its own handoff checklist, apply that too
+   (if present).
+5. If the session was **ad-hoc** (no task), follow §7.1 first (offer to create a tracked
    item; only if declined may task-like specifics live in the handoff snapshot).
 
 ### What a good handoff looks like

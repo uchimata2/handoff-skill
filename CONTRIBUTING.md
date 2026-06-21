@@ -34,6 +34,22 @@ The package is plain Markdown — there is no build step for the package itself.
 2. Make your change (Markdown only).
 3. Open a pull request describing what changed and why.
 
+## Working the backlog
+
+Work is tracked in [GitHub issues](https://github.com/uchimata2/handoff-skill/issues):
+
+- **Find something to do:** filter by label. `status: ready` means the approach is agreed and it's
+  ready to implement; `good first issue` is a gentle start. Priority is the `priority:*` labels;
+  related work is grouped by [milestone](https://github.com/uchimata2/handoff-skill/milestones).
+- **Specify before you build (for non-trivial changes):** agree the approach on the issue first —
+  a short spec in the issue or a comment — and get a maintainer's sign-off. This keeps single
+  source of truth (the issue holds the spec) and avoids rework. Small fixes can go straight to a PR.
+- **Then implement:** branch, make the change (Markdown only), and open a PR that closes the issue
+  (`Closes #123`). Keep it small and focused, and add a `CHANGELOG.md` entry under *Unreleased*.
+
+Status labels track where an issue is: `status: needs spec` → `status: ready` →
+`status: in progress` → merged.
+
 ## Adding a tracker binding
 
 Add `bindings/<tracker>.md` implementing the binding contract from `handoff.core.md` (§8):

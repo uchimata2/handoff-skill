@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   session type (#1).
 - README: Mermaid diagrams of the four-store routing procedure and the create/resume flows,
   plus a link to `EXAMPLES.md` (#2).
+- CONTRIBUTING: a "Working the backlog" guide (issues, specify-before-build, labels).
 
 ## [0.1.0] - 2026-06-21
 

@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet. See the [open milestones](https://github.com/uchimata2/handoff-skill/milestones)
-and [issues](https://github.com/uchimata2/handoff-skill/issues) for planned work._
+### Added
+- `EXAMPLES.md` — annotated good-vs-bad handoffs, a filled-in config, and walkthroughs by
+  session type (#1).
+- README: Mermaid diagrams of the four-store routing procedure and the create/resume flows,
+  plus a link to `EXAMPLES.md` (#2).
 
 ## [0.1.0] - 2026-06-21
 

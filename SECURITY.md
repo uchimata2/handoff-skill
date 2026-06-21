@@ -15,6 +15,9 @@ checklist** (`handoff.core.md` §5); this policy references it rather than dupli
 committing or sharing a handoff:
 
 - Run the core's §5 pre-write checklist over it.
+- For any secret, apply the core's redaction method (`handoff.core.md` §3, *Redacting secrets*):
+  omit the value, reference it by location/name if its existence matters, and never store it —
+  not even a truncated value or a "temporary" note.
 - Review the result yourself — never paste passwords, tokens, API keys, or other credentials into
   a handoff or task doc, and watch for usernames, home directories, absolute local paths,
   hostnames, or IPs that slipped in.

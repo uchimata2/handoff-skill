@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`.github/workflows/sync-status-to-project.yml`), documented in `PROJECT_BOARD.md` and linked
   from `README.md` / `CONTRIBUTING.md`.
 
+### Added
+- Concrete secret-redaction method in the core (`handoff.core.md` §3, *Redacting secrets*):
+  omit the value, reference by location/name, use placeholders not partial values, and store it
+  nowhere. `SECURITY.md` cross-references it (#7).
+
 ### Changed
 - Handoff exclusion rule broadened from secrets-only to a single consolidated gate covering
   secrets, user-/machine-private data, and copied local-memory contents; the shipped core now

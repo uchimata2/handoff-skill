@@ -70,7 +70,9 @@ For each store — what belongs in it, and what must stay out.
   the tracker / work item, repo files, or public URLs — reachable by anyone who pulls the repo.
 - OUT: any task-specific content (requirements, plans, findings, file lists, copied
   next-steps); anything already in project docs or memory; reusable lessons; task
-  references that belong on the task; restated workflow / how-tos; **secrets and
+  references that belong on the task; **restated workflow / how-tos — including a procedure
+  another skill or doc already defines** (point to that authoritative source, don't describe
+  it); **secrets and
   user-/machine-private data** (per §3 step 1 — usernames, home or absolute local paths,
   hostnames, IP/MAC addresses, local env values, copied local-memory contents); **pointers
   that resolve only to agent-private memory**, and anything that lives only in local memory.
@@ -140,6 +142,10 @@ pointer in it must resolve for anyone who pulls the repo (the tracker / work ite
 files, or public URLs). It must never point at, or depend on, an agent's local / private
 memory; memory may still hold private lessons, but resuming must not require them.
 
+**Reference, don't restate:** if another skill, doc, or tool already defines *how* to
+proceed, the handoff (and the core) **point** to that authoritative source rather than
+copying its steps — restating it risks drift and breaks single source of truth.
+
 ### Redacting secrets
 
 When step 1 catches a **secret**, redacting it is not masking — it means the value lives
@@ -171,6 +177,13 @@ nothing unless a flag is set.
 - recorded nowhere else and not worth keeping → **handoff file** ("stopped mid-way
   through step 3 of 5").
 - once the work lands in the task or is finished, it leaves the handoff.
+
+**Workflow owned elsewhere.** The next step follows a procedure a dedicated workflow
+skill / doc already defines.
+
+- *good* → **point**: "continue per the project's release-workflow doc."
+- *bad* → restating its steps in the handoff (build, tag, publish, announce…) — a second
+  copy that drifts from the source.
 
 ---
 

@@ -74,6 +74,7 @@ grammar is small and readability matters more than raw speed.                   
 Files to touch: src/lexer.ts, src/parser.ts, tests/parser.test.ts.               ✗ task docs (ITEM-7)
 Reminder: always run the linter with --fix before committing.                    ✗ project docs (a project-wide rule)
 I like terse, imperative commit messages.                                        ✗ agent memory (personal preference)
+How to run the tests: set NODE_ENV=test, then npm test.                          ✗ the testing doc/script (point to it; don't restate the how-to)
 Stopped mid step 3.                                                              ✓ ephemeral — this one stays
 ```
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-21
+
+Portability & security hardening, plus docs and packaging polish.
+
 ### Added
 - `EXAMPLES.md` — annotated good-vs-bad handoffs, a filled-in config, and walkthroughs by
   session type (#1).
@@ -64,5 +68,6 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/uchimata2/handoff-skill/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/uchimata2/handoff-skill/releases/tag/v0.1.0

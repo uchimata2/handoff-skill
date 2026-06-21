@@ -16,6 +16,8 @@ and project docs.
 - **memory:** `claude` — Claude Code has a persistent user-level memory store; use it as
   the "agent memory" store in the core's routing rules (§1–§3).
 
-In Claude Code, expose the two flows as the slash commands `/handoff:create` and
-`/handoff:resume`, mapping to the Create (§5) and Resume (§6) sections of the core. Add the
-matching `commands/create.md` and `commands/resume.md` pointers (see `../README.md`).
+This single skill exposes both flows: invoke it with `/handoff` (or let Claude trigger it
+from the description above), and the core's §4 detection picks Create (§5) or Resume (§6)
+from what you say. To expose distinct commands instead, add separate `handoff-create` and
+`handoff-resume` skills (each pointing at the relevant section) → `/handoff-create` and
+`/handoff-resume`; see `../README.md`.

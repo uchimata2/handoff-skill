@@ -1,5 +1,9 @@
 # Handoff skill — portable package
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Latest release](https://img.shields.io/github/v/release/uchimata2/handoff-skill?sort=semver)](https://github.com/uchimata2/handoff-skill/releases)
+
 A drop-in **handoff** skill: it lets any AI working session — a later session, another
 agent, or another person — pick up work seamlessly, while keeping a strict single source
 of truth. Every fact has exactly one home, and the handoff only *points* to those homes.

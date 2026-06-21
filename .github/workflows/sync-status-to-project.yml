@@ -1,0 +1,70 @@
+name: Sync status labels to project board
+
+# Keeps the "Handoff — Roadmap" project board (Status field) in sync with the
+# `status:` labels on issues. Lifecycle: Needs spec -> Ready -> In progress -> Merged.
+# A closed issue maps to "Merged".
+#
+# Requires a repo secret ADD_TO_PROJECT_PAT: a classic PAT with the `project` scope
+# (the default GITHUB_TOKEN cannot write to a user-owned Projects v2 board).
+
+on:
+  issues:
+    types: [labeled, unlabeled, reopened, closed]
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.ADD_TO_PROJECT_PAT }}
+      PROJECT_ID: PVT_kwHOBq4P884BbSJ7
+      STATUS_FIELD_ID: PVTSSF_lAHOBq4P884BbSJ7zhWDtj0
+      OPT_NEEDS_SPEC: "2a7723f0"
+      OPT_READY: "812d008e"
+      OPT_IN_PROGRESS: "ba2c97a3"
+      OPT_MERGED: "6041979a"
+      ISSUE_NODE_ID: ${{ github.event.issue.node_id }}
+      ISSUE_STATE: ${{ github.event.issue.state }}
+      LABELS_JSON: ${{ toJSON(github.event.issue.labels.*.name) }}
+    steps:
+      - name: Determine target status option
+        id: target
+        run: |
+          set -euo pipefail
+          labels="$LABELS_JSON"
+          opt=""
+          if [ "$ISSUE_STATE" = "closed" ]; then
+            opt="$OPT_MERGED"
+          elif printf '%s' "$labels" | grep -q 'status: in progress'; then
+            opt="$OPT_IN_PROGRESS"
+          elif printf '%s' "$labels" | grep -q 'status: ready'; then
+            opt="$OPT_READY"
+          elif printf '%s' "$labels" | grep -q 'status: needs spec'; then
+            opt="$OPT_NEEDS_SPEC"
+          fi
+          echo "opt=$opt" >> "$GITHUB_OUTPUT"
+
+      - name: Add issue to project and set Status
+        if: steps.target.outputs.opt != ''
+        run: |
+          set -euo pipefail
+          item_id=$(gh api graphql -f query='
+            mutation($project:ID!, $content:ID!) {
+              addProjectV2ItemById(input:{projectId:$project, contentId:$content}) {
+                item { id }
+              }
+            }' -f project="$PROJECT_ID" -f content="$ISSUE_NODE_ID" \
+            --jq '.data.addProjectV2ItemById.item.id')
+
+          gh api graphql -f query='
+            mutation($project:ID!, $item:ID!, $field:ID!, $opt:String!) {
+              updateProjectV2ItemFieldValue(input:{
+                projectId:$project, itemId:$item, fieldId:$field,
+                value:{ singleSelectOptionId:$opt }
+              }) { projectV2Item { id } }
+            }' -f project="$PROJECT_ID" -f item="$item_id" \
+               -f field="$STATUS_FIELD_ID" -f opt="${{ steps.target.outputs.opt }}"
+
+          echo "Set issue #${{ github.event.issue.number }} -> option ${{ steps.target.outputs.opt }}"

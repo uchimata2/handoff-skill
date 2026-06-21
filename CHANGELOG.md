@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   status triggers and the resume-vs-status disambiguation (non-mutating default) to §4, an
   `EXAMPLES.md` walkthrough, and an optional `handoff-status` split skill in the Claude stub
   and README (#9).
+- Close mode — wrap up a session cleanly **without** leaving a handoff. Close does all of
+  Create's durable-homes routing (§3) but writes no handoff file; if a live handoff exists it
+  is archived (`processed_<timestamp>`) so no resume pointer remains. Added a `### Close`
+  subsection under core §5, close triggers and the create-vs-close disambiguation to §4, the
+  ad-hoc edge (declined specifics have no fallback — surfaced, not dropped silently), an
+  `EXAMPLES.md` walkthrough, and an optional `handoff-close` split skill (#12).
 
 ## [0.2.0] - 2026-06-21
 

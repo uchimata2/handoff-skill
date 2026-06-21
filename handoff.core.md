@@ -10,11 +10,12 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed three ways:
+This core is consumed four ways:
 
 - **Create** a handoff when wrapping up or switching agents (§5).
 - **Resume** from an existing handoff when starting fresh (§6).
 - **Status** — preview the current handoff without changing anything (§6.5).
+- **Close** — wrap up a session cleanly without leaving a handoff (§5, *Close*).
 
 ---
 
@@ -195,16 +196,24 @@ Activate when the user says things like: "handoff", "hand off", "pass this to",
 "continue later", "pick up where", "transfer context", "save state", "resume",
 "take over". Read-only previews also activate: "what's in the handoff", "show /
 preview / summarize the handoff", "status of the handoff", "is there a handoff".
+Closing words also activate: "handoff close", "close out", "wrap up — no handoff",
+"done for good".
 
-### Create, resume, or status
+### Create, resume, status, or close
 
 - User is **wrapping up**, stopping, or switching agents → **Create** (§5).
 - User is **starting fresh** and a handoff exists at `handoff_file` → **Resume** (§6).
 - User wants to **see what's in the handoff** without consuming it (preview / show /
   summarize / status) → **Status** (§6.5) — read-only, no changes.
+- User wants to **wrap up without leaving a handoff** (explicit "close out", "done for
+  good", "wrap up — no handoff") → **Close** (§5, *Close*).
 
 When intent is ambiguous between resume and status, default to the **non-mutating**
 path: summarize (Status), then offer to resume — never archive on a maybe.
+
+A bare "wrap up" or "I'm done" is ambiguous between Create and Close — they leave
+different end states (a resume pointer vs none), so **ask** ("leave a resume pointer
+(handoff), or close out with none?") rather than guess.
 
 ### Proactive suggestion
 
@@ -261,6 +270,30 @@ session continue — **without** copying anything that has a durable home.
 - Reads in under a minute.
 - Names *where* to continue, not *what the task is*.
 - Contains nothing a reader could already get from the task docs or project docs.
+
+### Close — wrap up without a handoff
+
+Close ends a session **in a consistent state with no resume pointer** — it is Create minus
+the handoff file: do all the durable-homes work, then stop without writing `handoff_file`.
+Use it when the session is finished, not being handed off.
+
+1. **Route every session discovery through §3** to its proper home — task docs / project
+   docs / memory — updating statuses, decisions, results, and references (the *Process*
+   step 2 above). The §3 step-1 exclusion gate still applies, so secrets and private data
+   never reach a durable home.
+2. **Resolve any live handoff** at `handoff_file`. Since the session is being closed, not
+   handed off, no live resume pointer may remain: archive it (rename to the
+   `processed_<timestamp>` form, as §6.4). Its content already lives in durable homes — the
+   handoff only pointed — so nothing is lost.
+3. **Write no handoff file.** Skip *Process* steps 3–4 (handoff write + scan): there is no
+   snapshot to produce.
+4. **Confirm the workspace is left consistent.**
+
+**Ad-hoc edge:** in an ad-hoc session, §7.1 normally lets declined task specifics fall back
+into the handoff snapshot — but Close writes no handoff, so that fallback doesn't exist.
+Close still makes the §7.1 offer to create a tracked item; if the user **declines**, say
+plainly that the untracked specifics will have **no durable home** (offer Create instead, or
+proceed and drop them) — never lose them silently.
 
 ---
 

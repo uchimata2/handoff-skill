@@ -160,3 +160,22 @@ Points to: ITEM-7 (BACKLOG.md), project docs (AGENTS.md).
 Note the `Handoff present:` header — not Resume's `Resuming from handoff:` — so a preview never
 reads as a resume in progress. Nothing changes; the agent may add a one-line hint that you can
 say *resume* to continue or *discard* to archive, but takes no action unprompted.
+
+---
+
+## 7. Closing out without a handoff
+
+Sometimes a session is simply **done** — there's no next session to hand off to. Close does
+all the routing of a Create (core §5, *Close*) but writes **no** handoff file:
+
+1. Route every discovery to its home — task facts → the item (`ITEM-7`), a project-wide rule
+   → project docs, a personal preference → memory — updating statuses, decisions, and results
+   there.
+2. If a live handoff exists, archive it (`processed_<timestamp>`). Its content already lives
+   in those homes, so no resume pointer is left behind.
+3. Stop. No handoff file is written; the workspace is left consistent.
+
+**Ad-hoc caveat:** with no tracked item, Close still offers to create one (core §7.1). If you
+decline, there's no handoff snapshot to fall back on — so rather than dropping the untracked
+specifics silently, the agent says they have no durable home and lets you create a tracked
+item (or a handoff) instead.

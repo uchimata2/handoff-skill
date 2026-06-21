@@ -5,14 +5,19 @@ PowerShell build script — there is no running service and a small classic-vuln
 surface. The security considerations that matter here are about the **content of handoff
 files**, plus the usual care with the build script.
 
-## Handoff files may contain secrets
+## Handoff files must not capture private data
 
 A handoff (and the task/project docs it points to) can capture whatever was in a working
-session. The skill's routing procedure (`handoff.core.md` §3, step 1) instructs the agent to
-**redact secrets and store them nowhere**. Even so:
+session. The skill's routing procedure (`handoff.core.md` §3, step 1) is the source of truth for
+what to exclude: **secrets, user-/machine-private data, and copied local-memory contents are
+excluded and stored nowhere.** The shipped core also carries the canonical **pre-write / commit
+checklist** (`handoff.core.md` §5); this policy references it rather than duplicating it. Before
+committing or sharing a handoff:
 
-- Review a generated handoff before committing or sharing it.
-- Never paste passwords, tokens, API keys, or other credentials into a handoff or task doc.
+- Run the core's §5 pre-write checklist over it.
+- Review the result yourself — never paste passwords, tokens, API keys, or other credentials into
+  a handoff or task doc, and watch for usernames, home directories, absolute local paths,
+  hostnames, or IPs that slipped in.
 - Treat handoff files in a shared repo as readable by everyone with repo access.
 
 ## Reporting a vulnerability

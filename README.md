@@ -39,6 +39,19 @@ Nothing here is project-specific; all specifics live in the config you create.
      its `memory` value (its store, or `none`).
 5. **Done.** Trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
 
+## Build an installable artifact (optional)
+
+The package is plain Markdown and needs no build to use — just copy it per the steps above.
+For distribution you can bundle it into a single `handoff.skill` archive:
+
+```sh
+pwsh scripts/build-skill.ps1
+```
+
+This writes `dist/handoff.skill` — a zip of the package under a top-level `handoff/` folder.
+Unzip it into your project and follow the install steps above. The artifact is regenerated on
+demand and is git-ignored. See [CHANGELOG](CHANGELOG.md) for release history.
+
 ## How it works (one paragraph)
 
 The core sorts every piece of session information into one of four stores — handoff file,

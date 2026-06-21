@@ -48,7 +48,10 @@ Work is tracked in [GitHub issues](https://github.com/uchimata2/handoff-skill/is
   (`Closes #123`). Keep it small and focused, and add a `CHANGELOG.md` entry under *Unreleased*.
 
 Status labels track where an issue is: `status: needs spec` → `status: ready` →
-`status: in progress` → merged.
+`status: in progress` → merged. They also drive a visual kanban — the
+[Handoff — Roadmap board](https://github.com/users/uchimata2/projects/1). Cards move
+automatically when you change a label, so there's no board to manage by hand; see
+[`PROJECT_BOARD.md`](PROJECT_BOARD.md) for how the sync works.
 
 ## Adding a tracker binding
 

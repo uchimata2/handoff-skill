@@ -111,6 +111,12 @@ See [`EXAMPLES.md`](EXAMPLES.md) for annotated good-vs-bad handoffs that put thi
 - **No memory** (`memory: none`): memory-bound items fall back to project docs; nothing is
   silently lost.
 
+## Roadmap
+
+Planned work is tracked on the [project board](https://github.com/users/uchimata2/projects/1) —
+a kanban auto-synced from issue `status:` labels. See [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for
+how it works, and [`CONTRIBUTING.md`](CONTRIBUTING.md) to get involved.
+
 ## License
 
 [MIT](LICENSE) © 2026 uchimata2

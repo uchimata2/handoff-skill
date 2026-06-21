@@ -7,6 +7,7 @@ Thumbs.db
 
 # Generated installable skill artifact (built on demand from the package)
 *.skill
+dist/
 
 # Local context / internal notes — never publish (source tickets, plans, etc.)
 control/

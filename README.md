@@ -74,8 +74,8 @@ keeps only a pointer plus pure ephemeral state:
 
 ```mermaid
 flowchart TD
-  start(["Each piece of session info"]) --> q1{"Secret / sensitive?"}
-  q1 -- yes --> drop["Redact — store nowhere"]
+  start(["Each piece of session info"]) --> q1{"Secret / sensitive / user-private?"}
+  q1 -- yes --> drop["Exclude — store nowhere"]
   q1 -- no --> q2{"Task-specific facet?"}
   q2 -- yes --> td[("Task docs<br/>via tracker binding")]
   q2 -- no --> q3{"Generic / reusable facet?"}

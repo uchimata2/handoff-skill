@@ -10,7 +10,8 @@ assignees: ""
 A clear description of the problem or the confusing wording.
 
 **Where**
-Which file and section (e.g. `handoff.core.md` §3, `bindings/notion.md`, the README install steps).
+Which file and section (e.g. `handoff.core.md` §3, a `flows/` file like `flows/create.md` §5,
+`bindings/notion.md`, the README install steps).
 
 **Expected**
 What you expected the skill or docs to say or do.

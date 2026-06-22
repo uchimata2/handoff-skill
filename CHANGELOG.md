@@ -59,6 +59,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sub-bullets (#35).
 
 ### Fixed
+- Issue templates now reflect the v0.3.0 spine + `flows/` split: the feature-request "which part it
+  affects" prompt and the bug-report "where" example treated the core as the single `handoff.core.md`
+  file, so they now name the spine **and** the flow files (Create / Resume / Status / Close).
 - Reference/inventory hygiene after the #20 core split: repointed the pre-write / commit checklist
   citations in `SECURITY.md` and the core §3 *Redacting secrets* pointer to `flows/create.md` §5
   (they still read as `handoff.core.md` §5, but §5 now lives in the Create flow); listed

@@ -18,7 +18,10 @@ $root = Split-Path -Parent $PSScriptRoot
 $dist = Join-Path $root 'dist'
 $out  = Join-Path $dist 'handoff.skill'
 
-# Files and directories that make up the distributable package.
+# Canonical package manifest: the files and directories that make up the distributable
+# package. This array is the single source of truth for "what ships" — README.md and
+# CONTRIBUTING.md describe the package but point here rather than maintaining their own
+# file lists. Keep this list authoritative; update it when the package layout changes.
 $items = @(
     'handoff.core.md',
     'flows',

@@ -179,3 +179,31 @@ all the routing of a Create (core §5, *Close*) but writes **no** handoff file:
 decline, there's no handoff snapshot to fall back on — so rather than dropping the untracked
 specifics silently, the agent says they have no durable home and lets you create a tracked
 item (or a handoff) instead.
+
+---
+
+## 8. Routing a single discovery
+
+The routing procedure (core §3) runs per piece of session information. Three short cases show
+where each facet lands:
+
+**A discovery with two facets.** While doing a task you find that a tool silently does
+nothing unless a flag is set.
+
+- *task-specific facet* — this task's step needs that flag → **task docs**.
+- *generic facet* — the tool needs the flag in general → **project docs** (or **memory**
+  if it's a personal preference).
+- *handoff* — nothing: both facets now have durable homes.
+
+**Pure ephemeral state.** You stopped half-way through a multi-part change.
+
+- recorded nowhere else and not worth keeping → **handoff file** ("stopped mid-way
+  through step 3 of 5").
+- once the work lands in the task or is finished, it leaves the handoff.
+
+**Workflow owned elsewhere.** The next step follows a procedure a dedicated workflow
+skill / doc already defines.
+
+- *good* → **point**: "continue per the project's release-workflow doc."
+- *bad* → restating its steps in the handoff (build, tag, publish, announce…) — a second
+  copy that drifts from the source.

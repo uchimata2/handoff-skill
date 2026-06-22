@@ -29,6 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   bottom-up one at a time and let the base retarget, and verify the default branch actually
   contains every PR (and that linked issues auto-closed) before treating them as shipped. Pairs
   with enabling the repo's "Automatically delete head branches" so stacks retarget correctly (#33).
+- README now links the GitHub wiki (a new "Learn more" section) and the `CODE_OF_CONDUCT.md`
+  (README "Roadmap" + the CONTRIBUTING intro), so both are discoverable from tracked docs
+  (#34, #35).
 
 ### Changed
 - Split the monolithic core for **progressive disclosure**: `handoff.core.md` is now the
@@ -39,6 +42,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and the flows reference it. Sections keep their numbers and anchors (relocate, don't renumber).
   The agent stubs, `README.md`, `CONTRIBUTING.md`, and `scripts/build-skill.ps1` were updated to
   bundle and point at the flow files (#20).
+- Single-sourced the package manifest: the `$items` array in `scripts/build-skill.ps1` is now the
+  canonical list of files that ship in `handoff.skill`. The README and CONTRIBUTING "What's in
+  here" sections describe the package but point to that manifest instead of keeping their own file
+  lists that could drift (#19).
+- Trimmed the always-loaded spine: the §3 *Worked examples* block moved out of `handoff.core.md`
+  into `EXAMPLES.md` (new §8 *Routing a single discovery*); the spine §3 keeps a one-line pointer.
+  Routing rules unchanged — illustrative content only. Spine: 281 → 261 lines (#36).
+- Doc polish after the v0.3.0 split: the "core stays generic" rule (PR template + CONTRIBUTING,
+  including its grep check) now explicitly covers the `flows/` files alongside the `handoff.core.md`
+  spine, and the dense Claude Code install bullet in the README was broken into scannable
+  sub-bullets (#35).
 
 ### Fixed
 - Reference/inventory hygiene after the #20 core split: repointed the pre-write / commit checklist

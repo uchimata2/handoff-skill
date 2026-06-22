@@ -3,28 +3,25 @@
 Thanks for your interest in improving the **Handoff skill** — the portable, project- and
 agent-neutral source for a skill that transfers working context between AI sessions.
 Contributions of all sizes are welcome: fixes, clearer wording, new tracker bindings, or
-support for another agent.
+support for another agent. By participating, you agree to uphold our
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## What's in here
 
-- `handoff.core.md` — the always-loaded spine (config, routing model, detection, session types,
-  binding contract) — the heart of the skill.
-- `flows/` — the two on-demand flow files: `create.md` (Create / Close) and `resume.md`
-  (Resume / Status).
-- `config.example.md` — the per-project config schema.
-- `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
-- `agents/` — per-agent stub templates.
-- `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
-- `README.md` — install + overview.
+For the package layout, see [README's "What's in here"](README.md#whats-in-here). The exact set of
+files bundled into the `handoff.skill` artifact is the canonical **package manifest** — defined once,
+in the `$items` array in [`scripts/build-skill.ps1`](scripts/build-skill.ps1) — so this guide and the
+README describe the package rather than keeping their own copies of the file list.
 
 The package is plain Markdown — there is no build step for the package itself.
 
 ## Ground rules
 
-- **Keep the core generic.** `handoff.core.md` must stay free of any project-, tracker-,
-  agent-, or language-specific detail — those belong in a project's config or in a binding.
-  Quick check: a case-insensitive grep of the core for a specific tool/project/tracker name
-  should come back empty (the abstract binding contract aside).
+- **Keep the core generic.** The core — the `handoff.core.md` spine **and** the `flows/` files —
+  must stay free of any project-, tracker-, agent-, or language-specific detail; those belong in a
+  project's config or in a binding. Quick check: a case-insensitive grep of `handoff.core.md` and
+  `flows/` for a specific tool/project/tracker name should come back empty (the abstract binding
+  contract aside).
 - **One home per fact.** The skill exists to enforce single-source-of-truth routing, so keep
   the docs themselves free of duplication (core vs. bindings vs. config should not repeat
   each other).

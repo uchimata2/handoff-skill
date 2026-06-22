@@ -37,6 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   bundle and point at the flow files (#20).
 
 ### Fixed
+- Reference/inventory hygiene after the #20 core split: repointed the pre-write / commit checklist
+  citations in `SECURITY.md` and the core §3 *Redacting secrets* pointer to `flows/create.md` §5
+  (they still read as `handoff.core.md` §5, but §5 now lives in the Create flow); listed
+  `agents/claude.hooks.md` in the README "What's in here"; and refreshed the README routing-model
+  section (prose + second diagram) to reflect all four modes — Create, Resume, Status, Close —
+  instead of only Create/Resume (#32).
 - Agent stub templates no longer carry a bare `../README.md` link that dangles once the stub is
   copied to its install location (`.claude/skills/handoff/SKILL.md` /
   `.github/agents/handoff.agent.md`). The reference now goes through the existing `{{package}}`

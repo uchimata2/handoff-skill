@@ -169,28 +169,8 @@ This applies to every secret category in step 1 (API keys, tokens / JWTs, passwo
 connection strings, credential-bearing URLs). Before saving or sharing, the Create flow's
 pre-write checklist (`flows/create.md` §5) scans for exactly these.
 
-### Worked examples
-
-**A discovery with two facets.** While doing a task you find that a tool silently does
-nothing unless a flag is set.
-
-- *task-specific facet* — this task's step needs that flag → **task docs**.
-- *generic facet* — the tool needs the flag in general → **project docs** (or **memory**
-  if it's a personal preference).
-- *handoff* — nothing: both facets now have durable homes.
-
-**Pure ephemeral state.** You stopped half-way through a multi-part change.
-
-- recorded nowhere else and not worth keeping → **handoff file** ("stopped mid-way
-  through step 3 of 5").
-- once the work lands in the task or is finished, it leaves the handoff.
-
-**Workflow owned elsewhere.** The next step follows a procedure a dedicated workflow
-skill / doc already defines.
-
-- *good* → **point**: "continue per the project's release-workflow doc."
-- *bad* → restating its steps in the handoff (build, tag, publish, announce…) — a second
-  copy that drifts from the source.
+For worked examples of this routing in action — a two-facet discovery, pure ephemeral state,
+and a workflow owned elsewhere — see [`EXAMPLES.md`](EXAMPLES.md) *§8 Routing a single discovery*.
 
 ---
 

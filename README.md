@@ -23,7 +23,9 @@ and across agents.
 - `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
 - `README.md` — this file.
 
-Nothing here is project-specific; all specifics live in the config you create.
+Nothing here is project-specific; all specifics live in the config you create. The above is a
+conceptual overview; the authoritative list of files bundled into the `handoff.skill` artifact is
+the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
 
 ## Install in a new project
 
@@ -38,18 +40,17 @@ Nothing here is project-specific; all specifics live in the config you create.
 4. **Wire your agent.** Copy the matching template from `agents/` into your agent's native
    location and replace `{{package}}` (this folder's path) and `{{config}}` (your config
    path):
-   - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke
-     it with `/handoff` (or just say "handoff" / "resume" — its description lets Claude
-     trigger it automatically), and the core's §4 detection routes to Create (§5), Resume
-     (§6), Status (§6.5, a read-only preview), or Close (§5 *Close*, wrap up with no
-     handoff), then loads the matching on-demand flow file (`flows/create.md` or
-     `flows/resume.md`). *Optional:* to expose distinct commands, add separate skills
-     `.claude/skills/handoff-create/SKILL.md`, `.claude/skills/handoff-resume/SKILL.md`,
-     `.claude/skills/handoff-status/SKILL.md`, and `.claude/skills/handoff-close/SKILL.md`
-     (each pointing straight at its flow file) → `/handoff-create`, `/handoff-resume`,
-     `/handoff-status`, and `/handoff-close`. *Optional reminders:* wire Claude Code hooks to
-     nudge you to handoff/close at session start or before a compaction — see
-     [`agents/claude.hooks.md`](agents/claude.hooks.md).
+   - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke it
+     with `/handoff` (or just say "handoff" / "resume" — its description lets Claude trigger it
+     automatically), and the core's §4 detection routes to Create (§5), Resume (§6), Status
+     (§6.5, a read-only preview), or Close (§5 *Close*, wrap up with no handoff), then loads the
+     matching on-demand flow file (`flows/create.md` or `flows/resume.md`).
+     - *Optional — distinct commands:* to expose each mode as its own command, add separate
+       skills `.claude/skills/handoff-{create,resume,status,close}/SKILL.md` (each pointing
+       straight at its flow file) → `/handoff-create`, `/handoff-resume`, `/handoff-status`,
+       `/handoff-close`.
+     - *Optional — reminders:* wire Claude Code hooks to nudge you to handoff/close at session
+       start or before a compaction — see [`agents/claude.hooks.md`](agents/claude.hooks.md).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).
@@ -126,11 +127,18 @@ See [`EXAMPLES.md`](EXAMPLES.md) for annotated good-vs-bad handoffs that put thi
 - **No memory** (`memory: none`): memory-bound items fall back to project docs; nothing is
   silently lost.
 
+## Learn more
+
+For a one-minute conceptual overview of the skill, the four stores, and the modes, see the
+[project wiki](https://github.com/uchimata2/handoff-skill/wiki). For worked examples, see
+[`EXAMPLES.md`](EXAMPLES.md).
+
 ## Roadmap
 
 Planned work is tracked on the [project board](https://github.com/users/uchimata2/projects/1) —
 a kanban auto-synced from issue `status:` labels. See [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for
-how it works, and [`CONTRIBUTING.md`](CONTRIBUTING.md) to get involved.
+how it works, and [`CONTRIBUTING.md`](CONTRIBUTING.md) (with our
+[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)) to get involved.
 
 ## License
 

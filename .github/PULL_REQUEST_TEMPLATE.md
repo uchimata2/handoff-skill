@@ -9,7 +9,7 @@
 
 ## Checklist
 - [ ] Markdown only — no generated artifacts committed (`*.skill`, `dist/`).
-- [ ] The core (`handoff.core.md`) stays generic — no project, tracker, agent, or language specifics.
+- [ ] The core — the `handoff.core.md` spine **and** the `flows/` files — stays generic: no project, tracker, agent, or language specifics.
 - [ ] One home per fact — no duplication across core, bindings, and config.
 - [ ] Domain-neutral — nothing assumes code, version control, or one kind of work.
 - [ ] Updated `README.md` (and `CHANGELOG.md`) if behavior or structure changed.

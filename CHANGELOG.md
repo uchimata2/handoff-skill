@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README now links the GitHub wiki (a new "Learn more" section) and the `CODE_OF_CONDUCT.md`
   (README "Roadmap" + the CONTRIBUTING intro), so both are discoverable from tracked docs
   (#34, #35).
+- CI: a `checks` GitHub Actions workflow runs on every push and PR and guards two invariants —
+  a **portability guard** that fails if the always-loaded core (`handoff.core.md` + `flows/`)
+  contains a denylisted project/tracker/agent token, and an **offline Markdown link check** that
+  fails on unresolved internal links (`.github/workflows/checks.yml`) (#10).
 
 ### Changed
 - Split the monolithic core for **progressive disclosure**: `handoff.core.md` is now the

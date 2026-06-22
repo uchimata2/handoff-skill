@@ -1,0 +1,48 @@
+name: checks
+
+# Guards the project's two structural invariants:
+#   1. the always-loaded core stays project/tracker/agent-neutral (portability), and
+#   2. internal Markdown links resolve.
+# Both are cheap, deterministic checks — no secrets, no network for the guard.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portability-guard:
+    name: Core stays generic
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No project/tracker/agent token in the core (spine + flows)
+        run: |
+          # Curated denylist of project-, tracker-, and agent-specific tokens that must
+          # never appear in the always-loaded core — the handoff.core.md spine and the
+          # flows/ files (see CONTRIBUTING "Keep the core generic"). This is a tripwire
+          # for the most common accidental leaks, not an exhaustive list; extend it as
+          # new trackers/agents are added. Matched case-insensitively, whole-word.
+          pattern='notion|jira|asana|trello|clickup|claude|copilot|chatgpt|openai|anthropic|unity'
+          if grep -rinwE "$pattern" handoff.core.md flows/; then
+            echo "::error::Forbidden project/tracker/agent token found in the core (handoff.core.md / flows/). Keep the core generic — those specifics belong in a config or a binding. See CONTRIBUTING.md 'Keep the core generic'."
+            exit 1
+          fi
+          echo "Core is clean: no denylisted tokens in handoff.core.md or flows/."
+
+  link-check:
+    name: Internal Markdown links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Markdown links (offline — internal links only)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # --offline checks that local link targets exist without any network
+          # requests (no external-URL flakiness). Respects .gitignore, so the
+          # local-only control/ scratch is skipped.
+          args: --offline --no-progress '*.md' '**/*.md'
+          fail: true

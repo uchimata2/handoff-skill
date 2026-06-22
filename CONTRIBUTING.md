@@ -57,6 +57,22 @@ Status labels track where an issue is: `status: needs spec` → `status: ready` 
 automatically when you change a label, so there's no board to manage by hand; see
 [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for how the sync works.
 
+## Merging dependent or stacked PRs
+
+Most changes here are independent — open them as separate PRs branched off `main`. When a change
+genuinely builds on another that isn't merged yet (a *stack*), merge with care: a stacked merge can
+otherwise cascade *sideways* into the lower branch instead of landing on `main`, leaving `main` with
+only the bottom PR and the upper PRs' issues still open.
+
+- **Prefer sequential, non-stacked PRs** when practical — merge one, then branch the next off the
+  updated `main`. There's less to go wrong.
+- **If you do stack, merge bottom-up, one at a time.** This repo auto-deletes head branches on merge,
+  so as each PR merges GitHub retargets the next one's base to `main` — wait for that retarget before
+  merging the next.
+- **Verify the default branch before calling it shipped.** After the stack lands, confirm `main`
+  actually contains every PR's commits and that each linked issue auto-closed — a PR only closes its
+  issue when it merges into the **default** branch (`main`).
+
 ## Adding a tracker binding
 
 Add `bindings/<tracker>.md` implementing the binding contract from `handoff.core.md` (§8):

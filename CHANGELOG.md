@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `PreCompact` (nudge to handoff/close before a compaction, via a non-blocking `systemMessage`).
   Cross-platform examples (PowerShell + POSIX `sh`); the core stays agent-neutral, and the Claude
   stub and README §4 carry only a one-line pointer (#11).
+- CONTRIBUTING: a "Merging dependent or stacked PRs" guide — prefer sequential PRs, merge stacks
+  bottom-up one at a time and let the base retarget, and verify the default branch actually
+  contains every PR (and that linked issues auto-closed) before treating them as shipped. Pairs
+  with enabling the repo's "Automatically delete head branches" so stacks retarget correctly (#33).
 
 ### Changed
 - Split the monolithic core for **progressive disclosure**: `handoff.core.md` is now the

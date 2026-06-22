@@ -10,11 +10,11 @@ files**, plus the usual care with the build script.
 A handoff (and the task/project docs it points to) can capture whatever was in a working
 session. The skill's routing procedure (`handoff.core.md` §3, step 1) is the source of truth for
 what to exclude: **secrets, user-/machine-private data, and copied local-memory contents are
-excluded and stored nowhere.** The shipped core also carries the canonical **pre-write / commit
-checklist** (`handoff.core.md` §5); this policy references it rather than duplicating it. Before
+excluded and stored nowhere.** The Create flow carries the canonical **pre-write / commit
+checklist** (`flows/create.md` §5); this policy references it rather than duplicating it. Before
 committing or sharing a handoff:
 
-- Run the core's §5 pre-write checklist over it.
+- Run the Create flow's §5 pre-write checklist (`flows/create.md`) over it.
 - For any secret, apply the core's redaction method (`handoff.core.md` §3, *Redacting secrets*):
   omit the value, reference it by location/name if its existence matters, and never store it —
   not even a truncated value or a "temporary" note.

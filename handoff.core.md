@@ -166,8 +166,8 @@ When step 1 catches a **secret**, redacting it is not masking — it means the v
   to somewhere else — that is still storing it.
 
 This applies to every secret category in step 1 (API keys, tokens / JWTs, passwords,
-connection strings, credential-bearing URLs). Before saving or sharing, the §5 pre-write
-checklist scans for exactly these.
+connection strings, credential-bearing URLs). Before saving or sharing, the Create flow's
+pre-write checklist (`flows/create.md` §5) scans for exactly these.
 
 ### Worked examples
 

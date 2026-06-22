@@ -18,7 +18,8 @@ and across agents.
   and `resume.md` (Resume / Status).
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
-- `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`).
+- `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
+  optional Claude Code hook reminders (`claude.hooks.md`).
 - `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
 - `README.md` — this file.
 
@@ -98,17 +99,21 @@ flowchart TD
   q4 -- no --> pt["Already has a home —<br/>handoff only points to it"]
 ```
 
-The two flows that consume this model — **Create** (§5) and **Resume** (§6):
+The four modes that consume this model — **Create** (§5) and **Close** (§5, *Close*) on the
+write side, **Resume** (§6) and **Status** (§6.5) on the read side:
 
 ```mermaid
 flowchart LR
-  subgraph Create
+  subgraph "Create / Close"
     direction TB
-    c1["Route every discovery<br/>through §3 to its home"] --> c2["Write handoff:<br/>pointer + ephemeral state only"]
+    c1["Route every discovery<br/>through §3 to its home"] --> c2["Create: write handoff —<br/>pointer + ephemeral state only"]
+    c1 --> c3["Close: write no handoff —<br/>archive any live one"]
   end
-  subgraph Resume
+  subgraph "Resume / Status"
     direction TB
-    r1["Read handoff"] --> r2["Summarize and confirm"] --> r3["Open the pointed-to homes"] --> r4["Archive handoff, then continue"]
+    r1["Read handoff"] --> r2["Summarize"]
+    r2 --> r3["Resume: open homes,<br/>archive, then continue"]
+    r2 --> r4["Status: stop —<br/>no changes"]
   end
 ```
 

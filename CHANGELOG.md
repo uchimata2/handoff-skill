@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-22
+
+Progressive-disclosure core split (an always-loaded spine plus on-demand flow files), two new
+modes — **Status** and **Close** — optional Claude Code hook reminders, and release tooling
+(a CI portability + link guard, a single-sourced package manifest, and doc-consistency polish).
+
 ### Added
 - Status mode — a read-only "what's in the current handoff?" preview alongside Create and
   Resume. It finds and summarizes the handoff (title + short summary + the pointers it
@@ -135,6 +141,7 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/uchimata2/handoff-skill/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/uchimata2/handoff-skill/releases/tag/v0.1.0

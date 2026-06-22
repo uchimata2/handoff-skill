@@ -14,7 +14,8 @@ What you'd like to see. Keep in mind the ground rules in `CONTRIBUTING.md` — t
 generic, every fact has one home, and nothing assumes code or one kind of work.
 
 **Which part it affects**
-Core (`handoff.core.md`) and its section, a binding, the config schema, an agent stub, or docs.
+The core — the `handoff.core.md` spine or a `flows/` file (Create / Resume / Status / Close) — and
+its section; a binding; the config schema; an agent stub; or docs.
 
 **Alternatives considered**
 Optional — other approaches you weighed and why this one.

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-02
+
+A new tracker binding for projects that keep each work item as its own Markdown file in a
+folder — the directory-shaped sibling of `local-markdown`.
+
 ### Added
 - New tracker binding `bindings/local-markdown-dir.md` — a **folder of one-file-per-task**
   Markdown files with YAML frontmatter, where "open" vs "done" is signalled by folder location
@@ -151,7 +156,8 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/uchimata2/handoff-skill/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/uchimata2/handoff-skill/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/uchimata2/handoff-skill/releases/tag/v0.1.0

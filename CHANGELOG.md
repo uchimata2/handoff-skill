@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- New tracker binding `bindings/local-markdown-dir.md` — a **folder of one-file-per-task**
+  Markdown files with YAML frontmatter, where "open" vs "done" is signalled by folder location
+  (e.g. `tasks/` vs `tasks/closed/`). The directory-shaped sibling of `local-markdown`, for
+  projects that keep each work item as its own document rather than sections of one backlog file.
+  Zero dependencies; makes no code/domain assumptions. Reads generic `tracker_*` keys
+  (`tracker_dir`, optional `tracker_closed_dir`, `tracker_id_prefix`, `tracker_template`,
+  `tracker_lint`). Enumerated everywhere the bindings are listed (`config.example.md`,
+  `bindings/README.md`, the bug-report template) and given an `EXAMPLES.md` §4 walkthrough.
+
 ## [0.3.0] - 2026-06-22
 
 Progressive-disclosure core split (an always-loaded spine plus on-demand flow files), two new

@@ -8,7 +8,7 @@ simple.
 ## Core keys (project config)
 
 - `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md>
-- `tracker`: <binding from bindings/: notion | local-markdown | none>
+- `tracker`: <binding from bindings/: notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
 
@@ -26,6 +26,13 @@ Include only the block matching your `tracker`.
 
 ### tracker: local-markdown
 - `tracker_file`: <path to the backlog file, e.g. BACKLOG.md>
+
+### tracker: local-markdown-dir
+- `tracker_dir`: <folder holding open task files, e.g. tasks/>
+- `tracker_closed_dir`: <optional; folder done tasks move to, e.g. tasks/closed/>
+- `tracker_id_prefix`: <optional; id scheme prefix, e.g. TASK; default ITEM>
+- `tracker_template`: <optional; path to a task-file template to seed new files>
+- `tracker_lint`: <optional; command to validate the folder after a write>
 
 ### tracker: none
 - (no tracker keys; every session is treated as ad-hoc — see `handoff.core.md` §7.1)

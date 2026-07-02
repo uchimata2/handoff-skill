@@ -17,7 +17,7 @@ and across agents.
 - `flows/` — the two on-demand flow files the spine loads per run: `create.md` (Create / Close)
   and `resume.md` (Resume / Status).
 - `config.example.md` — the per-project config schema.
-- `bindings/` — tracker bindings (`notion`, `local-markdown`) + how to write your own.
+- `bindings/` — tracker bindings (`notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
   optional Claude Code hook reminders (`claude.hooks.md`).
 - `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.

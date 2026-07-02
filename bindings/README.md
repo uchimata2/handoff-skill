@@ -9,6 +9,8 @@ tracker-agnostic; each file here implements the **binding contract** (see
 
 - `notion.md` — a Notion database / data source as the tracker.
 - `local-markdown.md` — a plain Markdown backlog file in the repo (zero dependencies).
+- `local-markdown-dir.md` — a folder of one-file-per-task Markdown files with frontmatter, "open"
+  vs "done" signalled by folder location (zero dependencies).
 
 ## The contract (summary)
 

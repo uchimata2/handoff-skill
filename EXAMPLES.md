@@ -123,6 +123,33 @@ required. Point `tracker` at `local-markdown`, set `tracker_file: BACKLOG.md`, a
 plain `## [ITEM-n] Title` sections (see [`bindings/local-markdown.md`](bindings/local-markdown.md)).
 Handoffs look identical to §2; only the binding behind "task docs" differs.
 
+### A project that keeps one file per task (`local-markdown-dir`)
+
+Some projects don't use a single backlog file — each task is its **own** Markdown file in a
+folder, with frontmatter, and "open" vs "done" is signalled by which folder the file is in. The
+[`local-markdown-dir`](bindings/local-markdown-dir.md) binding fits that shape with config only:
+
+```markdown
+- `tracker`: local-markdown-dir
+
+### tracker: local-markdown-dir
+- `tracker_dir`: tasks/
+- `tracker_closed_dir`: tasks/closed/
+- `tracker_id_prefix`: TASK
+```
+
+Now "task docs" for `TASK-014` is the file `tasks/TASK-014-*.md`: its requirements, plan,
+decisions, and log all live there and get updated **on the file** as work proceeds. Marking it
+done sets the `status` field and moves the file into `tasks/closed/`. The handoff is still
+pointer-only, exactly like §2 — it just references the id and its path:
+
+```markdown
+# Handoff
+
+**Resume:** TASK-014 (tasks/TASK-014-parser-rewrite.md) — continue implementation.
+**Next action:** finish step 3 of 5, then run the test suite.
+```
+
 ---
 
 ## 5. Resuming from a handoff

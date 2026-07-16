@@ -10,18 +10,15 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed four ways:
+This core is consumed four ways — **Create** (wrapping up / switching agents, §5), **Resume**
+(starting fresh, §6), **Status** (preview without changing anything, §6.5), and **Close** (wrap
+up leaving no handoff, §5 *Close*).
 
-- **Create** a handoff when wrapping up or switching agents (§5).
-- **Resume** from an existing handoff when starting fresh (§6).
-- **Status** — preview the current handoff without changing anything (§6.5).
-- **Close** — wrap up a session cleanly without leaving a handoff (§5, *Close*).
-
-This core is split for **progressive disclosure**: this file is the always-loaded **spine**
-(§0–§4, §7–§8 — configuration, the routing model, detection, session types, and the binding
-contract). Each mode's *steps* live in an on-demand **flow file** that §4 directs you to load:
-`flows/create.md` (Create / Close) and `flows/resume.md` (Resume / Status). A run loads the
-spine plus one flow, never both.
+It is split for **progressive disclosure**: this file is the always-loaded **spine** (§0–§4,
+§7–§8 — configuration, routing model, detection, session types, binding contract). Each mode's
+*steps* live in an on-demand **flow file** that §4 directs you to load — `flows/create.md`
+(Create / Close) or `flows/resume.md` (Resume / Status); a run loads the spine plus one flow,
+never both.
 
 ---
 

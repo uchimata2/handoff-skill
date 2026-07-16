@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Token-trimmed the `handoff.core.md` intro: the "consumed four ways" bulleted list is now a single
+  inline sentence and the progressive-disclosure paragraph was tightened, with no change to meaning
+  or structure. Ports a wording optimization already proven in a downstream install, shrinking the
+  always-loaded spine by a few lines.
+
 ## [0.4.0] - 2026-07-02
 
 A new tracker binding for projects that keep each work item as its own Markdown file in a

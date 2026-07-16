@@ -11,6 +11,7 @@ simple.
 - `tracker`: <binding from bindings/: notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
+- `reconcile_targets`: <optional; homes to sweep for staleness on Create/Close — paths, globs, or named stores like the tracker open dir, memory files, index docs; omit to sweep the homes the session touched. See `handoff.core.md` §3a>
 
 `memory` is not a project key — it's agent-specific, so each agent's stub supplies it
 (`memory: <agent> | none`). See `handoff.core.md` §0.

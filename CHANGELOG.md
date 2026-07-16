@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Reconcile (staleness sweep) as an explicit, backward-looking half of routing. The spine now names
+  it (`handoff.core.md` §3a): §3 routes each *new* discovery **forward** to its home; §3a requires a
+  **backward** pass that reconciles the durable homes the session touched — mark finished work done
+  and move it, close umbrella/review items whose parts are all resolved, correct superseded
+  project-doc / memory / index lines, and confirm every pointer still resolves — so a "clean" handoff
+  can't ship a finished task still marked open or a memory line a newer fact made false. Create and
+  Close both run the sweep before the handoff is written / the session closes (`flows/create.md`
+  *Process* step 2 and Close step 1), and the pre-write checklist gained a reconciliation group
+  alongside the secrets/privacy scan. A new **optional** `reconcile_targets` config key lets a project
+  point at the exact homes to sweep (fallback: the homes the session touched); documented in
+  `config.example.md`, `README.md`, and the §0 config table (#46).
+
 ### Changed
 - Explicit `resume` no longer re-asks for confirmation: when the invocation names the mode
   **explicitly and adjacent to the handoff keyword** ("resume", "resume handoff", "handoff resume"),

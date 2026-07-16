@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-17
+
+Reconciliation as an explicit, backward-looking half of routing — a staleness sweep on Create and
+Close so a "clean" handoff can't leave the tracker or memory contradicting the session's work —
+plus a friction cut (explicit `resume` no longer re-asks to confirm) and a token-trimmed spine intro.
+
 ### Added
 - Reconcile (staleness sweep) as an explicit, backward-looking half of routing. The spine now names
   it (`handoff.core.md` §3a): §3 routes each *new* discovery **forward** to its home; §3a requires a
@@ -183,7 +189,8 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/uchimata2/handoff-skill/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/uchimata2/handoff-skill/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/uchimata2/handoff-skill/compare/v0.1.0...v0.2.0

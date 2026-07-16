@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Explicit `resume` no longer re-asks for confirmation: when the invocation names the mode
+  **explicitly and adjacent to the handoff keyword** ("resume", "resume handoff", "handoff resume"),
+  the Resume flow now prints the summary and continues straight to §6.4, skipping the
+  Resume/Keep/Discard prompt (`flows/resume.md` §6.3). The prompt is retained for **inferred**
+  resumes (auto-trigger, paraphrase, or an incidental "resume" not next to the keyword), where the
+  user never actually asked to consume the handoff. Safe because the only pre-work state change is
+  archiving the handoff by rename, which is recoverable; the spine's ambiguity default (§4) is
+  unchanged (#47).
 - Token-trimmed the `handoff.core.md` intro: the "consumed four ways" bulleted list is now a single
   inline sentence and the progressive-disclosure paragraph was tightened, with no change to meaning
   or structure. Ports a wording optimization already proven in a downstream install, shrinking the

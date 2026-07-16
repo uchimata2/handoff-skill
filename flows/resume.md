@@ -25,7 +25,12 @@ Resuming from handoff: <title>
 
 ### 6.3 Confirm
 
-Ask: "Resume / Keep it for later / Discard?".
+If the user's invocation asked to resume **explicitly and adjacent to the handoff keyword**
+("resume", "resume handoff", "handoff resume"), skip this step and go straight to §6.4 — no
+prompt. The invocation *is* the consent, and the only pre-work state change is archiving the
+handoff by rename (§6.4), which is recoverable. The §6.2 summary above still prints, so the user
+sees what is being resumed. Otherwise (resume was inferred, not stated next to the keyword) ask:
+"Resume / Keep it for later / Discard?".
 
 - **Resume** → §6.4.
 - **Keep** → leave it untouched.

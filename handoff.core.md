@@ -40,6 +40,7 @@ Read these keys; if one is absent, use the fallback.
 | `tracker_*` | project config | Binding-specific settings the active binding reads | per binding |
 | `project_docs` | project config | Where durable project docs live (instructions, standards, guidelines) | Ask the user |
 | `language` | project config | Language for written artifacts | Match the task / source |
+| `reconcile_targets` | project config | Homes to sweep for staleness on Create / Close — paths, globs, or named stores (tracker folder, memory files, index docs) | The durable homes the session touched (§3a) |
 | `memory` | agent stub | The agent's persistent memory mechanism, or `none` | `none` — memory-bound items fall back to project docs |
 
 Everything tracker-specific (how to find / read / create / update a work item) lives in
@@ -149,6 +150,29 @@ memory; memory may still hold private lessons, but resuming must not require the
 **Reference, don't restate:** if another skill, doc, or tool already defines *how* to
 proceed, the handoff (and the core) **point** to that authoritative source rather than
 copying its steps — restating it risks drift and breaks single source of truth.
+
+### 3a. Reconcile — routing runs in both directions
+
+§3 routes each *new* discovery **forward** to its home. A session also **invalidates** facts that
+already have homes: a finished task still marked open, an umbrella item whose findings are now all
+resolved, a project-doc or memory line the session made false, a pointer that now targets a moved
+file. These are **undocumented regressions** — the mirror image of undocumented progress, and just
+as much a single-source-of-truth failure.
+
+So before writing (Create) or closing (Close) a handoff, **sweep the durable homes the session
+touched and reconcile them with the new state**:
+
+- **statuses** — mark finished work done and move it per the tracker binding; close umbrella /
+  review items whose parts are all resolved; leave genuinely-paused work open (don't close what's
+  only parked);
+- **superseded content** — correct or remove statements a later verified fact overrode, including
+  index / summary lines;
+- **pointers** — every reference (in the handoff, task docs, project docs) still resolves.
+
+The test: the tracker, the project docs, the memory, and the handoff must tell the **same, current**
+story. Where two disagree, the most recent verified fact wins — fix the others. If the project
+config declares `reconcile_targets` (§0), sweep those explicitly; otherwise sweep the homes the
+session touched.
 
 ### Redacting secrets
 

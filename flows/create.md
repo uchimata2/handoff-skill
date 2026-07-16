@@ -23,6 +23,12 @@ session continue — **without** copying anything that has a durable home.
 
    Do this *before* writing the handoff, so the handoff can simply point to the updated
    homes.
+
+   After routing new facts forward, **reconcile the existing homes** the session touched
+   (core §3a): mark finished tracker items done and move them per the binding; close umbrella /
+   review items whose parts are all resolved; correct superseded project-doc / memory / index
+   lines; and confirm every pointer still resolves. If the config sets `reconcile_targets`, sweep
+   exactly those. This backward pass is as required as the forward one.
 3. **Write the handoff file** (`handoff_file`) with only:
    - the work item to resume (pointer / id / reference) and the intended next action;
    - pure session-ephemeral state per §2 (what isn't, and shouldn't be, recorded elsewhere);
@@ -40,6 +46,13 @@ session continue — **without** copying anything that has a durable home.
    - [ ] No local environment-variable values or machine / OS specifics.
    - [ ] No contents copied from a local / private memory store — reference shared homes instead.
    - [ ] Ephemeral notes are generic, with no identifiers (§2).
+
+   **Reconciliation checklist (in addition to the secrets/privacy scan; see core §3a):**
+   - [ ] Every task the session finished is marked done and moved to the closed location.
+   - [ ] No open tracker item's status contradicts the session's work; umbrella items with all
+         parts resolved are closed.
+   - [ ] No project-doc, memory, or index/summary line contradicts a newer verified fact.
+   - [ ] Every pointer in the handoff resolves (no link to a moved or closed path).
 
    If the project ships a security policy with its own handoff checklist, apply that too
    (if present).
@@ -61,7 +74,9 @@ Use it when the session is finished, not being handed off.
 1. **Route every session discovery through §3** to its proper home — task docs / project
    docs / memory — updating statuses, decisions, results, and references (the *Process*
    step 2 above). The §3 step-1 exclusion gate still applies, so secrets and private data
-   never reach a durable home.
+   never reach a durable home. Then **reconcile the existing homes for staleness** exactly as
+   Create *Process* step 2 (core §3a) — Close must not leave the tracker or memory contradicting
+   the final state either.
 2. **Resolve any live handoff** at `handoff_file`. Since the session is being closed, not
    handed off, no live resume pointer may remain: archive it (rename to the
    `processed_<timestamp>` form, as §6.4). Its content already lives in durable homes — the

@@ -33,7 +33,8 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    `.agents/handoff-skill/`).
 2. **Create a config.** Copy `config.example.md` to a project location (e.g.
    `.agents/handoff/config.md`) and fill in `handoff_file`, `tracker`, `project_docs`,
-   and `language`.
+   and `language`. (Optional: `reconcile_targets` — the homes to sweep for staleness on
+   Create/Close; omit it to sweep the homes the session touched. See core §3a.)
 3. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its
    `tracker_*` keys — or `tracker: none`. Need a different tracker? See
    `bindings/README.md`.

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-08-09
+
+First fixes from real production use: `local-markdown-dir` no longer assumes the folder is the index
+(and every binding now states its assumptions), reconcile is surfaced as a first-class capability,
+and an explicit `/handoff <text>` records that text as the handoff's subject instead of executing it.
+
 ### Fixed
 - An explicit invocation with trailing text — e.g. `/handoff work on task T-012 full lifecycle` —
   is now unambiguously a **Create** whose *subject* is that text: the core records it as the intended
@@ -34,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `local-markdown-dir`) gained an **"Assumptions this binding makes"** section, and `bindings/README.md`
   makes that a required step when writing a binding; `EXAMPLES.md` and `config.example.md` show the
   central-index case (#52).
+
+## [0.5.0] - 2026-07-17
 
 Reconciliation as an explicit, backward-looking half of routing — a staleness sweep on Create and
 Close so a "clean" handoff can't leave the tracker or memory contradicting the session's work —
@@ -215,7 +223,8 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/uchimata2/handoff-skill/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/uchimata2/handoff-skill/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/uchimata2/handoff-skill/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/uchimata2/handoff-skill/compare/v0.2.0...v0.3.0

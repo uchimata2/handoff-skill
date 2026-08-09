@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: "Transfers working context between AI sessions — any work, not just coding — so a later session, another agent, or another person can continue seamlessly. Use it when wrapping up or pausing significant work, switching agents or sessions, before a context compaction, when a handoff file exists, or when the user says handoff, hand off, resume, continue later, pick up where we left off, take over, or save state — even if they don't name the skill explicitly."
+description: "Transfers working context between AI sessions — any work, not just coding — so a later session, another agent, or another person can continue seamlessly. Creating or closing a handoff also reconciles your durable homes — a backward sweep for stale tracker statuses, docs, and memory the session made out of date. Use it when wrapping up or pausing significant work, switching agents or sessions, before a context compaction, when a handoff file exists, or when the user says handoff, hand off, resume, continue later, pick up where we left off, take over, save state, reconcile stale statuses, or close out — even if they don't name the skill explicitly."
 ---
 
 > Template — copy to `.github/agents/handoff.agent.md` in your project and replace the

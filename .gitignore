@@ -12,6 +12,13 @@ dist/
 # Local context / internal notes — never publish (source tickets, plans, etc.)
 control/
 
+# This project uses its own skill. A `.handoff/` config binds a checkout to one
+# machine's install and points at that checkout's local notes, so it is per-clone
+# state, not shared source — the same reasoning as `.claude/*` below, and it holds
+# for any contributor who adopts the skill, not just the maintainer. The handoff
+# file itself lives under `control/`, already excluded above.
+.handoff/
+
 # The agent harness's own folder defaults to OUT, and a clone's share is named
 # in. Nothing here is written by this project: the harness creates files on its
 # own schedule, and what it stores includes directory sources resolved to

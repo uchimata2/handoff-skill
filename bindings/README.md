@@ -26,4 +26,9 @@ contract here — just implement the operations for your tracker.
    an HTTP API, or plain file edits.
 3. Call out any project-specific values (which database, which id scheme, which file) as
    things the project **config** supplies — keep the binding itself reusable.
-4. Set `tracker: <your-binding>` in the project config.
+4. **State the assumptions your binding makes** in an *"Assumptions this binding makes"* section —
+   what it treats as authoritative, whether anything must be kept in sync (e.g. a central index),
+   and how "done" is signalled. An adopter should be able to check them in ~30 seconds; a wrong
+   assumption is how a binding silently breaks a project's single source of truth while looking
+   compliant.
+5. Set `tracker: <your-binding>` in the project config.

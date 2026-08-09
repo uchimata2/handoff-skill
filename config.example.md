@@ -33,7 +33,7 @@ Include only the block matching your `tracker`.
 - `tracker_closed_dir`: <optional; folder done tasks move to, e.g. tasks/closed/>
 - `tracker_id_prefix`: <optional; id scheme prefix, e.g. TASK; default ITEM>
 - `tracker_template`: <optional; path to a task-file template to seed new files>
-- `tracker_lint`: <optional; command to validate the folder after a write>
+- `tracker_lint`: <optional; command that validates the folder **and any central index** after a write, exiting non-zero on drift — the invariant hook. If this project keeps a central index, declare how it's produced (generated vs maintained); see `bindings/local-markdown-dir.md` *Index topology*>
 
 ### tracker: none
 - (no tracker keys; every session is treated as ad-hoc — see `handoff.core.md` §7.1)

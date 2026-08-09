@@ -7,7 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2026-07-17
+### Changed
+- `local-markdown-dir` no longer presents "the folder is the index" as the only topology. It now
+  names two — **folder-as-index** and **a central index (generated or maintained)** — and spells out
+  that a declared central index is a durable home that must be kept in sync (regenerate if generated,
+  edit in the same pass if maintained), with `tracker_lint` as the enforcement hook that core §3a
+  reconcile relies on. Fixes a silent failure where a handoff could follow the binding correctly and
+  still leave a project's central index stale. Every binding (`notion`, `local-markdown`,
+  `local-markdown-dir`) gained an **"Assumptions this binding makes"** section, and `bindings/README.md`
+  makes that a required step when writing a binding; `EXAMPLES.md` and `config.example.md` show the
+  central-index case (#52).
 
 Reconciliation as an explicit, backward-looking half of routing — a staleness sweep on Create and
 Close so a "clean" handoff can't leave the tracker or memory contradicting the session's work —

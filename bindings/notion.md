@@ -38,3 +38,17 @@ a comment for a milestone. Attach a plan as a child page when the workflow calls
 - This binding is generic. Project-specific board conventions (id scheme, statuses,
   plan-attachment rules) belong in `tracker_workflow`, not here — that keeps the binding
   reusable across Notion-based projects.
+
+## Assumptions this binding makes
+
+Check these against the adopting project in ~30 seconds; if one is false, adapt via the project
+config (or `tracker_workflow`), not this binding:
+
+- The **Notion database** (`tracker_database`) is the authoritative store; the repo keeps no copy
+  of task content — references are page URLs, so resuming needs Notion access.
+- **Board conventions** (statuses, id scheme, plan attachment, comment etiquette) live in
+  `tracker_workflow`, not the binding.
+- **Notion assigns ids** (auto-increment) — never set one; read the assigned id back for the
+  reference.
+- Access is via the **Notion MCP server** (a live service + auth) — unlike the zero-dependency
+  file bindings, availability and permissions can affect find/read/create/update.

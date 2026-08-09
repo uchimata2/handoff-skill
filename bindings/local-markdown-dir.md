@@ -17,8 +17,9 @@ If your backlog is a single file of `## [ITEM-n]` sections, use
 - `tracker_id_prefix` — *optional*; the id scheme prefix (e.g. `TASK`). Default `ITEM`.
 - `tracker_template` — *optional*; path to a task-file template used to seed new files
   (frontmatter + section skeleton). If omitted, use the minimal shape below.
-- `tracker_lint` — *optional*; a command that validates the folder after a write (e.g. a board
-  linter). Run it after create/update and resolve any error it reports before finishing.
+- `tracker_lint` — *optional*; a command that validates the folder **and any central index** after a
+  write and exits non-zero on drift. Run it after create/update and resolve what it reports before
+  finishing. This is the binding's invariant-enforcement hook — see *Keeping the tracker consistent*.
 
 ## Item format
 
@@ -69,17 +70,69 @@ append decisions / results / notes to the log section, newest last; leave unrela
 intact. **When the item reaches the done status:** set the status field **and**, if
 `tracker_closed_dir` is set, **move the file there** — the folder is part of the status signal,
 so a done file left in the open folder is inconsistent (a linter will usually flag it). If
-`tracker_lint` is set, run it after writing.
+`tracker_lint` is set, run it after writing. If the project declares a **central index** (see
+*Index topology*), update it in the **same** write — regenerate it if it is generated, edit it in
+place if it is maintained — so the index never lags the files.
 
 **reference** — the item id (`<id>`) plus a repo-relative link to its file (in the open or
 closed folder), so anyone who pulls the repo can open it. Add a heading anchor if useful.
 
+## Index topology
+
+Projects use this binding in one of two shapes. **Know which one the adopting project is** before
+you write, because "done" means different work in each:
+
+- **(a) Folder-as-index** — there is *no* central list. The set of files, and each file's `status`,
+  are the single source of truth; a status change is one edit (plus a folder move when done).
+- **(b) A central index exists** — a task list / board / dashboard built from the files. That index
+  is a **durable home too**, so it must stay consistent with the files:
+  - if it is **generated** (built by a script from the files), never hand-edit it — **regenerate**
+    it after any write;
+  - if it is **maintained** (edited by hand), update it in the **same pass** as the status change.
+
+  Following this binding literally *without* accounting for a central index is the classic silent
+  failure: the file is correct, the index is stale, and nothing complains. If a central index
+  exists, the project config should say so — how it is produced (generated vs maintained) — and
+  point `tracker_lint` at a check.
+
+## Keeping the tracker consistent
+
+`tracker_lint` is the enforcement hook: a command that fails when the folder or the index has
+drifted, run after every create/update. It is what lets core **§3a reconcile** catch a stale index
+that a handoff would otherwise leave behind. A check typically verifies, and exits non-zero on any
+mismatch:
+
+- every file's `status` is in the project's allowed vocabulary;
+- every **done** file lives in `tracker_closed_dir` (and no open file does);
+- ids are unique across open + closed;
+- **the central index (if any) matches the files** — same ids, same statuses.
+
+```text
+# in project config
+- `tracker_lint`: scripts/check-tasks --strict      # exits non-zero on any drift above
+```
+
+If the check has no "fix" mode, treat a non-zero exit as work to finish by hand before the write is
+done — don't leave it failing.
+
 ## Notes
 
-- **The folder is the index.** There is no central list to keep in sync — the set of files, and
-  each file's `status`, are the single source of truth. If the project ships a board/lint script,
-  point `tracker_lint` at it so writes can't silently drift.
 - Status vocabulary is the project's own; a small set such as `backlog / in-progress / blocked /
   done` is plenty. The binding stays agnostic to the specific values.
 - Keep a task template (`tracker_template`) out of `tracker_dir` itself, or it will look like a
-  task; a common home is a sibling `_TEMPLATE.md` one level up.
+  task; a common home is a sibling `_TEMPLATE.md` one level up. A `_templates/` subfolder is also
+  fine as long as its files don't match the `<id>-*.md` pattern **find** scans for.
+
+## Assumptions this binding makes
+
+Check these against the adopting project in ~30 seconds; if one is false, the project config (not
+this binding) is where you adapt:
+
+- The **file set** is authoritative — *unless* the project declares a central index (see *Index
+  topology*), in which case the index is a durable home that must be kept in sync.
+- **Folder location is part of the status signal**: an item's open/done state is read from which
+  folder holds it (when `tracker_closed_dir` is set), not from the `status` field alone.
+- **One file per work item**, named `<id>-<slug>.md`; ids are unique across the open and closed
+  folders and never reused.
+- The binding owns only *where* things live and *when* a file moves; the frontmatter fields, status
+  vocabulary, and body sections are the project's own (via `tracker_template` / `tracker_lint`).

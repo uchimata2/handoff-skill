@@ -11,3 +11,15 @@ dist/
 
 # Local context / internal notes — never publish (source tickets, plans, etc.)
 control/
+
+# The agent harness's own folder defaults to OUT, and a clone's share is named
+# in. Nothing here is written by this project: the harness creates files on its
+# own schedule, and what it stores includes directory sources resolved to
+# absolute machine paths. Until this rule existed, .claude/settings.local.json
+# was excluded only by the maintainer's *global* gitignore — real protection on
+# one machine and none for any contributor, and invisible from inside the repo
+# because a clean `git status` is what both cases look like.
+# `.claude/*` rather than `.claude/`: an excluded directory cannot have its
+# contents re-included, so the exception below needs the contents excluded.
+.claude/*
+!.claude/settings.json

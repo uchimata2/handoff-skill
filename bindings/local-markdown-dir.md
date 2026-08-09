@@ -98,9 +98,9 @@ you write, because "done" means different work in each:
 ## Keeping the tracker consistent
 
 `tracker_lint` is the enforcement hook: a command that fails when the folder or the index has
-drifted, run after every create/update. It is what lets core **§3a reconcile** catch a stale index
-that a handoff would otherwise leave behind. A check typically verifies, and exits non-zero on any
-mismatch:
+drifted, run after every create/update. It gives core **§3a reconcile** a concrete check for the
+stale index a handoff would otherwise leave behind. A check typically verifies, and exits non-zero
+on any mismatch:
 
 - every file's `status` is in the project's allowed vocabulary;
 - every **done** file lives in `tracker_closed_dir` (and no open file does);

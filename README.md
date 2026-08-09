@@ -10,6 +10,11 @@ of truth. Every fact has exactly one home, and the handoff only *points* to thos
 It works in any project (development or not), with or without an external task tracker,
 and across agents.
 
+It runs in **both directions**. Routing new work forward is only half of it: creating or
+closing a handoff also **reconciles** your durable homes — a backward sweep for staleness so
+a finished task isn't left marked open, an umbrella item isn't left open once its parts are
+done, and no doc, memory, or index line is left contradicting a newer verified fact (core §3a).
+
 ## What's in here
 
 - `handoff.core.md` — the always-loaded **spine**: configuration, the routing model, detection,
@@ -76,7 +81,10 @@ The core sorts every piece of session information into one of four stores — ha
 task docs, project docs, agent memory — using a short routing procedure (core §2–§3). The
 handoff file holds only a pointer to what to resume plus pure session-ephemeral state;
 everything durable goes to its real home. Trackers are reached through a binding; memory
-is whatever your agent supplies (or none).
+is whatever your agent supplies (or none). Before a handoff is written or a session closed,
+the same procedure runs **backward** as well — a **reconcile** sweep (core §3a) that fixes the
+durable homes the session made stale, so the tracker, docs, memory, and handoff all tell the
+same current story.
 
 ## The routing model (visual)
 
@@ -108,7 +116,7 @@ write side, **Resume** (§6) and **Status** (§6.5) on the read side:
 flowchart LR
   subgraph "Create / Close"
     direction TB
-    c1["Route every discovery<br/>through §3 to its home"] --> c2["Create: write handoff —<br/>pointer + ephemeral state only"]
+    c1["Route each discovery through §3,<br/>then reconcile stale homes (§3a)"] --> c2["Create: write handoff —<br/>pointer + ephemeral state only"]
     c1 --> c3["Close: write no handoff —<br/>archive any live one"]
   end
   subgraph "Resume / Status"
@@ -119,7 +127,9 @@ flowchart LR
   end
 ```
 
-See [`EXAMPLES.md`](EXAMPLES.md) for annotated good-vs-bad handoffs that put this into practice.
+Both write-side modes reconcile first (core §3a): they don't just record new work, they fix the
+durable homes the session made stale before finishing. See [`EXAMPLES.md`](EXAMPLES.md) for
+annotated good-vs-bad handoffs that put this into practice.
 
 ## Degrades gracefully
 

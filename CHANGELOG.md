@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Surfaced **reconcile** (core §3a) as a first-class capability. It was reachable only by reading the
+  spine end-to-end; now `README.md` (intro, "How it works", and the modes diagram) and both agent
+  skill descriptions (`agents/claude.SKILL.md`, `agents/copilot.agent.md`) name the backward
+  staleness sweep that Create/Close run — so an adopter learns handoff doesn't only *record* new work,
+  it *fixes the durable homes the session made stale*. Decision recorded on a standalone
+  `/handoff reconcile` mode: worth doing, tracked as a separate follow-up (#60) (#56).
 - `local-markdown-dir` no longer presents "the folder is the index" as the only topology. It now
   names two — **folder-as-index** and **a central index (generated or maintained)** — and spells out
   that a declared central index is a durable home that must be kept in sync (regenerate if generated,

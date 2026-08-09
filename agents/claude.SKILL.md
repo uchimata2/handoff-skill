@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Transfers working context between AI sessions — any work, not just coding — so a later session, another agent, or another person can continue seamlessly. Use it when wrapping up or pausing significant work, switching agents or sessions, before a context compaction, when a handoff file exists, or when the user says handoff, hand off, resume, continue later, pick up where we left off, take over, save state, close out, or wrap up — even if they don't name the skill explicitly.
+description: Transfers working context between AI sessions — any work, not just coding — so a later session, another agent, or another person can continue seamlessly. Creating or closing a handoff also reconciles your durable homes — a backward sweep that fixes stale tracker statuses, project docs, memory, and index lines the session made out of date. Use it when wrapping up or pausing significant work, switching agents or sessions, before a context compaction, when a handoff file exists, or when the user says handoff, hand off, resume, continue later, pick up where we left off, take over, save state, reconcile or sweep stale statuses, close out, or wrap up — even if they don't name the skill explicitly.
 argument-hint: "What will the next session be used for?"
 ---
 
@@ -19,6 +19,9 @@ on-demand flow file for the chosen mode (`{{package}}/flows/create.md` or
   the "agent memory" store in the core's routing rules (§1–§3).
 - **Proactive reminders (optional):** wire Claude Code hooks to nudge you to handoff or close
   at session start and before a compaction — see `{{package}}/agents/claude.hooks.md`.
+- **Reconcile (built in):** Create and Close run the core's §3a backward sweep — fixing stale
+  tracker statuses, docs, memory, and index lines — before finishing, not only routing new work
+  forward. It runs automatically as part of those modes.
 
 This single skill exposes every mode: invoke it with `/handoff` (or let Claude trigger it
 from the description above), and the core's §4 detection picks Create (§5), Resume (§6),

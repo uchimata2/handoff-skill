@@ -222,6 +222,30 @@ A bare "wrap up" or "I'm done" is ambiguous between Create and Close — they le
 different end states (a resume pointer vs none), so **ask** ("leave a resume pointer
 (handoff), or close out with none?") rather than guess.
 
+### Explicit invocation and its argument
+
+Note whether the mode was **explicitly requested** — the handoff keyword, or a mode word
+(`create` / `resume` / `status` / `close`), appears in the command or arguments the user typed —
+or **inferred** from context. Flows may branch on this: an explicitly requested action may skip a
+confirmation that exists only to check an inferred intent (see `flows/resume.md` §6.3).
+
+When the skill is invoked **explicitly with trailing text** after the handoff keyword — e.g.
+`handoff <text>`:
+
+- if the text **is just a mode word** (`create` / `resume` / `status` / `close` with nothing else),
+  it selects that mode;
+- **otherwise the whole argument is the *subject of the handoff to create*** — a description of what
+  the **next** session should do. Choose **Create**, record that text as the intended next action /
+  resume target (the Create flow's write step), and **do not carry it out in the current session** —
+  an explicit `handoff <text>` asks you to *write a handoff about* that work, not to do it now;
+  writing the handoff is the task. (If the argument merely opens with `create`, that word just names
+  the mode — the remainder is the subject; a phrase that only *contains* `resume` / `status` /
+  `close` is still a subject, not a mode switch.) If the text names a work item, resolve it via the
+  binding's *find* / *reference* (§8) for the pointer, but start no work on it.
+
+This does not change the ambiguity rule above: when intent is genuinely ambiguous, still default to
+the non-mutating path.
+
 ### Load the relevant flow
 
 Each mode's steps live in an on-demand flow file. Once you've picked the mode, load **only**

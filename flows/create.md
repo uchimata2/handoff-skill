@@ -13,6 +13,11 @@ session continue — **without** copying anything that has a durable home.
 
 ### Process
 
+**If the skill was invoked with an argument** — text after the handoff keyword (e.g.
+`handoff <what the next session should do>`) — that text is the **subject of this handoff**, not a
+task to perform now (core §4). Record it as the intended next action in step 3; if it names a work
+item, resolve it via the binding's *find* / *reference* for the pointer, but start no work on it.
+
 1. If a handoff already exists at `handoff_file`, show its summary and ask: overwrite it
    with the current handoff, or keep the existing one and stop. If keep → stop.
 2. **Route every session discovery through §3 first.** This is the important step:
@@ -30,7 +35,8 @@ session continue — **without** copying anything that has a durable home.
    lines; and confirm every pointer still resolves. If the config sets `reconcile_targets`, sweep
    exactly those. This backward pass is as required as the forward one.
 3. **Write the handoff file** (`handoff_file`) with only:
-   - the work item to resume (pointer / id / reference) and the intended next action;
+   - the work item to resume (pointer / id / reference) and the intended next action — this is
+     where any **invocation argument** is recorded (see the note above), captured as the next action;
    - pure session-ephemeral state per §2 (what isn't, and shouldn't be, recorded elsewhere);
    - pointers to the relevant homes (task, plan, project docs) — by reference to a commonly
      accessible home, not copied, and never to agent-private memory (see *Portable references*).

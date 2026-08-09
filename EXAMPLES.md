@@ -150,6 +150,23 @@ pointer-only, exactly like §2 — it just references the id and its path:
 **Next action:** finish step 3 of 5, then run the test suite.
 ```
 
+**If this project also keeps a central index** — a generated `tasks/INDEX.md` or a board built from
+the files — that index is a durable home too, so it must not lag the files. Declare it and point
+`tracker_lint` at a consistency check:
+
+```markdown
+### tracker: local-markdown-dir
+- `tracker_dir`: tasks/
+- `tracker_closed_dir`: tasks/closed/
+- `tracker_id_prefix`: TASK
+- `tracker_lint`: scripts/check-tasks --strict    # fails if INDEX.md ≠ the files
+```
+
+Now marking `TASK-014` done updates its file **and** refreshes the index in the same pass
+(regenerate if it's generated, edit if it's maintained), and `tracker_lint` fails the write if the
+two ever disagree — the exact staleness core §3a reconcile is there to catch. See
+[`bindings/local-markdown-dir.md`](bindings/local-markdown-dir.md) *Index topology*.
+
 ---
 
 ## 5. Resuming from a handoff

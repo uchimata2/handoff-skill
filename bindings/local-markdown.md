@@ -41,3 +41,14 @@ anchor if your renderer supports it).
 
 - No code or domain assumptions — equally fine for research notes, writing tasks, or ops.
 - Statuses are free text; a small set such as `backlog / in-progress / done` is plenty.
+
+## Assumptions this binding makes
+
+Check these against the adopting project in ~30 seconds; if one is false, use a different binding
+or adapt via the project config:
+
+- The **single backlog file** (`tracker_file`) is authoritative — every item lives in it; there is
+  no per-item file, external store, or central index to keep in sync.
+- **One item per `## [ITEM-n]` level-2 heading**; ids are `ITEM-<n>` and are never reused.
+- **"Done" is a `status` value**, not a location — nothing moves on completion (if you keep tasks
+  as separate files and signal done by folder, use [`local-markdown-dir.md`](local-markdown-dir.md)).

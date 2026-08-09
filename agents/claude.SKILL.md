@@ -26,8 +26,14 @@ on-demand flow file for the chosen mode (`{{package}}/flows/create.md` or
 This single skill exposes every mode: invoke it with `/handoff` (or let Claude trigger it
 from the description above), and the core's §4 detection picks Create (§5), Resume (§6),
 Status (§6.5, a read-only preview — "show / preview / what's in the handoff"), or Close
-(§5 *Close*, wrap up with no handoff — "close out / done for good") from what you say. To
-expose distinct commands instead, add separate `handoff-create`, `handoff-resume`,
+(§5 *Close*, wrap up with no handoff — "close out / done for good") from what you say.
+
+**Anything you type after `/handoff` is the handoff's *subject*, not a command to run now.**
+`/handoff work on TASK-42 next` means *write a handoff whose next action is "work on TASK-42"* — the
+core records that text (§4) and stops; it does **not** start the task. Writing the handoff is the
+task. (A mode word — `/handoff resume` / `status` / `close` — still selects that mode.)
+
+To expose distinct commands instead, add separate `handoff-create`, `handoff-resume`,
 `handoff-status`, and `handoff-close` skills — each pointing straight at its flow file for an
 even leaner load (`handoff-create` / `handoff-close` → `{{package}}/flows/create.md`;
 `handoff-resume` / `handoff-status` → `{{package}}/flows/resume.md`) → `/handoff-create`,

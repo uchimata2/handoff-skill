@@ -12,6 +12,10 @@ the project config at `{{config}}` (handoff-file path, tracker, project docs). I
 detection then points you to the on-demand flow file for the chosen mode
 (`{{package}}/flows/create.md` or `{{package}}/flows/resume.md`); load just that one.
 
+Text you pass after the handoff keyword is the handoff's **subject**, not a command to run: the
+core records it as the intended next action (§4) and stops — it does not carry that work out now
+(a mode word like `resume` / `status` / `close` still selects that mode).
+
 - **memory:** `none` — GitHub Copilot CLI has no persistent memory store, so memory-bound
   items fall back to project docs per the core's rules.
 

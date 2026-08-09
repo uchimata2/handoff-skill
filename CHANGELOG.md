@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- An explicit invocation with trailing text — e.g. `/handoff work on task T-012 full lifecycle` —
+  is now unambiguously a **Create** whose *subject* is that text: the core records it as the intended
+  next action in the handoff file and does **not** perform the described work in the current session.
+  Previously the trailing text read like an instruction, so the agent sometimes did the task and never
+  wrote the handoff. Added a `handoff.core.md` §4 *"Explicit invocation and its argument"* subsection
+  (which also lands the explicit-vs-inferred note deferred from #47), taught `flows/create.md` to
+  record the argument as the next action, and made both agent stubs state at the entry point that the
+  argument is content to record, not a command to run. A leading mode word
+  (`resume` / `status` / `close`) still selects that mode (#62).
+
 ### Changed
 - Surfaced **reconcile** (core §3a) as a first-class capability. It was reachable only by reading the
   spine end-to-end; now `README.md` (intro, "How it works", and the modes diagram) and both agent

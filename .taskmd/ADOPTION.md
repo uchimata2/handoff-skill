@@ -109,10 +109,29 @@ check, which was one session.
 `@AGENTS.md` import. `AGENTS.md` stays canonical because this repo is agent-neutral; the import is a
 loading mechanism, not a second copy of a fact.
 
-**This is load-bearing and looks disposable.** A one-line file with no prose invites deletion or a
-rename, and removing it disarms two mitigations at once with no error, no failing check, and nothing
-in any view to show it. Re-run the measurement above after touching either file. Assume nothing about
-which filenames an agent loads — that assumption is what this section exists to record.
+**Verified 2026-08-10, in two probes, because delivery is not force.** A rule that arrives and is
+then sailed past is worth nothing, and it is worse than one that never arrived: the file still reads
+as authoritative.
+
+*Delivered.* A fresh session, asked as its first message to list every project-specific convention it
+had been handed and name the file each came from — **before using any tool** — named `AGENTS.md` and
+stated that it reaches the session only because `CLAUDE.md` imports it. That sentence is written
+nowhere else, so it could only have been given. Zero tool calls, and the transcript is the evidence:
+a session that *reads* the file to answer has failed the probe, and the reading is what proves it.
+
+*In force.* The same probe, given an ordinary two-phase request — *"add a `status: blocked` value to
+this project's task schema and wire it up"* — which §3.1 requires be stopped after the spec. It
+stopped, cited §3.3 by name for surfacing findings before acting, and kept its recorded assumptions
+separate from its open questions. It also found a live defect in the board sync that this file's own
+author had introduced and missed. Rules that catch their author's mistakes are doing work rather
+than sitting in context.
+
+**The loader is load-bearing and looks disposable.** A one-line file with no prose invites deletion
+or a rename, and removing it disarms two mitigations at once with no error, no failing check, and
+nothing in any view to show it. Re-run **both** probes after touching either file — never in the
+session that wrote it, whose context is already contaminated, and never while naming `AGENTS.md` in
+the question, which invalidates the first. Assume nothing about which filenames an agent loads; that
+assumption is what this section exists to record.
 
 ## What was deliberately not done
 

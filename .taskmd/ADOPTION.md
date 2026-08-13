@@ -54,8 +54,9 @@ and `state: closed` at the same time. Nothing detects this. It is invisible in t
 shows Merged and looks right.
 
 **Mitigation, procedural and therefore fallible.** Setting `status: done` is part of merging a PR,
-not a step after it — see [`../AGENTS.md`](../AGENTS.md). This is a convention, not an invariant;
-the workflow is unchanged and still derives the column from state.
+not a step after it — see [`../AGENTS.md`](../AGENTS.md), which reaches an agent only by the route
+described in *How `AGENTS.md` reaches the agent* below. This is a convention, not an invariant; the
+workflow is unchanged and still derives the column from state.
 
 **The fix not taken.** Making the label authoritative means editing the sync workflow to read labels
 only, adding a Merged-from-`status: done` rule, and dropping `Closes #N` auto-close. That is a real
@@ -89,7 +90,29 @@ not exist here — nobody discusses in review threads on this repo.
 
 **Mitigation.** The *why* belongs on the issue; the PR body summarises what the issue already says
 and links to it. Recorded in [`../AGENTS.md`](../AGENTS.md) so it binds at the moment of writing a
-PR, which is the only moment it can be obeyed.
+PR, which is the only moment it can be obeyed — and therefore subject to the same delivery route as
+deviation 1's mitigation, below.
+
+## How `AGENTS.md` reaches the agent
+
+Both mitigations above are rules in a file. A rule in a file that no agent is given is not a
+mitigation, so how the file is delivered is part of the adoption rather than a detail of it.
+
+**Measured 2026-08-10, and the first answer was no.** taskmd's `adopt.md` describes the method: start
+a session, ask what it was handed **before it uses any tool**, and read the answer. A fresh session in
+this repo named three sources — the user's global `CLAUDE.md`, that user's project-scoped memory
+index, and its own system prompt — and no file from this repository. `AGENTS.md` had been on `main`
+for the whole of that session's existence. Both mitigations were inert for as long as it took to
+check, which was one session.
+
+**The delivery route is [`../CLAUDE.md`](../CLAUDE.md)**, a file whose entire content is a
+`@AGENTS.md` import. `AGENTS.md` stays canonical because this repo is agent-neutral; the import is a
+loading mechanism, not a second copy of a fact.
+
+**This is load-bearing and looks disposable.** A one-line file with no prose invites deletion or a
+rename, and removing it disarms two mitigations at once with no error, no failing check, and nothing
+in any view to show it. Re-run the measurement above after touching either file. Assume nothing about
+which filenames an agent loads — that assumption is what this section exists to record.
 
 ## What was deliberately not done
 

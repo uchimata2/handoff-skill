@@ -3,6 +3,11 @@
 Short on purpose: this file is loaded on every turn, before it is clear that there is any task work.
 Anything that can wait to be looked up lives in the document it belongs to and is linked from here.
 
+It does not load itself. [`CLAUDE.md`](CLAUDE.md) is a one-line import that pulls this file in;
+without it nothing here reaches an agent, and two of the mitigations in
+[`.taskmd/ADOPTION.md`](.taskmd/ADOPTION.md) stop being true. Moving or renaming either file means
+re-running the check described there.
+
 ## Task tracking
 
 Tasks are **GitHub issues** in this repository, worked with the

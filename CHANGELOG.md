@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Resume now checks which of the handoff's claims still hold before acting on them.** A handoff
+  describes the workspace as it stood when a session stopped, and the world keeps moving after that
+  — another session, another person, or elapsed time can make a claim false **without anyone having
+  written it wrongly**. One adopter resumed a handoff stating a clean workspace with nothing pushed;
+  on arrival there were four uncommitted items and the work had been pushed. No write-side rule can
+  reach this, because the resume side is the only side that can know what arrived. `flows/resume.md`
+  §6.2 now tests the handoff's checkable ephemeral claims, reports what no longer holds, and lets it
+  change the plan — the workspace wins, and silently reconciling the difference is not an option. It
+  runs before §6.3, so a mismatch reaches the user while resuming is still a decision. **How** to
+  check is left to the environment: the core names no tool and keeps its domain-neutrality. Status
+  (§6.5) deliberately does **not** run it — it previews the document rather than acting on it (#86).
+
 ### Fixed
 - A **mode word followed by a qualifier** now has a correct reading in `handoff.core.md` §4
   *Explicit invocation and its argument*. The rule previously said that an argument which *is just a
@@ -24,19 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   only reconciled because the session happened to have touched them. The homes the session touched
   are now **always** swept, and declared targets are swept in addition. §0, `config.example.md` and
   `README.md` agree with it (#85).
-
-### Added
-- **Resume now checks which of the handoff's claims still hold before acting on them.** A handoff
-  describes the workspace as it stood when a session stopped, and the world keeps moving after that
-  — another session, another person, or elapsed time can make a claim false **without anyone having
-  written it wrongly**. One adopter resumed a handoff stating a clean workspace with nothing pushed;
-  on arrival there were four uncommitted items and the work had been pushed. No write-side rule can
-  reach this, because the resume side is the only side that can know what arrived. `flows/resume.md`
-  §6.2 now tests the handoff's checkable ephemeral claims, reports what no longer holds, and lets it
-  change the plan — the workspace wins, and silently reconciling the difference is not an option. It
-  runs before §6.3, so a mismatch reaches the user while resuming is still a decision. **How** to
-  check is left to the environment: the core names no tool and keeps its domain-neutrality. Status
-  (§6.5) deliberately does **not** run it — it previews the document rather than acting on it (#86).
 
 ### Documentation
 - `bindings/local-markdown-dir.md` and `config.example.md` now state that **an unset

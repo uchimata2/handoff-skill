@@ -41,10 +41,15 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    and `language`. (Optional: `reconcile_targets` — *extra* homes to sweep for staleness on
    Create/Close, on top of the ones the session touched: the index, lessons and tracker files
    that go stale silently. A floor, not a ceiling. See core §3a.)
-3. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its
+3. **Decide whether archives are tracked.** A consumed handoff is renamed alongside
+   `handoff_file`, never deleted (core §1), so that folder gains roughly one file per session.
+   Ignore them if you want them out of the way, or track them if you want the record — but choose
+   now, because the decision is cheap today and a large diff later. The skill will not prune them
+   for you: they are your records, and it is the wrong tool to be deleting them.
+4. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its
    `tracker_*` keys — or `tracker: none`. Need a different tracker? See
    `bindings/README.md`.
-4. **Wire your agent.** Copy the matching template from `agents/` into your agent's native
+5. **Wire your agent.** Copy the matching template from `agents/` into your agent's native
    location and replace `{{package}}` (this folder's path) and `{{config}}` (your config
    path):
    - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke it
@@ -61,7 +66,7 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).
-5. **Done.** Trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
+6. **Done.** Trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
 
 ## Build an installable artifact (optional)
 

@@ -1,6 +1,6 @@
 # taskmd adoption — adopted, with recorded deviations
 
-**Assessed 2026-08-09. Adopted 2026-08-10** on the maintainer's instruction. This project tracks work
+**Assessed 2026-08-09. Adopted 2026-08-14** on the maintainer's instruction. This project tracks work
 as GitHub Issues with a Projects board, so the binding is **GitHub Issues**, shipped with the taskmd
 plugin as `docs/bindings/github-issues.md`. The schema is [`config.md`](config.md). No local `tasks/`
 folder and no taskmd CLI are involved: the CLI is local-Markdown only, and nothing in it touches the
@@ -25,14 +25,14 @@ Assumptions are claims about **this project**, not about GitHub.
 | 5 | A GitHub cross-reference is not treated as a recorded link | **Holds** — see below |
 | 6 | Nothing about a task is recorded only in a PR, commit or branch | **Fails narrowly — deviation 4** |
 
-**Assumption 5, answered 2026-08-10.** This project groups related work by
+**Assumption 5, answered 2026-08-14.** This project groups related work by
 [milestone](https://github.com/uchimata2/handoff-skill/milestones)
 ([`../CONTRIBUTING.md`](../CONTRIBUTING.md)), not by mentioning one issue on another. The only `#N`
 convention is `Closes #N` in a PR's *Related issue* section, which is a closing link rather than a
 relation between two tasks. Nothing here has ever read an incidental cross-reference as a record, so
 moving `related` into the issue-body property block takes nothing away.
 
-**Assumption 6, answered 2026-08-10 — and it fails**, though not where the assessment expected. It
+**Assumption 6, answered 2026-08-14 — and it fails**, though not where the assessment expected. It
 expected review discussion to be the leak, because this project reviews through PRs. It is not: the
 last six merged PRs (#51, #58, #59, #61, #63, #64) carry **zero comments and zero reviews between
 them**, so there is no review thread for a decision to hide in. The leak is deviation 4.
@@ -98,7 +98,7 @@ deviation 1's mitigation, below.
 Both mitigations above are rules in a file. A rule in a file that no agent is given is not a
 mitigation, so how the file is delivered is part of the adoption rather than a detail of it.
 
-**Measured 2026-08-10, and the first answer was no.** taskmd's `adopt.md` describes the method: start
+**Measured 2026-08-14, and the first answer was no.** taskmd's `adopt.md` describes the method: start
 a session, ask what it was handed **before it uses any tool**, and read the answer. A fresh session in
 this repo named three sources — the user's global `CLAUDE.md`, that user's project-scoped memory
 index, and its own system prompt — and no file from this repository. `AGENTS.md` had been on `main`
@@ -109,7 +109,7 @@ check, which was one session.
 `@AGENTS.md` import. `AGENTS.md` stays canonical because this repo is agent-neutral; the import is a
 loading mechanism, not a second copy of a fact.
 
-**Verified 2026-08-10, in two probes, because delivery is not force.** A rule that arrives and is
+**Verified 2026-08-14, in two probes, because delivery is not force.** A rule that arrives and is
 then sailed past is worth nothing, and it is worse than one that never arrived: the file still reads
 as authoritative.
 

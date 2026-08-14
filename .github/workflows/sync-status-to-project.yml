@@ -2,7 +2,23 @@ name: Sync status labels to project board
 
 # Keeps the "Handoff — Roadmap" project board (Status field) in sync with the
 # `status:` labels on issues. Lifecycle: Needs spec -> Ready -> In progress -> Merged.
-# A closed issue maps to "Merged".
+# A closed issue maps to "Merged", and so does `status: done` on an open one.
+# `status: cancelled` is checked before state and overrides both.
+#
+# Every value in .taskmd/config.md's status vocabulary must have a branch below:
+#   backlog (= no status: label) -> left alone, deliberately off the board
+#   needs spec / ready / in progress -> its column
+#   done -> Merged
+#   cancelled -> removed from the board (it gets no column; see the branch for why)
+#   anything else -> the run FAILS, naming the label
+# The failure is the point. A value with no branch used to leave `opt` empty, which
+# skipped the update step by its own `if:` and exited 0 — a silent no-op that looked
+# exactly like a success while the card sat in the wrong column.
+#
+# One deliberate gap while closure stays state-driven: a CLOSED issue carrying an
+# unrecognised label still maps to Merged rather than failing, because `closed` is a
+# definite fact today and Merged is its defined outcome. #66 removes the state branch,
+# and the failure then covers that case too.
 #
 # Requires a repo secret ADD_TO_PROJECT_PAT: a classic PAT with the `project` scope
 # (the default GITHUB_TOKEN cannot write to a user-owned Projects v2 board).
@@ -35,7 +51,15 @@ jobs:
           set -euo pipefail
           labels="$LABELS_JSON"
           opt=""
-          if [ "$ISSUE_STATE" = "closed" ]; then
+          action="none"
+          if printf '%s' "$labels" | grep -q 'status: cancelled'; then
+            # Checked BEFORE state: cancelling work normally means closing the issue too,
+            # and `closed -> Merged` would otherwise swallow every cancellation and file
+            # abandoned work in the shipped column. Abandoned work leaves the board. It
+            # gets no column: adding one means replacing the Status option set wholesale,
+            # which re-keys every option id hard-coded here and in PROJECT_BOARD.md.
+            action="remove"
+          elif [ "$ISSUE_STATE" = "closed" ]; then
             opt="$OPT_MERGED"
           elif printf '%s' "$labels" | grep -q 'status: in progress'; then
             opt="$OPT_IN_PROGRESS"
@@ -43,11 +67,51 @@ jobs:
             opt="$OPT_READY"
           elif printf '%s' "$labels" | grep -q 'status: needs spec'; then
             opt="$OPT_NEEDS_SPEC"
+          elif printf '%s' "$labels" | grep -q 'status: done'; then
+            # Shipped, but the issue is still open — #66 makes this the normal path.
+            opt="$OPT_MERGED"
+          elif printf '%s' "$labels" | grep -q 'status: '; then
+            # A status: label this chain cannot express. Fail loudly — a silent no-op
+            # is indistinguishable from a success, which is the bug this branch fixes.
+            echo "::error::Unrecognised status label on issue #${{ github.event.issue.number }}: $labels. Every value in .taskmd/config.md's status vocabulary needs a branch in this workflow — add one, or the card silently stays where it was."
+            exit 1
           fi
+          # No status: label at all is NOT an error: on this repo that absence *is*
+          # `backlog`, deliberately off the board (.taskmd/ADOPTION.md deviation 2).
+          # It leaves action=none and the steps below are skipped.
+          if [ -n "$opt" ]; then action="set"; fi
           echo "opt=$opt" >> "$GITHUB_OUTPUT"
+          echo "action=$action" >> "$GITHUB_OUTPUT"
+          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>}"
+
+      - name: Remove issue from project
+        if: steps.target.outputs.action == 'remove'
+        run: |
+          set -euo pipefail
+          item_id=$(gh api graphql -f query='
+            query($content:ID!) {
+              node(id:$content) {
+                ... on Issue {
+                  projectItems(first:20) { nodes { id project { id } } }
+                }
+              }
+            }' -f content="$ISSUE_NODE_ID" \
+            --jq ".data.node.projectItems.nodes[] | select(.project.id == \"$PROJECT_ID\") | .id")
+
+          if [ -z "$item_id" ]; then
+            echo "Issue #${{ github.event.issue.number }} is not on the board — nothing to remove."
+            exit 0
+          fi
+
+          gh api graphql -f query='
+            mutation($project:ID!, $item:ID!) {
+              deleteProjectV2Item(input:{projectId:$project, itemId:$item}) { deletedItemId }
+            }' -f project="$PROJECT_ID" -f item="$item_id"
+
+          echo "Removed issue #${{ github.event.issue.number }} from the board (status: cancelled)."
 
       - name: Add issue to project and set Status
-        if: steps.target.outputs.opt != ''
+        if: steps.target.outputs.action == 'set'
         run: |
           set -euo pipefail
           item_id=$(gh api graphql -f query='

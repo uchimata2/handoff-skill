@@ -17,7 +17,16 @@ is driven by the issue's `status:` label and kept in sync automatically (see
 | **Needs spec**  | label `status: needs spec` | Scheduled; the approach isn't written.   |
 | **Ready**       | label `status: ready`      | Spec agreed; ready to implement.         |
 | **In progress** | label `status: in progress`| Being worked on now.                     |
-| **Merged**      | issue **closed**           | Shipped.                                 |
+| **Merged**      | issue **closed**, or label `status: done` | Shipped.                  |
+
+Two vocabulary values have no column, by decision:
+
+- **`status: cancelled`** — the card is **removed from the board**. Abandoned work was not shipped,
+  so Merged would misreport it, and giving it a column of its own means replacing the Status option
+  set *wholesale* (see [Lessons](#lessons-the-short-version)) — which re-keys every option id hard-coded
+  below and in the workflow, and clears Status on every existing card. Live-infrastructure risk for a
+  display improvement, the same trade `.taskmd/config.md` refused for `blocked`.
+- **`status: backlog`** — not a label at all; see below.
 
 Lower-priority issues with **no** `status:` label are intentionally kept **off** the board.
 They live in the [backlog filter](https://github.com/uchimata2/handoff-skill/issues?q=is%3Aopen+is%3Aissue+-label%3A%22status%3A+needs+spec%22+-label%3A%22status%3A+ready%22+-label%3A%22status%3A+in+progress%22)
@@ -29,11 +38,20 @@ linked from the board's README.
 runs on every issue `labeled`, `unlabeled`, `reopened`, or `closed` event. It:
 
 1. Reads the issue's current labels and open/closed state.
-2. Picks the target column — closed ⇒ **Merged**, otherwise the highest-priority `status:`
-   label present (**in progress** > **ready** > **needs spec**).
-3. Adds the issue to the board if it isn't there yet (idempotent), then sets its **Status** field.
+2. Picks the target action — closed ⇒ **Merged**, otherwise the highest-priority `status:`
+   label present (**in progress** > **ready** > **needs spec** > **done** ⇒ Merged), or
+   *remove from the board* for **cancelled**.
+3. Adds the issue to the board if it isn't there yet (idempotent), then sets its **Status** field —
+   or deletes its card, for cancelled.
 
 An open issue with no `status:` label is left where it is — the workflow never clears a column.
+
+**A `status:` label with no branch in the workflow fails the run**, naming the label. It used to be
+silent: an unrecognised value left the target empty, which skipped the update step by its own `if:`
+and exited 0, so the card stayed put and the run looked successful. Every value in
+[`.taskmd/config.md`](.taskmd/config.md)'s `status` vocabulary needs a branch — adding a value to that
+vocabulary without adding one here is now a visible failure rather than a card that quietly stops
+moving.
 
 ### Required secret
 

@@ -122,7 +122,7 @@ flowchart LR
   end
   subgraph "Resume / Status"
     direction TB
-    r1["Read handoff"] --> r2["Summarize"]
+    r1["Read handoff"] --> r2["Summarize + check<br/>which claims still hold"]
     r2 --> r3["Resume: open homes,<br/>archive, then continue"]
     r2 --> r4["Status: stop —<br/>no changes"]
   end

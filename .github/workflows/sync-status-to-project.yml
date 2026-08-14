@@ -1,27 +1,34 @@
 name: Sync status labels to project board
 
-# Keeps the "Handoff — Roadmap" project board (Status field) in sync with the
-# `status:` labels on issues. Lifecycle: Needs spec -> Ready -> In progress -> Merged.
-# A closed issue maps to "Merged", and so does `status: done` on an open one.
-# `status: cancelled` is checked before state and overrides both.
+# The `status:` label is the ONE stored fact about a task's lifecycle. This workflow
+# renders the two views of it: the board column, and the issue's open/closed state.
+# Nothing here ever reads state as a fact or writes a label — that direction is what
+# leaves a task contradicting itself with no view able to flag it.
 #
-# Every value in .taskmd/config.md's status vocabulary must have a branch below:
-#   backlog (= no status: label) -> left alone, deliberately off the board
-#   needs spec / ready / in progress -> its column
-#   done -> Merged
-#   cancelled -> removed from the board (it gets no column; see the branch for why)
+# Every value in .taskmd/config.md's status vocabulary has a branch below:
+#   backlog (= no status: label) -> nothing at all: off the board, state untouched
+#   needs spec / ready / in progress -> its column, and the issue OPEN
+#   done -> Merged, and the issue CLOSED
+#   cancelled -> removed from the board, and the issue CLOSED
 #   anything else -> the run FAILS, naming the label
-# The failure is the point. A value with no branch used to leave `opt` empty, which
-# skipped the update step by its own `if:` and exited 0 — a silent no-op that looked
-# exactly like a success while the card sat in the wrong column.
+# The failure is the point. A value with no branch used to leave the target empty,
+# which skipped the update step by its own `if:` and exited 0 — a silent no-op that
+# looked exactly like a success while the card sat in the wrong column.
 #
-# One deliberate gap while closure stays state-driven: a CLOSED issue carrying an
-# unrecognised label still maps to Merged rather than failing, because `closed` is a
-# definite fact today and Merged is its defined outcome. #66 removes the state branch,
-# and the failure then covers that case too.
+# Branches are ordered MOST TERMINAL FIRST, which is the tie-break when an issue
+# carries more than one `status:` label. Two labels is a defect either way (#94).
 #
-# Requires a repo secret ADD_TO_PROJECT_PAT: a classic PAT with the `project` scope
-# (the default GITHUB_TOKEN cannot write to a user-owned Projects v2 board).
+# Closing an issue by hand no longer moves anything: the next label event renders
+# state back from the label, reopening it if the label says the work is unfinished.
+# To close an issue, set `status: done` (or `cancelled`). PRs use `Refs #N`, never
+# `Closes #N` — that is GitHub closing an issue with no label write behind it.
+#
+# Two tokens, each doing what only it can:
+#   ADD_TO_PROJECT_PAT — a classic PAT with the `project` scope, for the board.
+#     GITHUB_TOKEN cannot write a user-owned Projects v2 board.
+#   GITHUB_TOKEN — for closing/reopening. The PAT's `project` scope does not grant
+#     issue writes, and events triggered by GITHUB_TOKEN start no new workflow run,
+#     so the state step cannot loop.
 
 on:
   issues:
@@ -29,6 +36,7 @@ on:
 
 permissions:
   contents: read
+  issues: write   # the workflow renders issue state from the label (close / reopen)
 
 jobs:
   sync:
@@ -52,24 +60,24 @@ jobs:
           labels="$LABELS_JSON"
           opt=""
           action="none"
+          want_state="none"
+          # Ordered MOST TERMINAL FIRST. With state no longer deciding anything, this
+          # order is the only tie-break left when an issue carries more than one
+          # `status:` label, and the advanced value should win. Two labels is still a
+          # defect — #94 makes it fail outright.
           if printf '%s' "$labels" | grep -q 'status: cancelled'; then
-            # Checked BEFORE state: cancelling work normally means closing the issue too,
-            # and `closed -> Merged` would otherwise swallow every cancellation and file
-            # abandoned work in the shipped column. Abandoned work leaves the board. It
-            # gets no column: adding one means replacing the Status option set wholesale,
-            # which re-keys every option id hard-coded here and in PROJECT_BOARD.md.
-            action="remove"
-          elif [ "$ISSUE_STATE" = "closed" ]; then
-            opt="$OPT_MERGED"
-          elif printf '%s' "$labels" | grep -q 'status: in progress'; then
-            opt="$OPT_IN_PROGRESS"
-          elif printf '%s' "$labels" | grep -q 'status: ready'; then
-            opt="$OPT_READY"
-          elif printf '%s' "$labels" | grep -q 'status: needs spec'; then
-            opt="$OPT_NEEDS_SPEC"
+            # Abandoned work leaves the board. It gets no column: adding one means
+            # replacing the Status option set wholesale, which re-keys every option id
+            # hard-coded here and in PROJECT_BOARD.md. Merged would misreport it.
+            action="remove"; want_state="closed"
           elif printf '%s' "$labels" | grep -q 'status: done'; then
-            # Shipped, but the issue is still open — #66 makes this the normal path.
-            opt="$OPT_MERGED"
+            opt="$OPT_MERGED"; want_state="closed"
+          elif printf '%s' "$labels" | grep -q 'status: in progress'; then
+            opt="$OPT_IN_PROGRESS"; want_state="open"
+          elif printf '%s' "$labels" | grep -q 'status: ready'; then
+            opt="$OPT_READY"; want_state="open"
+          elif printf '%s' "$labels" | grep -q 'status: needs spec'; then
+            opt="$OPT_NEEDS_SPEC"; want_state="open"
           elif printf '%s' "$labels" | grep -q 'status: '; then
             # A status: label this chain cannot express. Fail loudly — a silent no-op
             # is indistinguishable from a success, which is the bug this branch fixes.
@@ -78,11 +86,23 @@ jobs:
           fi
           # No status: label at all is NOT an error: on this repo that absence *is*
           # `backlog`, deliberately off the board (.taskmd/ADOPTION.md deviation 2).
-          # It leaves action=none and the steps below are skipped.
+          # It leaves action=none / want_state=none and every step below is skipped —
+          # including the state step, so `backlog` never closes or reopens anything.
           if [ -n "$opt" ]; then action="set"; fi
+
+          # State is RENDERED from the label, never read as a fact. Only act on a real
+          # difference, so a run triggered by our own close/reopen is a no-op.
+          state_action="none"
+          if [ "$want_state" = "closed" ] && [ "$ISSUE_STATE" != "closed" ]; then
+            state_action="close"
+          elif [ "$want_state" = "open" ] && [ "$ISSUE_STATE" = "closed" ]; then
+            state_action="reopen"
+          fi
+
           echo "opt=$opt" >> "$GITHUB_OUTPUT"
           echo "action=$action" >> "$GITHUB_OUTPUT"
-          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>}"
+          echo "state_action=$state_action" >> "$GITHUB_OUTPUT"
+          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>} state=$ISSUE_STATE want=$want_state state_action=$state_action"
 
       - name: Remove issue from project
         if: steps.target.outputs.action == 'remove'
@@ -132,3 +152,27 @@ jobs:
                -f field="$STATUS_FIELD_ID" -f opt="${{ steps.target.outputs.opt }}"
 
           echo "Set issue #${{ github.event.issue.number }} -> option ${{ steps.target.outputs.opt }}"
+
+      - name: Render issue state from the label
+        if: steps.target.outputs.state_action != 'none'
+        # GITHUB_TOKEN, not the PAT, and deliberately so:
+        #   1. ADD_TO_PROJECT_PAT is documented as a classic PAT with the `project`
+        #      scope, which does not grant issue writes. `gh issue close` under it
+        #      would fail the first time anyone set `status: done`.
+        #   2. GitHub does not start workflow runs from events triggered by
+        #      GITHUB_TOKEN, so closing here produces no second run. Under a PAT it
+        #      would produce one (idempotent, but noise).
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          case "${{ steps.target.outputs.state_action }}" in
+            close)
+              gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
+              echo "Closed #${{ github.event.issue.number }} — its label says the work is finished."
+              ;;
+            reopen)
+              gh issue reopen "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
+              echo "Reopened #${{ github.event.issue.number }} — its label says the work is not finished."
+              ;;
+          esac

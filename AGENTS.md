@@ -15,20 +15,23 @@ Tasks are **GitHub issues** in this repository, worked with the
 [`.taskmd/config.md`](.taskmd/config.md).
 
 **Read [`.taskmd/ADOPTION.md`](.taskmd/ADOPTION.md) before writing to a task.** This project departs
-from that binding in four recorded ways, and one of them — closure being driven by issue state
-rather than by the `status:` label — is the kind of mismatch that leaves a task quietly contradicting
-itself. The board is [Handoff — Roadmap](https://github.com/users/uchimata2/projects/1); see
+from that binding in two recorded ways — down from four, since closure is now driven by the `status:`
+label and the PR template no longer asks for the *why*. The board is
+[Handoff — Roadmap](https://github.com/users/uchimata2/projects/1); see
 [`PROJECT_BOARD.md`](PROJECT_BOARD.md). Never drag a card by hand.
 
-Two consequences of the deviations, stated here because they bind at the moment of acting:
+Three things that bind at the moment of acting:
 
-- **Setting `status: done` is part of merging a PR, not a step after it.** `Closes #N` plus a
-  squash-merge closes the issue without touching the label, and nothing detects the disagreement.
+- **Setting `status: done` is how you close an issue.** The label is the one stored fact; the issue's
+  open/closed state and its board column are both rendered from it. So the last step of merging a PR
+  is labelling its issue — not because a convention asks, but because nothing else closes it. PRs
+  carry `Refs #N`, never `Closes #N`.
 - **An issue with no `status:` label is not unclassified — it is `backlog`,** and deliberately off
   the board. Do not add a label to "fix" it.
-- **The *why* goes on the issue, not in the PR.** The PR template asks "what changed and why", and a
-  reason that lives only there — or only in a commit message — is invisible to every task operation.
-  Put the reasoning on the issue and let the PR body summarise it.
+- **The *why* goes on the issue, not in the PR.** A reason that lives only in a PR body or a commit
+  message is invisible to every task operation. The PR template now asks only "what changed" and
+  points the *why* at the issue, so this is the template's default rather than a discipline — but a
+  commit message is still an easy place to strand a decision.
 
 ## Conduct
 
@@ -58,8 +61,8 @@ task's record false; a dropped observation is lost the moment the session ends.
 ## Working conventions
 
 - Work the backlog **one-by-one, specify-then-implement**: agree the spec on the issue, then
-  implement on a branch off `main` — not off another feature branch — then PR with `Closes #N`,
-  squash-merge, `--delete-branch`.
+  implement on a branch off `main` — not off another feature branch — then PR with `Refs #N`,
+  squash-merge, `--delete-branch`, then set `status: done`, which closes the issue.
 - Update `CHANGELOG.md` `[Unreleased]` with every change.
 - CI ([`.github/workflows/checks.yml`](.github/workflows/checks.yml)) must be green: portability
   guard and offline link check.

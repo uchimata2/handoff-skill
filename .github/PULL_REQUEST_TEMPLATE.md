@@ -1,10 +1,13 @@
 <!-- Thanks for contributing! Keep PRs small and focused. See CONTRIBUTING.md. -->
 
-## What changed and why
+## What changed
+<!-- What this PR does. The *why* belongs on the issue — put it there and link, don't restate it
+     here: nothing that reads tasks ever reads a PR body. -->
 
 
 ## Related issue
-<!-- e.g. Closes #12 -->
+<!-- e.g. Refs #12 — NOT `Closes #12`. Closing is done by setting `status: done` on the issue,
+     which closes it and moves its card. See CONTRIBUTING.md. -->
 
 
 ## Checklist

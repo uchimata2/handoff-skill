@@ -45,11 +45,16 @@ Work is tracked in [GitHub issues](https://github.com/uchimata2/handoff-skill/is
 - **Specify before you build (for non-trivial changes):** agree the approach on the issue first —
   a short spec in the issue or a comment — and get a maintainer's sign-off. This keeps single
   source of truth (the issue holds the spec) and avoids rework. Small fixes can go straight to a PR.
-- **Then implement:** branch, make the change (Markdown only), and open a PR that closes the issue
-  (`Closes #123`). Keep it small and focused, and add a `CHANGELOG.md` entry under *Unreleased*.
+- **Then implement:** branch, make the change (Markdown only), and open a PR that references the
+  issue (`Refs #123` — **not** `Closes #123`; see below). Keep it small and focused, and add a
+  `CHANGELOG.md` entry under *Unreleased* if the change touches the shipped package.
+- **Then close it by labelling it:** set `status: done` on the issue. That is what closes it — the
+  label is the one stored fact, and both the issue's open/closed state and its board column are
+  rendered from it. `Closes #N` is avoided precisely because it makes GitHub close the issue with no
+  label write behind it, leaving the label saying one thing and the state another.
 
 Status labels track where an issue is: `status: needs spec` → `status: ready` →
-`status: in progress` → merged. They also drive a visual kanban — the
+`status: in progress` → `status: done`. They also drive a visual kanban — the
 [Handoff — Roadmap board](https://github.com/users/uchimata2/projects/1). Cards move
 automatically when you change a label, so there's no board to manage by hand; see
 [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for how the sync works.
@@ -67,8 +72,10 @@ only the bottom PR and the upper PRs' issues still open.
   so as each PR merges GitHub retargets the next one's base to `main` — wait for that retarget before
   merging the next.
 - **Verify the default branch before calling it shipped.** After the stack lands, confirm `main`
-  actually contains every PR's commits and that each linked issue auto-closed — a PR only closes its
-  issue when it merges into the **default** branch (`main`).
+  actually contains every PR's commits, and that each issue carries `status: done` and is closed.
+  Nothing closes an issue for you: a merged PR leaves its issue **open** until the label is set. That
+  is deliberate — an issue still open after its PR merged is a visible reminder, where an issue
+  closed with a stale label is invisible.
 
 ## Adding a tracker binding
 

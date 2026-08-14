@@ -33,7 +33,8 @@ item, resolve it via the binding's *find* / *reference* for the pointer, but sta
    (core §3a): mark finished tracker items done and move them per the binding; close umbrella /
    review items whose parts are all resolved; correct superseded project-doc / memory / index
    lines; and confirm every pointer still resolves. If the config sets `reconcile_targets`, sweep
-   exactly those. This backward pass is as required as the forward one.
+   those **in addition** — a declared list is a floor, not a ceiling (core §3a). This backward pass
+   is as required as the forward one.
 3. **Write the handoff file** (`handoff_file`) with only:
    - the work item to resume (pointer / id / reference) and the intended next action — this is
      where any **invocation argument** is recorded (see the note above), captured as the next action;

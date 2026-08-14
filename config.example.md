@@ -11,7 +11,7 @@ simple.
 - `tracker`: <binding from bindings/: notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
-- `reconcile_targets`: <optional; homes to sweep for staleness on Create/Close — paths, globs, or named stores like the tracker open dir, memory files, index docs; omit to sweep the homes the session touched. See `handoff.core.md` §3a>
+- `reconcile_targets`: <optional; **extra** homes to sweep for staleness on Create/Close, on top of the ones the session touched — paths, globs, or named stores. Good ones are the homes that go stale **silently**: your index, your lessons / decision files, your tracker. A floor, not a ceiling — omitting it still sweeps the homes the session touched. See `handoff.core.md` §3a>
 
 `memory` is not a project key — it's agent-specific, so each agent's stub supplies it
 (`memory: <agent> | none`). See `handoff.core.md` §0.
@@ -30,7 +30,7 @@ Include only the block matching your `tracker`.
 
 ### tracker: local-markdown-dir
 - `tracker_dir`: <folder holding open task files, e.g. tasks/>
-- `tracker_closed_dir`: <optional; folder done tasks move to, e.g. tasks/closed/>
+- `tracker_closed_dir`: <optional; folder done tasks move to, e.g. tasks/closed/; if unset, nothing moves on closure and done tasks stay in `tracker_dir`>
 - `tracker_id_prefix`: <optional; id scheme prefix, e.g. TASK; default ITEM>
 - `tracker_template`: <optional; path to a task-file template to seed new files>
 - `tracker_lint`: <optional; command that validates the folder **and any central index** after a write, exiting non-zero on drift — the invariant hook. If this project keeps a central index, declare how it's produced (generated vs maintained); see `bindings/local-markdown-dir.md` *Index topology*>

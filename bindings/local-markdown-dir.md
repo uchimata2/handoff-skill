@@ -45,7 +45,9 @@ What "done" looks like.
 
 Ids are `<prefix><n>` (`<prefix>` from `tracker_id_prefix`, default `ITEM`), `<n>` incrementing
 from the highest existing id across **both** the open and closed folders — never reuse a number.
-Match the zero-padding width of the existing ids.
+Match the zero-padding width of the existing ids. **If `tracker_closed_dir` is unset there is no
+second folder**: nothing moves on closure, done files stay where they are, and the open folder alone
+carries every id.
 
 The **exact** frontmatter fields, their allowed values, and the body sections are the project's
 convention — defined by `tracker_template` and any `tracker_lint` script, not by this binding.
@@ -103,7 +105,8 @@ stale index a handoff would otherwise leave behind. A check typically verifies, 
 on any mismatch:
 
 - every file's `status` is in the project's allowed vocabulary;
-- every **done** file lives in `tracker_closed_dir` (and no open file does);
+- every **done** file lives in `tracker_closed_dir` (and no open file does) — skip this one when
+  `tracker_closed_dir` is unset, since then nothing moves on closure;
 - ids are unique across open + closed;
 - **the central index (if any) matches the files** — same ids, same statuses.
 

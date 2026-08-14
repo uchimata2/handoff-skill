@@ -40,7 +40,7 @@ Read these keys; if one is absent, use the fallback.
 | `tracker_*` | project config | Binding-specific settings the active binding reads | per binding |
 | `project_docs` | project config | Where durable project docs live (instructions, standards, guidelines) | Ask the user |
 | `language` | project config | Language for written artifacts | Match the task / source |
-| `reconcile_targets` | project config | Homes to sweep for staleness on Create / Close — paths, globs, or named stores (tracker folder, memory files, index docs) | The durable homes the session touched (§3a) |
+| `reconcile_targets` | project config | **Extra** homes to sweep for staleness on Create / Close, on top of the ones the session touched — paths, globs, or named stores (tracker folder, memory files, index docs). A floor, not a ceiling (§3a) | No extras — sweep the durable homes the session touched (§3a) |
 | `memory` | agent stub | The agent's persistent memory mechanism, or `none` | `none` — memory-bound items fall back to project docs |
 
 Everything tracker-specific (how to find / read / create / update a work item) lives in
@@ -170,9 +170,13 @@ touched and reconcile them with the new state**:
 - **pointers** — every reference (in the handoff, task docs, project docs) still resolves.
 
 The test: the tracker, the project docs, the memory, and the handoff must tell the **same, current**
-story. Where two disagree, the most recent verified fact wins — fix the others. If the project
-config declares `reconcile_targets` (§0), sweep those explicitly; otherwise sweep the homes the
-session touched.
+story. Where two disagree, the most recent verified fact wins — fix the others.
+
+**Always sweep the durable homes the session touched.** If the project config declares
+`reconcile_targets` (§0), sweep those **as well** — a declared list is a **floor, never a ceiling**.
+It exists to catch the homes that go stale *silently*, the ones a session invalidates without opening:
+the index, the decisions or lessons file, the tracker. Being hand-kept, it is subject to exactly the
+staleness it prevents, so it may never be read as the full extent of the sweep.
 
 ### Redacting secrets
 

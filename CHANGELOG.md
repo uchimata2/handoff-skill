@@ -17,6 +17,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   *subject* after `create`, and a *qualifier on this run* after `resume` / `status` / `close`. Adds
   one narrow ask-don't-guess case, for a qualifier that plainly describes work for a later session.
   Reported by an adopter (#78).
+- **`reconcile_targets` is a floor, not a ceiling.** Core §3a said to sweep the declared targets
+  *"otherwise"* the homes the session touched, and `flows/create.md` said to sweep **"exactly
+  those"** — an either/or in which declaring the key silently *narrowed* the §3a sweep. An adopter
+  closing four tasks left statements stale in two documents outside its declared list; they were
+  only reconciled because the session happened to have touched them. The homes the session touched
+  are now **always** swept, and declared targets are swept in addition. §0, `config.example.md` and
+  `README.md` agree with it (#85).
+
+### Documentation
+- `bindings/local-markdown-dir.md` and `config.example.md` now state that **an unset
+  `tracker_closed_dir` means nothing moves on closure** — done tasks stay in `tracker_dir`. The
+  id-increment rule reads "across both the open and closed folders", which invited the reader to
+  think closure needs a second folder; the `tracker_lint` invariant that every done file lives in
+  the closed folder now says to skip it when the key is unset (#57).
+- `config.example.md` and `README.md` now say what a **good** `reconcile_targets` looks like — the
+  homes that go stale silently: the index, the lessons / decision files, the tracker (#57).
 
 ## [0.6.0] - 2026-08-09
 

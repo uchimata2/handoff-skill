@@ -181,6 +181,16 @@ Continue implementation — finish step 3 of 5 (extract the parser), then run th
 Heads-up: uncommitted edits and a preview process are left over from the previous session.
 ```
 
+The last line is a **claim about the workspace**, and claims decay. Before offering the choice, the
+agent checks the ones that are checkable (core §6.2): the leftover edits are there, but the preview
+process is not — a second session closed it after this handoff was written. Nobody wrote it wrongly;
+it simply stopped being true in transit. So the summary carries a line the writing session could not
+have known to add:
+
+```text
+Changed since it was written: the preview process is no longer running.
+```
+
 Then: **Resume / Keep it for later / Discard?** On resume, the agent opens the pointed-to homes
 (the item in `BACKLOG.md`, plus project docs), archives the handoff so it isn't resumed twice,
 and starts the work. The substance comes from the item — the handoff just said *where* to look.
@@ -190,8 +200,8 @@ and starts the work. The substance comes from the item — the handoff just said
 ## 6. Previewing a handoff (status)
 
 Status answers *"what's in the handoff?"* without consuming it (core §6.5). It reads **only**
-the handoff file — no archive, no opening the pointed-to homes, no tracker calls — and prints a
-short, distinct preview:
+the handoff file — no archive, no opening the pointed-to homes, no tracker calls, and no arrival
+check — and prints a short, distinct preview:
 
 ```text
 Handoff present: ITEM-7

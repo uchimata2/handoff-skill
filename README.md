@@ -19,8 +19,8 @@ done, and no doc, memory, or index line is left contradicting a newer verified f
 
 - `handoff.core.md` — the always-loaded **spine**: configuration, the routing model, detection,
   session types, and the binding contract.
-- `flows/` — the two on-demand flow files the spine loads per run: `create.md` (Create / Close)
-  and `resume.md` (Resume / Status).
+- `flows/` — the three on-demand flow files the spine loads per run: `create.md` (Create / Close),
+  `resume.md` (Resume / Status), and `check.md` (Check — validate the config).
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
@@ -40,7 +40,9 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    `.agents/handoff/config.md`) and fill in `handoff_file`, `tracker`, `project_docs`,
    and `language`. (Optional: `reconcile_targets` — *extra* homes to sweep for staleness on
    Create/Close, on top of the ones the session touched: the index, lessons and tracker files
-   that go stale silently. A floor, not a ceiling. See core §3a.)
+   that go stale silently. A floor, not a ceiling. See core §3a.) Nothing parses this file, so
+   once it's filled in, ask the skill to **check** it (core §9) — it reports what doesn't resolve
+   before a session depends on it.
 3. **Decide whether archives are tracked.** A consumed handoff is renamed alongside
    `handoff_file`, never deleted (core §1), so that folder gains roughly one file per session.
    Ignore them if you want them out of the way, or track them if you want the record — but choose
@@ -55,12 +57,13 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke it
      with `/handoff` (or just say "handoff" / "resume" — its description lets Claude trigger it
      automatically), and the core's §4 detection routes to Create (§5), Resume (§6), Status
-     (§6.5, a read-only preview), or Close (§5 *Close*, wrap up with no handoff), then loads the
-     matching on-demand flow file (`flows/create.md` or `flows/resume.md`).
+     (§6.5, a read-only preview), Close (§5 *Close*, wrap up with no handoff), or Check (§9,
+     validate the config), then loads the matching on-demand flow file (`flows/create.md`,
+     `flows/resume.md`, or `flows/check.md`).
      - *Optional — distinct commands:* to expose each mode as its own command, add separate
-       skills `.claude/skills/handoff-{create,resume,status,close}/SKILL.md` (each pointing
+       skills `.claude/skills/handoff-{create,resume,status,close,check}/SKILL.md` (each pointing
        straight at its flow file) → `/handoff-create`, `/handoff-resume`, `/handoff-status`,
-       `/handoff-close`.
+       `/handoff-close`, `/handoff-check`.
      - *Optional — reminders:* wire Claude Code hooks to nudge you to handoff/close at session
        start or before a compaction — see [`agents/claude.hooks.md`](agents/claude.hooks.md).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.

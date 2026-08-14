@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **A config can now be checked before a session depends on it.** A config is prose read by an
+  agent, not a parsed file, so nothing rejects a misspelled key, a `tracker` naming a binding that
+  does not exist, or a `handoff_file` under a folder nobody created. All three surfaced **during** a
+  run — usually a Create, at the moment the user was trying to stop work. A fifth mode, **Check**,
+  moves that failure to setup: it resolves every §0 key, confirms the active binding file exists,
+  confirms `handoff_file` can be written, runs the binding's invariant hook if it declares one, and
+  reports the lot at once rather than stopping at the first failure. It fixes nothing and opens
+  nothing — the paths to the homes are the question, not what is in them. The steps live in a new
+  on-demand `flows/check.md` (§9) rather than in the always-loaded spine, because the concern bites
+  once, at setup, and an adopter needs to validate a config **without** starting a real run. **How**
+  to look is left to the environment, as with the §6.2 arrival check: the flow says a file exists, a
+  folder accepts a write, a declared command exits clean, and names no tool for any of it. §0 gains
+  the matching rule that a key which is present but will not resolve is a config defect to report,
+  not something to work around mid-run (#53).
 - **The package now states what happens to archived handoffs, and commits to never deleting one.**
   Consuming or discarding a handoff renames it and always has, so archives accumulate at roughly one
   per session — one adopting repository held 47 of them, and 49 two days later — but nothing in the

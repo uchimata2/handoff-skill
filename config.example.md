@@ -5,6 +5,12 @@ Copy this file to your project's config location and fill it in. The handoff cor
 keys. It's plain Markdown read by the agent — no parser — so keep the `key: value` shape
 simple.
 
+**Nothing validates this file automatically**, which is why a typo here surfaces mid-session rather
+than now. When you have filled it in, ask the skill to **check** it (`handoff.core.md` §9,
+`flows/check.md`): it resolves every key, confirms your binding exists and your handoff file can be
+written, runs your binding's invariant hook if it declares one, and reports what it could not
+resolve — at setup, instead of in the middle of a run.
+
 ## Core keys (project config)
 
 - `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md; consumed handoffs are renamed alongside it (`processed_` / `discarded_`) and never deleted, so this folder accumulates about one file per session — decide whether it is tracked>

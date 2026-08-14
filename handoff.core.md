@@ -10,15 +10,16 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed four ways — **Create** (wrapping up / switching agents, §5), **Resume**
-(starting fresh, §6), **Status** (preview without changing anything, §6.5), and **Close** (wrap
-up leaving no handoff, §5 *Close*).
+This core is consumed five ways — **Create** (wrapping up / switching agents, §5), **Resume**
+(starting fresh, §6), **Status** (preview without changing anything, §6.5), **Close** (wrap
+up leaving no handoff, §5 *Close*), and **Check** (validate the config before a session depends
+on it, §9).
 
 It is split for **progressive disclosure**: this file is the always-loaded **spine** (§0–§4,
 §7–§8 — configuration, routing model, detection, session types, binding contract). Each mode's
 *steps* live in an on-demand **flow file** that §4 directs you to load — `flows/create.md`
-(Create / Close) or `flows/resume.md` (Resume / Status); a run loads the spine plus one flow,
-never both.
+(Create / Close), `flows/resume.md` (Resume / Status), or `flows/check.md` (Check); a run loads
+the spine plus one flow, never more.
 
 ---
 
@@ -45,6 +46,12 @@ Read these keys; if one is absent, use the fallback.
 
 Everything tracker-specific (how to find / read / create / update a work item) lives in
 the active binding (§8), configured by its `tracker_*` keys.
+
+**A key that is present but will not resolve is a config defect, not a session problem** — a
+`tracker` naming a binding that isn't there, a `handoff_file` under a folder that was never created.
+The fallbacks above cover an *absent* key; they do not cover a wrong one. Say what failed and point
+at **Check** (§9), which reports the lot at once. Working around it silently mid-run leaves the
+project with the same broken config and one more session that quietly coped.
 
 ---
 
@@ -236,9 +243,10 @@ Activate when the user says things like: "handoff", "hand off", "pass this to",
 "take over". Read-only previews also activate: "what's in the handoff", "show /
 preview / summarize the handoff", "status of the handoff", "is there a handoff".
 Closing words also activate: "handoff close", "close out", "wrap up — no handoff",
-"done for good".
+"done for good". So do setup words: "check the config", "validate the config", "handoff
+doctor", "is my config right", "did I set this up correctly".
 
-### Create, resume, status, or close
+### Create, resume, status, close, or check
 
 - User is **wrapping up**, stopping, or switching agents → **Create** (§5).
 - User is **starting fresh** and a handoff exists at `handoff_file` → **Resume** (§6).
@@ -246,6 +254,9 @@ Closing words also activate: "handoff close", "close out", "wrap up — no hando
   summarize / status) → **Status** (§6.5) — read-only, no changes.
 - User wants to **wrap up without leaving a handoff** (explicit "close out", "done for
   good", "wrap up — no handoff") → **Close** (§5, *Close*).
+- User wants to know whether the **config itself** is sound — at setup, after editing it, or
+  because a run just failed on it → **Check** (§9). Read-only, like Status, but over the config
+  rather than over the handoff.
 
 When intent is ambiguous between resume and status, default to the **non-mutating**
 path: summarize (Status), then offer to resume — never archive on a maybe.
@@ -257,33 +268,33 @@ different end states (a resume pointer vs none), so **ask** ("leave a resume poi
 ### Explicit invocation and its argument
 
 Note whether the mode was **explicitly requested** — the handoff keyword, or a mode word
-(`create` / `resume` / `status` / `close`), appears in the command or arguments the user typed —
-or **inferred** from context. Flows may branch on this: an explicitly requested action may skip a
+(`create` / `resume` / `status` / `close` / `check`), appears in the command or arguments the user
+typed — or **inferred** from context. Flows may branch on this: an explicitly requested action may skip a
 confirmation that exists only to check an inferred intent (see `flows/resume.md` §6.3).
 
 When the skill is invoked **explicitly with trailing text** after the handoff keyword — e.g.
 `handoff <text>`:
 
-**A leading mode word always selects the mode** (`create` / `resume` / `status` / `close`), whether
-it stands alone or is followed by more text. What the remainder means depends on which mode it
-opened:
+**A leading mode word always selects the mode** (`create` / `resume` / `status` / `close` /
+`check`), whether it stands alone or is followed by more text. What the remainder means depends on
+which mode it opened:
 
 - **after `create`** — the remainder is the **subject of the handoff to write**: a description of
   what the **next** session should do. Record it as the intended next action / resume target (the
   Create flow's write step) and **do not carry it out now** — `handoff create <text>` asks you to
   *write a handoff about* that work, not to do it. If the text names a work item, resolve it via the
   binding's *find* / *reference* (§8) for the pointer, but start no work on it;
-- **after `resume`, `status` or `close`** — the remainder is a **qualifier on this run**: how to do
-  the thing, not a thing to do later. `resume, full lifecycle` is Resume, carried out with that
-  instruction. These modes act on a handoff that already exists, so there is no subject for them to
-  take;
+- **after `resume`, `status`, `close` or `check`** — the remainder is a **qualifier on this run**:
+  how to do the thing, not a thing to do later. `resume, full lifecycle` is Resume, carried out with
+  that instruction. These modes act on something that already exists — a handoff, or the config — so
+  there is no subject for them to take;
 - **with no leading mode word** — the whole argument is the subject, and the mode is **Create**, as
-  above. A phrase that merely *mentions* `resume` / `status` / `close` part-way through is a subject,
-  not a mode switch.
+  above. A phrase that merely *mentions* `resume` / `status` / `close` / `check` part-way through is
+  a subject, not a mode switch.
 
-**Ask when the qualifier is really a subject.** Text after `resume` / `status` / `close` that plainly
-describes work for a **later** session rather than guidance for this one — `resume the migration next
-week` — fits both readings. Ask which was meant rather than guessing; this is the same rule the
+**Ask when the qualifier is really a subject.** Text after `resume` / `status` / `close` / `check`
+that plainly describes work for a **later** session rather than guidance for this one — `resume the
+migration next week` — fits both readings. Ask which was meant rather than guessing; this is the same rule the
 ambiguity paragraph above applies to a bare *wrap up*, and it is the only case in this section that
 warrants a question.
 
@@ -300,11 +311,12 @@ path through the rule.*
 ### Load the relevant flow
 
 Each mode's steps live in an on-demand flow file. Once you've picked the mode, load **only**
-that file and follow it — a Create/Close run never needs the Resume/Status flow, and
-vice-versa:
+that file and follow it — a Create/Close run never needs the Resume/Status flow, and no mode
+needs more than one:
 
 - **Create** (§5) or **Close** (§5, *Close*) → `flows/create.md`.
 - **Resume** (§6) or **Status** (§6.5) → `flows/resume.md`.
+- **Check** (§9) → `flows/check.md`.
 
 The routing model (§1–§3), session types (§7), and binding contract (§8) stay here in the
 spine; the flow files reference them, never restate them.

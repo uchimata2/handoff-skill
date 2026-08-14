@@ -54,7 +54,9 @@ Work is tracked in [GitHub issues](https://github.com/uchimata2/handoff-skill/is
   label write behind it, leaving the label saying one thing and the state another.
 
 Status labels track where an issue is: `status: needs spec` → `status: ready` →
-`status: in progress` → `status: done`. They also drive a visual kanban — the
+`status: in progress` → `status: done`. Move between them with **one combined edit** —
+`gh issue edit N --add-label "status: ready" --remove-label "status: needs spec"` — because the field
+holds one value and the sync fails the run if it finds two. They also drive a visual kanban — the
 [Handoff — Roadmap board](https://github.com/users/uchimata2/projects/1). Cards move
 automatically when you change a label, so there's no board to manage by hand; see
 [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for how the sync works.

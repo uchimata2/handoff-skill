@@ -28,6 +28,9 @@ Three things that bind at the moment of acting:
   carry `Refs #N`, never `Closes #N`.
 - **An issue with no `status:` label is not unclassified — it is `backlog`,** and deliberately off
   the board. Do not add a label to "fix" it.
+- **Change a status with one combined `gh issue edit --add-label … --remove-label …`.** The field
+  holds one value and two labels fail the sync; a combined edit removes before it adds, two separate
+  calls leave a window where both exist.
 - **The *why* goes on the issue, not in the PR.** A reason that lives only in a PR body or a commit
   message is invisible to every task operation. The PR template now asks only "what changed" and
   points the *why* at the issue, so this is the template's default rather than a discipline — but a

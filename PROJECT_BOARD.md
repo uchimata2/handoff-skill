@@ -29,6 +29,14 @@ state — are rendered from the label, never the other way round. So:
 - **PRs use `Refs #N`, never `Closes #N`.** `Closes` makes GitHub close the issue with no label write
   behind it, which is exactly the contradiction this design removes. A merged PR therefore leaves its
   issue open until someone sets the label — visible, and harmless.
+- **Change a status with one combined edit**, never two calls:
+
+  ```sh
+  gh issue edit N --add-label "status: ready" --remove-label "status: needs spec"
+  ```
+
+  The field holds **one** value, and the workflow fails the run when it finds two. A combined edit
+  removes before it adds, so it never leaves a two-label window; two separate calls do.
 
 Two vocabulary values have no column, by decision:
 

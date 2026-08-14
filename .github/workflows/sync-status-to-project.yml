@@ -5,6 +5,15 @@ name: Sync status labels to project board
 # Nothing here ever reads state as a fact or writes a label — that direction is what
 # leaves a task contradicting itself with no view able to flag it.
 #
+# Labels and state are both read LIVE, never from the event payload. A payload is a
+# snapshot from when the event fired, and one edit fires two events whose snapshots
+# disagree; acting on one of them raced, failed, and produced the right answer by
+# accident (#96).
+#
+# The status field is single-valued: more than one `status:` label FAILS the run.
+# Relabel with one combined `gh issue edit --add-label X --remove-label Y`, which
+# removes before it adds; two separate calls leave a real two-label window.
+#
 # Every value in .taskmd/config.md's status vocabulary has a branch below:
 #   backlog (= no status: label) -> nothing at all: off the board, state untouched
 #   needs spec / ready / in progress -> its column, and the issue OPEN
@@ -63,9 +72,30 @@ jobs:
     steps:
       - name: Determine target status option
         id: target
+        # GITHUB_TOKEN: the PAT is `project`-scoped and cannot read issues.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          labels="$LABELS_JSON"
+
+          # Read labels LIVE, not from the event payload. One edit fires two events
+          # whose payloads are snapshots taken at different moments — for a single
+          # `gh issue edit --add-label X --remove-label Y` they read as "no status
+          # label" and "X", and only the second is the answer. Deciding from the live
+          # set makes both runs compute the same, final result, and means a transient
+          # that has already resolved cannot fail the count below.
+          labels=$(gh issue view "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" --json labels --jq '[.labels[].name] | @json')
+
+          # The status field is single-valued. More than one label is not a fact, and
+          # resolving it by precedence would put a finished task in the wrong column
+          # behind a green run — the failure mode #72 removed for unknown values.
+          status_count=$(printf '%s' "$labels" | grep -o 'status: [a-z ]*' | wc -l)
+          if [ "$status_count" -gt 1 ]; then
+            echo "::error::Issue #${{ github.event.issue.number }} carries $status_count status: labels — $labels. The status field holds one value. Fix with a single combined edit: gh issue edit N --add-label 'status: X' --remove-label 'status: Y' (which removes before it adds), not two separate calls."
+            exit 1
+          fi
+
           opt=""
           action="none"
           want_state="none"
@@ -104,7 +134,7 @@ jobs:
           echo "opt=$opt" >> "$GITHUB_OUTPUT"
           echo "action=$action" >> "$GITHUB_OUTPUT"
           echo "want_state=$want_state" >> "$GITHUB_OUTPUT"
-          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>} payload_state=$ISSUE_STATE want=$want_state"
+          echo "Issue #${{ github.event.issue.number }}: labels=$labels action=$action opt=${opt:-<none>} want=$want_state"
 
       - name: Remove issue from project
         if: steps.target.outputs.action == 'remove'

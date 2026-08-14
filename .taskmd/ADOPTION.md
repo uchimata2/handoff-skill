@@ -63,10 +63,15 @@ in `AGENTS.md`, fallible by construction. Nothing now depends on anyone remember
 whose issue was never labelled leaves that issue **open**, which is visible, where the old failure
 was an issue closed with a stale label, which was not.
 
-**What is left of it.** Two things worth keeping in view. Closing an issue by hand is now *reverted*
-on the next label event, which is correct but will surprise anyone who does it. And #69's 17 closed
-issues carrying open-status labels are live contradictions: any label event on one reopens it until
-that sweep runs.
+**The backlog of contradictions it left is cleared** (#69, 2026-08-14). Every one of the 40 closed
+issues now carries `status: done`; none carries an open value, and none carries none. The check that
+found the problem — *closed issues still carrying an open `status:` label* — returns **0**, from 17.
+No issue was reopened by the sweep and no workflow run failed. That also retired the hazard this
+paragraph used to warn about, which was live for exactly the hours between the two merges.
+
+**What is left of it.** Closing an issue by hand is now *reverted* on the next label event. That is
+correct — state is a rendering — but it will surprise anyone who does it, because nothing warns you
+at the moment of clicking.
 
 ## Deviation 2 — `backlog` is the absence of a label
 

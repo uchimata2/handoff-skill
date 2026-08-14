@@ -9,7 +9,7 @@ tasks_dir: tasks           # UNUSED on this binding — see "The tasks folder" b
 # ------------------------------------------------------------------ status
 status_field: status
 open_statuses: [backlog, needs spec, ready, in progress]
-blocked_status: none       # this project has no "held up" status value
+blocked_status: none       # decided, not overlooked — see "The blocked status" below
 
 # ------------------------------------------------------------- deliverables
 deliverables_field: none   # outputs are not tracked per task here
@@ -89,7 +89,26 @@ lives in the property block, which is the one thing this binding absorbs.
 | blocked_by | dependency | blocks |
 | related | soft | - |
 
+## The blocked status
+
+There is no `blocked` value, and that is a decision rather than an omission (#81).
+
+Blocking is recorded as `blocked_by` edges, which GitHub carries natively as issue dependencies.
+Adding a status value would buy one thing — stopped work not looking active on the board — and would
+cost a new **Blocked** column, which means replacing the Status single-select option set *wholesale*:
+that can re-key the four option IDs hard-coded in
+[`../PROJECT_BOARD.md`](../PROJECT_BOARD.md) and in the sync workflow, and clear the Status on every
+existing card. Live-infrastructure risk for a display improvement.
+
+`blocked_status` also does nothing here even when set. Its only job is to let `check` report a task
+claiming blocked with no dependency recorded, and `check` never runs on this project — the CLI is
+local-Markdown only and there is no `tasks_dir`.
+
 ## Ordering
 
 `priority` orders the work, best first, in the vocabulary order above. Effort is not estimated here,
 so a task sorts on blocked-last, then priority, then id.
+
+**Blocked-last keys off open `blocked_by` edges, not off any status value.** It works with
+`blocked_status: none` and always has. Reading it the other way is what once made the missing
+`blocked` value look like a defect.

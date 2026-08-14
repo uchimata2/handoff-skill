@@ -80,6 +80,8 @@ For each store — what belongs in it, and what must stay out.
     **restated workflow / how-tos, including a procedure another skill or doc already
     defines** (point to the authoritative source, don't describe it);
   - **secrets and user-/machine-private data** — the §3 step-1 exclusion gate;
+  - **derived values** — counts, durations, sizes, rates — carried as a *value* instead of as a
+    pointer to what produces them (the §3 rule *Derived values decay*);
   - **pointers that resolve only to agent-private memory**, and anything that lives only there.
 
 **Task docs**
@@ -133,7 +135,8 @@ both get written, at their own altitude).
    - else cross-project or agent / user-private → **agent memory** if available; else
      project docs if shareable; else drop.
 4. **Pure session-ephemeral state**, recorded nowhere else and not worth keeping? →
-   **handoff file**.
+   **handoff file**. A **measured or counted value is not this**, however much it looks like it —
+   see *Derived values decay*, below.
 5. **Otherwise it already has a home** → in the handoff, only **point** to it — provided
    that home is reachable by whoever resumes (see *Portable references*). If the sole home
    is agent-private memory, the handoff can't rely on it: promote the shareable facet to
@@ -141,6 +144,22 @@ both get written, at their own altitude).
 
 The golden rule: **the handoff points, it does not store.** If a fact has any durable
 home (task, project, memory), it goes there; the handoff at most references it.
+
+**Derived values decay, and they do not look like it.** A count, a duration, a size, a rate is
+**produced** by something, and prose hides that: "the full run takes 7–11 minutes" reads as a
+description, not as one measurement taken once. The next session has nothing to distrust, so the
+value is copied forward untested — and a number is wrong silently, where a stale sentence usually
+reads as odd. Route it by how hard it is to produce again:
+
+- **cheap to re-derive** (a count, a status, anything a command or a view answers) → point at **what
+  answers it**, never at the value. One line, and it cannot go stale;
+- **expensive to re-derive** (a measurement, a timing) → it is a **finding**: send it to its durable
+  home per steps 2–3, recorded with **what was measured and when**, then point there;
+- **neither** → leave it out.
+
+This is the golden rule applied where it is least obvious. A value feels like state rather than like
+a fact with a home, so it passes step 4 honestly and lands in the handoff, where nothing will ever
+check it again.
 
 **Portable references:** a handoff is cross-agent, cross-user, and cross-session — every
 pointer in it must resolve for anyone who pulls the repo (the tracker / work item, repo

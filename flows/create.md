@@ -61,6 +61,13 @@ item, resolve it via the binding's *find* / *reference* for the pointer, but sta
    - [ ] No project-doc, memory, or index/summary line contradicts a newer verified fact.
    - [ ] Every pointer in the handoff resolves (no link to a moved or closed path).
 
+   **Derived-value check (see core §3, *Derived values decay*):**
+   - [ ] No count, duration, size, or rate is carried as a **value** where a pointer to what
+         produces it would do.
+   - [ ] Any measurement that had to be kept lives in a durable home, with what was measured and
+         when — not only in the handoff.
+   - [ ] Nothing was copied forward from a previous handoff without being re-checked.
+
    If the project ships a security policy with its own handoff checklist, apply that too
    (if present).
 5. If the session was **ad-hoc** (no task), follow §7.1 first (offer to create a tracked

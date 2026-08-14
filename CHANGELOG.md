@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **The package now states what happens to archived handoffs, and commits to never deleting one.**
+  Consuming or discarding a handoff renames it and always has, so archives accumulate at roughly one
+  per session — one adopting repository held 47 of them, and 49 two days later — but nothing in the
+  package had ever said so, or said whose job it was to prune them. The answer is that it is **not**
+  the skill's: they are the project's records and the only evidence of what a past session claimed,
+  the only moment the skill could act on them is mid-Create or mid-Resume, and a tool invoked to
+  preserve context should not be deleting files. No retention config key, for the same reason —
+  a key is only worth its bytes if the skill acts on it. `handoff.core.md` §1 gains the two rules an
+  agent needs (**only `handoff_file` is live**; an archive is never a resume candidate), and
+  `README.md` and `config.example.md` put the tracked-or-ignored decision where an adopter actually
+  makes it (#84).
 - **Derived values are now routed by how hard they are to produce again.** A count, a duration, a
   size or a rate is *produced* by something, and prose hides that: "the full run takes 7–11 minutes"
   reads as a description rather than as one measurement taken once, so the next session has nothing

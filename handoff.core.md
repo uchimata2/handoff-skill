@@ -60,6 +60,15 @@ Every piece of information from a session belongs to exactly one of these. A sin
 | **Project docs** | Project-wide conventions, standards, workflow, tooling, onboarding | Durable; shared by all agents and people on the project |
 | **Agent memory** | Durable, cross-project, agent/user-private preferences & reusable lessons | Durable; private to one agent; **optional** |
 
+**Archived handoffs are records, not handoffs.** Consuming or discarding one **renames** it
+(`processed_` / `discarded_`, §6.4) rather than deleting it, so archives accumulate — roughly one per
+session, which is expected and not a leak. Two rules follow:
+
+- **Only `handoff_file` is live.** An archive is never a resume candidate, however recent.
+- **Never delete one.** They are the project's records and the only evidence of what a past session
+  claimed. Pruning is the project's decision, taken outside a handoff run; whether they are tracked
+  at all is a setup choice made where `handoff_file` is chosen.
+
 ---
 
 ## 2. Routing matrix

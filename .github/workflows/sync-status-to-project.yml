@@ -38,6 +38,14 @@ permissions:
   contents: read
   issues: write   # the workflow renders issue state from the label (close / reopen)
 
+# One label edit can fire two events (`--add-label X --remove-label Y` fires `labeled`
+# AND `unlabeled`). Serialise them per issue so the second run reads the state the
+# first one left, rather than racing it. Never cancel: each event carries a distinct
+# label set and the later one holds the final truth.
+concurrency:
+  group: sync-status-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -90,19 +98,13 @@ jobs:
           # including the state step, so `backlog` never closes or reopens anything.
           if [ -n "$opt" ]; then action="set"; fi
 
-          # State is RENDERED from the label, never read as a fact. Only act on a real
-          # difference, so a run triggered by our own close/reopen is a no-op.
-          state_action="none"
-          if [ "$want_state" = "closed" ] && [ "$ISSUE_STATE" != "closed" ]; then
-            state_action="close"
-          elif [ "$want_state" = "open" ] && [ "$ISSUE_STATE" = "closed" ]; then
-            state_action="reopen"
-          fi
-
+          # State is RENDERED from the label, never read as a fact. Which state is
+          # WANTED is decided here from labels; whether to act is decided in the state
+          # step, against a live read — the payload's state is stale (see that step).
           echo "opt=$opt" >> "$GITHUB_OUTPUT"
           echo "action=$action" >> "$GITHUB_OUTPUT"
-          echo "state_action=$state_action" >> "$GITHUB_OUTPUT"
-          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>} state=$ISSUE_STATE want=$want_state state_action=$state_action"
+          echo "want_state=$want_state" >> "$GITHUB_OUTPUT"
+          echo "Issue #${{ github.event.issue.number }}: action=$action opt=${opt:-<none>} payload_state=$ISSUE_STATE want=$want_state"
 
       - name: Remove issue from project
         if: steps.target.outputs.action == 'remove'
@@ -154,7 +156,7 @@ jobs:
           echo "Set issue #${{ github.event.issue.number }} -> option ${{ steps.target.outputs.opt }}"
 
       - name: Render issue state from the label
-        if: steps.target.outputs.state_action != 'none'
+        if: steps.target.outputs.want_state != 'none'
         # GITHUB_TOKEN, not the PAT, and deliberately so:
         #   1. ADD_TO_PROJECT_PAT is documented as a classic PAT with the `project`
         #      scope, which does not grant issue writes. `gh issue close` under it
@@ -166,13 +168,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          case "${{ steps.target.outputs.state_action }}" in
-            close)
-              gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
-              echo "Closed #${{ github.event.issue.number }} — its label says the work is finished."
-              ;;
-            reopen)
-              gh issue reopen "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
-              echo "Reopened #${{ github.event.issue.number }} — its label says the work is not finished."
-              ;;
-          esac
+          want="${{ steps.target.outputs.want_state }}"
+
+          # Read state LIVE, not from the event payload. `gh issue edit --add-label X
+          # --remove-label Y` fires two events whose payloads BOTH say the old state,
+          # so both runs would decide to act, one would win, and the other would fail
+          # with "Could not close the issue" having achieved the right outcome. The
+          # payload describes the issue as it was when the event fired; by now a
+          # sibling run may have changed it. `concurrency` above serialises the pair
+          # so this read happens after the other run has finished, not beside it.
+          current=$(gh issue view "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" --json state --jq '.state' | tr '[:upper:]' '[:lower:]')
+
+          if [ "$current" = "$want" ]; then
+            echo "#${{ github.event.issue.number }} is already $want — nothing to do."
+            exit 0
+          fi
+
+          if [ "$want" = "closed" ]; then
+            gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
+            echo "Closed #${{ github.event.issue.number }} — its label says the work is finished."
+          else
+            gh issue reopen "${{ github.event.issue.number }}" --repo "${{ github.repository }}"
+            echo "Reopened #${{ github.event.issue.number }} — its label says the work is not finished."
+          fi

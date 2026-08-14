@@ -232,19 +232,38 @@ confirmation that exists only to check an inferred intent (see `flows/resume.md`
 When the skill is invoked **explicitly with trailing text** after the handoff keyword — e.g.
 `handoff <text>`:
 
-- if the text **is just a mode word** (`create` / `resume` / `status` / `close` with nothing else),
-  it selects that mode;
-- **otherwise the whole argument is the *subject of the handoff to create*** — a description of what
-  the **next** session should do. Choose **Create**, record that text as the intended next action /
-  resume target (the Create flow's write step), and **do not carry it out in the current session** —
-  an explicit `handoff <text>` asks you to *write a handoff about* that work, not to do it now;
-  writing the handoff is the task. (If the argument merely opens with `create`, that word just names
-  the mode — the remainder is the subject; a phrase that only *contains* `resume` / `status` /
-  `close` is still a subject, not a mode switch.) If the text names a work item, resolve it via the
-  binding's *find* / *reference* (§8) for the pointer, but start no work on it.
+**A leading mode word always selects the mode** (`create` / `resume` / `status` / `close`), whether
+it stands alone or is followed by more text. What the remainder means depends on which mode it
+opened:
+
+- **after `create`** — the remainder is the **subject of the handoff to write**: a description of
+  what the **next** session should do. Record it as the intended next action / resume target (the
+  Create flow's write step) and **do not carry it out now** — `handoff create <text>` asks you to
+  *write a handoff about* that work, not to do it. If the text names a work item, resolve it via the
+  binding's *find* / *reference* (§8) for the pointer, but start no work on it;
+- **after `resume`, `status` or `close`** — the remainder is a **qualifier on this run**: how to do
+  the thing, not a thing to do later. `resume, full lifecycle` is Resume, carried out with that
+  instruction. These modes act on a handoff that already exists, so there is no subject for them to
+  take;
+- **with no leading mode word** — the whole argument is the subject, and the mode is **Create**, as
+  above. A phrase that merely *mentions* `resume` / `status` / `close` part-way through is a subject,
+  not a mode switch.
+
+**Ask when the qualifier is really a subject.** Text after `resume` / `status` / `close` that plainly
+describes work for a **later** session rather than guidance for this one — `resume the migration next
+week` — fits both readings. Ask which was meant rather than guessing; this is the same rule the
+ambiguity paragraph above applies to a bare *wrap up*, and it is the only case in this section that
+warrants a question.
 
 This does not change the ambiguity rule above: when intent is genuinely ambiguous, still default to
 the non-mutating path.
+
+*Corrected 2026-08-13 from an adopter's report. The rule previously read `just a mode word` selects
+the mode and **otherwise** the whole argument is a Create subject — with a parenthesis granting
+`create <text>` the mode-plus-subject reading and denying it to the other three. So `resume, full
+lifecycle` selected Create and recorded "resume, full lifecycle" as the next session's task, which is
+the opposite of what was asked. Mode word plus qualifier is ordinary phrasing and had no correct
+path through the rule.*
 
 ### Load the relevant flow
 

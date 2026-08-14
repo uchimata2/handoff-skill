@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- A **mode word followed by a qualifier** now has a correct reading in `handoff.core.md` §4
+  *Explicit invocation and its argument*. The rule previously said that an argument which *is just a
+  mode word* selects the mode, and **otherwise** the whole argument is a Create subject — so
+  `resume, full lifecycle` selected **Create** and recorded "resume, full lifecycle" as the next
+  session's task. That is the opposite of what was asked, and it discarded the live handoff in the
+  same move. A leading mode word now always selects the mode; the remainder is the handoff's
+  *subject* after `create`, and a *qualifier on this run* after `resume` / `status` / `close`. Adds
+  one narrow ask-don't-guess case, for a qualifier that plainly describes work for a later session.
+  Reported by an adopter (#78).
+
 ## [0.6.0] - 2026-08-09
 
 First fixes from real production use: `local-markdown-dir` no longer assumes the folder is the index

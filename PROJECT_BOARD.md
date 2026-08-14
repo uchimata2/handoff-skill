@@ -10,14 +10,25 @@ is driven by the issue's `status:` label and kept in sync automatically (see
 
 ## Columns = lifecycle
 
-`status: needs spec` → `status: ready` → `status: in progress` → **Merged**
+`status: needs spec` → `status: ready` → `status: in progress` → `status: done`
 
 | Column          | Driven by                  | Meaning                                  |
 | --------------- | -------------------------- | ---------------------------------------- |
 | **Needs spec**  | label `status: needs spec` | Scheduled; the approach isn't written.   |
 | **Ready**       | label `status: ready`      | Spec agreed; ready to implement.         |
 | **In progress** | label `status: in progress`| Being worked on now.                     |
-| **Merged**      | issue **closed**, or label `status: done` | Shipped.                  |
+| **Merged**      | label `status: done`       | Shipped.                                 |
+
+**The label is the one stored fact.** Both views of it — the column *and* the issue's open/closed
+state — are rendered from the label, never the other way round. So:
+
+- **Setting `status: done` closes the issue** and moves its card to Merged. That is how you close an
+  issue here.
+- **Closing an issue by hand moves nothing**, and the next label event reopens it if its label still
+  says the work is unfinished. Change the label, not the state.
+- **PRs use `Refs #N`, never `Closes #N`.** `Closes` makes GitHub close the issue with no label write
+  behind it, which is exactly the contradiction this design removes. A merged PR therefore leaves its
+  issue open until someone sets the label — visible, and harmless.
 
 Two vocabulary values have no column, by decision:
 
@@ -37,14 +48,17 @@ linked from the board's README.
 [`.github/workflows/sync-status-to-project.yml`](.github/workflows/sync-status-to-project.yml)
 runs on every issue `labeled`, `unlabeled`, `reopened`, or `closed` event. It:
 
-1. Reads the issue's current labels and open/closed state.
-2. Picks the target action — closed ⇒ **Merged**, otherwise the highest-priority `status:`
-   label present (**in progress** > **ready** > **needs spec** > **done** ⇒ Merged), or
-   *remove from the board* for **cancelled**.
+1. Reads the issue's current labels, and its state **only to decide whether state needs changing**.
+2. Picks the target from the labels alone — most terminal first: **cancelled** (remove from the
+   board) > **done** (Merged) > **in progress** > **ready** > **needs spec**.
 3. Adds the issue to the board if it isn't there yet (idempotent), then sets its **Status** field —
    or deletes its card, for cancelled.
+4. Renders the issue's state from the same label: closes it for **done** / **cancelled**, reopens it
+   for the open values. It acts only on a real difference, so it is a no-op when state already
+   agrees.
 
-An open issue with no `status:` label is left where it is — the workflow never clears a column.
+An open issue with no `status:` label is left where it is — the workflow never clears a column, and
+never closes or reopens anything.
 
 **A `status:` label with no branch in the workflow fails the run**, naming the label. It used to be
 silent: an unrecognised value left the target empty, which skipped the update step by its own `if:`
@@ -52,6 +66,15 @@ and exited 0, so the card stayed put and the run looked successful. Every value 
 [`.taskmd/config.md`](.taskmd/config.md)'s `status` vocabulary needs a branch — adding a value to that
 vocabulary without adding one here is now a visible failure rather than a card that quietly stops
 moving.
+
+### Two tokens
+
+The workflow uses both, each for the thing only it can do:
+
+- **`GITHUB_TOKEN`** (built in, with `issues: write`) closes and reopens issues. The PAT below is
+  scoped to `project` and does not grant issue writes — and events triggered by `GITHUB_TOKEN` start
+  no new workflow run, so the state step cannot loop.
+- **`ADD_TO_PROJECT_PAT`** (the secret below) writes the board.
 
 ### Required secret
 

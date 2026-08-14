@@ -7,10 +7,14 @@ folder and no taskmd CLI are involved: the CLI is local-Markdown only, and nothi
 network.
 
 The earlier version of this file recorded an assessment and declined to adopt, because one of the
-binding's six assumptions fails structurally here. That assumption still fails. Adoption went ahead
-anyway, so this file's job is now to say exactly where the project departs from the binding and what
-each departure costs — an adoption that hid them would be the failure mode the binding's own
-preamble describes, *a project inconsistent while appearing to comply*.
+binding's six assumptions failed structurally here. Adoption went ahead anyway, so this file's job is
+to say exactly where the project departs from the binding and what each departure costs — an adoption
+that hid them would be the failure mode the binding's own preamble describes, *a project inconsistent
+while appearing to comply*.
+
+**Two of the four departures were since fixed rather than lived with** (#66 and #72, 2026-08-14),
+including the structural one. They are kept below as retired entries rather than deleted: what the
+adoption cost, and what closed the gap, is the part worth being able to read later.
 
 ## The check
 
@@ -19,48 +23,50 @@ Assumptions are claims about **this project**, not about GitHub.
 | # | Assumption | Here |
 | :-- | :--- | :--- |
 | 1 | Nothing needs a task's id before the task exists | **Holds** — ids appear in the changelog and the board after the issue exists, not before |
-| 2 | Nobody closes or reopens an issue in the UI; `state` is written *from* the `status:` label | **Fails — deviation 1** |
+| 2 | Nobody closes or reopens an issue in the UI; `state` is written *from* the `status:` label | **Holds since 2026-08-14** — see *Deviation 1, retired* |
 | 3 | Every label the vocabulary needs already exists | **Holds as of adoption** — `status: done` and `status: cancelled` were created; everything else already existed |
 | 4 | `gh` ≥ 2.94.0, issues with sub-issues and dependencies, `repo` scope | **Holds.** `gh version 2.96.0` |
 | 5 | A GitHub cross-reference is not treated as a recorded link | **Holds** — see below |
-| 6 | Nothing about a task is recorded only in a PR, commit or branch | **Fails narrowly — deviation 4** |
+| 6 | Nothing about a task is recorded only in a PR, commit or branch | **Holds since 2026-08-14** — see *Deviation 4, retired* |
 
 **Assumption 5, answered 2026-08-14.** This project groups related work by
 [milestone](https://github.com/uchimata2/handoff-skill/milestones)
 ([`../CONTRIBUTING.md`](../CONTRIBUTING.md)), not by mentioning one issue on another. The only `#N`
-convention is `Closes #N` in a PR's *Related issue* section, which is a closing link rather than a
-relation between two tasks. Nothing here has ever read an incidental cross-reference as a record, so
-moving `related` into the issue-body property block takes nothing away.
+convention is `Refs #N` in a PR's *Related issue* section — a reference rather than a relation between
+two tasks, and since #66 not a closing link either. Nothing here has ever read an incidental
+cross-reference as a record, so moving `related` into the issue-body property block takes nothing
+away.
 
-**Assumption 6, answered 2026-08-14 — and it fails**, though not where the assessment expected. It
-expected review discussion to be the leak, because this project reviews through PRs. It is not: the
-last six merged PRs (#51, #58, #59, #61, #63, #64) carry **zero comments and zero reviews between
-them**, so there is no review thread for a decision to hide in. The leak is deviation 4.
+**Assumption 6, answered 2026-08-14 — it failed, and was then fixed.** It failed, though not where
+the assessment expected: review discussion was the predicted leak, because this project reviews
+through PRs, but the last six merged PRs before adoption (#51, #58, #59, #61, #63, #64) carried
+**zero comments and zero reviews between them**, so there was no review thread for a decision to hide
+in. The leak was deviation 4 — the PR template asking for the *why* — and removing that prompt is
+what closed it.
 
-## Deviation 1 — closure is state-driven, not label-driven
+## Deviation 1 — retired 2026-08-14
 
-[`../PROJECT_BOARD.md`](../PROJECT_BOARD.md) defines the **Merged** column as *issue closed*, and
-`.github/workflows/sync-status-to-project.yml` implements it: the job reads
-`github.event.issue.state` and picks the column from it, falling back to the `status:` labels only
-when the issue is open. On top of that, this project's PRs carry `Closes #N` and are squash-merged,
-so **GitHub closes issues automatically** — a state change with no label write behind it.
+**What it was.** `PROJECT_BOARD.md` defined the **Merged** column as *issue closed*, and the sync
+workflow implemented it: the job read `github.event.issue.state` and picked the column from it,
+falling back to the `status:` labels only when the issue was open. PRs carried `Closes #N` and were
+squash-merged, so GitHub closed issues automatically — a state change with no label write behind it.
+Between a merge and someone setting the label, an issue read `status: in progress` and
+`state: closed` at the same time, invisibly, because the board showed Merged and looked right.
 
-The binding requires the reverse: the `status:` label is the one stored fact, and state is a
-rendering written from it — *"a click that changes the rendering without changing the fact leaves
-the task contradicting itself, and no view will flag it."*
+**The fix this file called "not taken" was taken** (#66, after #72 gave the chain branches for
+`done` and `cancelled`). The workflow now reads labels only and renders **both** views from them —
+the board column *and* the issue's open/closed state. `Closes #N` is gone; PRs use `Refs #N`, and
+setting `status: done` is what closes an issue.
 
-**Cost.** Between a PR merging and someone setting the label, the issue reads `status: in progress`
-and `state: closed` at the same time. Nothing detects this. It is invisible in the board, which
-shows Merged and looks right.
+**It is now an invariant rather than a convention.** The previous mitigation was procedural — a rule
+in `AGENTS.md`, fallible by construction. Nothing now depends on anyone remembering: a merged PR
+whose issue was never labelled leaves that issue **open**, which is visible, where the old failure
+was an issue closed with a stale label, which was not.
 
-**Mitigation, procedural and therefore fallible.** Setting `status: done` is part of merging a PR,
-not a step after it — see [`../AGENTS.md`](../AGENTS.md), which reaches an agent only by the route
-described in *How `AGENTS.md` reaches the agent* below. This is a convention, not an invariant; the
-workflow is unchanged and still derives the column from state.
-
-**The fix not taken.** Making the label authoritative means editing the sync workflow to read labels
-only, adding a Merged-from-`status: done` rule, and dropping `Closes #N` auto-close. That is a real
-change to working automation and a maintainer's decision, not something to slip into an adoption.
+**What is left of it.** Two things worth keeping in view. Closing an issue by hand is now *reverted*
+on the next label event, which is correct but will surprise anyone who does it. And #69's 17 closed
+issues carrying open-status labels are live contradictions: any label event on one reopens it until
+that sweep runs.
 
 ## Deviation 2 — `backlog` is the absence of a label
 
@@ -77,26 +83,29 @@ The binding writes `status:proposed`. This repo's labels are `status: needs spec
 break the workflow for a cosmetic gain, so the space stays and every `gh` write must reproduce it
 exactly. A mistyped label fails the write rather than mislabelling, which is what makes this safe.
 
-## Deviation 4 — the PR body is a second home for "why"
+## Deviation 4 — retired 2026-08-14
 
-[`../.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md) opens with **"What
-changed and why"**. That section invites the reasoning behind a change into the pull request, and
-this binding never reads anything attached to an issue, so a decision whose only home is a PR body —
-or a commit message — has no home at all (METHOD §6).
+**What it was.** [`../.github/PULL_REQUEST_TEMPLATE.md`](../.github/PULL_REQUEST_TEMPLATE.md) opened
+with **"What changed and why"**. That section invited the reasoning behind a change into the pull
+request, and this binding never reads anything attached to an issue, so a decision whose only home
+was a PR body — or a commit message — had no home at all (METHOD §6). It was structural rather than
+accidental: the template asked for it every time.
 
-This is structural rather than accidental: the template asks for it every time. It is also the
-smallest of the four deviations to live with, because the venue that would have made it serious does
-not exist here — nobody discusses in review threads on this repo.
+**Fixed at the source** (#66, folded in because it lands in the same files). The heading is now
+**"What changed"**, and the template points the *why* at the issue. The cause was the prompt, so
+removing the prompt removes the deviation; the previous mitigation was a rule in `AGENTS.md` asking
+people not to answer a question the template kept asking.
 
-**Mitigation.** The *why* belongs on the issue; the PR body summarises what the issue already says
-and links to it. Recorded in [`../AGENTS.md`](../AGENTS.md) so it binds at the moment of writing a
-PR, which is the only moment it can be obeyed — and therefore subject to the same delivery route as
-deviation 1's mitigation, below.
+**What is left of it.** A commit message is still an easy place to strand a decision, and no template
+governs those. `AGENTS.md` keeps the rule for that reason, narrowed to it.
 
 ## How `AGENTS.md` reaches the agent
 
-Both mitigations above are rules in a file. A rule in a file that no agent is given is not a
-mitigation, so how the file is delivered is part of the adoption rather than a detail of it.
+The two mitigations this section was written for are gone — #66 and #72 replaced both with
+automation, which is the point: a rule in a file that no agent is given is not a mitigation at all.
+`AGENTS.md` still carries the deviation-2 and deviation-3 rules and the conduct rules, so how the
+file is delivered remains part of the adoption rather than a detail of it. It matters less than it
+did, and the probes below are still the only evidence that it works.
 
 **Measured 2026-08-14, and the first answer was no.** taskmd's `adopt.md` describes the method: start
 a session, ask what it was handed **before it uses any tool**, and read the answer. A fresh session in

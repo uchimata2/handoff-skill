@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Derived values are now routed by how hard they are to produce again.** A count, a duration, a
+  size or a rate is *produced* by something, and prose hides that: "the full run takes 7–11 minutes"
+  reads as a description rather than as one measurement taken once, so the next session has nothing
+  to distrust. One adopter carried a measured figure through **five consecutive handoffs**; when it
+  was finally re-measured it was 154 seconds against the 7–11 minutes being carried. Another carried
+  a tracker count that was already stale when written. Both passed every gate, because §3 step 4
+  admits "pure ephemeral state recorded nowhere else" and a measurement satisfies that honestly.
+  `handoff.core.md` §3 gains the rule *Derived values decay* — cheap to re-derive, point at what
+  answers it; expensive, route it to a durable home stamped with what was measured and when;
+  neither, leave it out — plus an exclusion in step 4, where the mistake is actually made, and a
+  pointer from §2's OUT list. The create flow's pre-write checklist gains a derived-value block,
+  including a check that nothing was copied forward from a previous handoff unre-checked (#83).
 - **Resume now checks which of the handoff's claims still hold before acting on them.** A handoff
   describes the workspace as it stood when a session stopped, and the world keeps moving after that
   — another session, another person, or elapsed time can make a claim false **without anyone having

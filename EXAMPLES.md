@@ -238,7 +238,7 @@ item (or a handoff) instead.
 
 ## 8. Routing a single discovery
 
-The routing procedure (core §3) runs per piece of session information. Three short cases show
+The routing procedure (core §3) runs per piece of session information. Four short cases show
 where each facet lands:
 
 **A discovery with two facets.** While doing a task you find that a tool silently does
@@ -254,6 +254,17 @@ nothing unless a flag is set.
 - recorded nowhere else and not worth keeping → **handoff file** ("stopped mid-way
   through step 3 of 5").
 - once the work lands in the task or is finished, it leaves the handoff.
+
+**A measured value.** You timed the full check run, or counted what is left open. This looks like
+the case above — it is session state, recorded nowhere else — but it is not (core §3, *Derived
+values decay*).
+
+- *cheap to re-derive* (how many are left) → **point at what answers it**: "counts: run the
+  tracker's open query." Never the number itself.
+- *expensive to re-derive* (the timing) → it is a **finding**: → **task or project docs**, written
+  as "measured at 154 s on <date>, on one machine", then pointed at.
+- *bad* → "the full run takes 7–11 minutes" in the handoff. Nothing says it was measured once, so
+  the next session carries it forward, and the one after that — each copy as confident as the first.
 
 **Workflow owned elsewhere.** The next step follows a procedure a dedicated workflow
 skill / doc already defines.

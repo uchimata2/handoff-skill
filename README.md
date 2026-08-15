@@ -36,12 +36,15 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
 
 1. **Copy the package.** Drop this folder into the new repo (e.g. at
    `.agents/handoff-skill/`).
-2. **Create a config.** Copy `config.example.md` to a project location (e.g.
-   `.agents/handoff/config.md`) and fill in `handoff_file`, `tracker`, `project_docs`,
-   and `language`. (Optional: `reconcile_targets` — *extra* homes to sweep for staleness on
-   Create/Close, on top of the ones the session touched: the index, lessons and tracker files
-   that go stale silently. A floor, not a ceiling. See core §3a.) Nothing parses this file, so
-   nothing will reject a mistake in it — step 6 is where you confirm it resolves.
+2. **Let it resolve your setup.** You may not need to write a config at all. On its first run the
+   skill resolves each key by core §0's chain — **declared**, then **discovered** from what your
+   project already says, then **asked** — and records what it discovered or asked at
+   `.handoff/config.md`, behind one confirmation. Write a config yourself only to override what it
+   would find, or to set what it never guesses: `handoff_file` (default `.handoff/HANDOFF.md`) and
+   `reconcile_targets` — *extra* homes to sweep for staleness on Create/Close, on top of the ones
+   the session touched: the index, lessons and tracker files that go stale silently. A floor, not a
+   ceiling; see core §3a. Nothing parses the file, so nothing will reject a mistake in it — step 6
+   is where you confirm it resolves.
 3. **Decide whether archives are tracked.** A consumed handoff is renamed in place beside
    `handoff_file` — `processed_…` / `discarded_…`, never deleted (core §1) — so that directory gains
    roughly one file per session. Ignore the two patterns if you want the records out of the way, or
@@ -50,9 +53,10 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    tool to be deleting them. *Upgrading from `0.7.0`?* Archives went into a `handoff-archive/`
    folder then, so a rule written to ignore or track that folder no longer covers anything new —
    and moving those archives back beside `handoff_file` repairs the relative pointers inside them.
-4. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its
-   `tracker_*` keys — or `tracker: none`. Need a different tracker? See
-   `bindings/README.md`.
+4. **Confirm the tracker it found.** Discovery names a binding in `bindings/` from what your project
+   already says about where tasks live. Confirm it, or set `tracker` yourself — including
+   `tracker: none`. Its `tracker_*` keys stay yours to fill either way: they are project facts, not
+   discoveries. Need a different tracker? See `bindings/README.md`.
 5. **Wire your agent.** Copy the matching template from `agents/` into your agent's native
    location and replace `{{package}}` (this folder's path) and `{{config}}` (your config
    path):
@@ -72,10 +76,11 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).
 6. **Confirm it works.** Ask the skill to **check** the config — say "check the config" or
-   "handoff doctor" (core §9). Check changes nothing: it resolves every key in your config, opens
-   the binding `tracker` names, and confirms `handoff_file` can be written.
+   "handoff doctor" (core §9). Check changes nothing: it resolves every key and says **how** —
+   declared, cached from a discovery, or on a default — opens the binding `tracker` names, and
+   confirms `handoff_file` can be written.
 
-   A good result is every key **resolved or on a documented fallback** — `tracker: none` and an
+   A good result is every key **resolved or on a documented default** — `tracker: none` and an
    absent `memory` are ordinary configurations, not faults — the **binding file found**, and
    **`handoff_file` writable**. Whatever doesn't resolve is reported all at once, so one run tells
    you everything to fix. On an upgraded install Check may additionally report a `handoff-archive/`
@@ -96,8 +101,8 @@ the package once in your agent's user-level location (for Claude Code, `~/.claud
 single stub beside it, and that one stub answers for every project on the machine. A shared stub has
 no single `{{config}}`, so the config becomes **discovery** rather than a path: look first for a
 project-local config in the current project (commonly `.handoff/config.md`), else fall back to a
-user-level config beside the stub if one exists, else ask for the missing keys — which is core §0's
-documented fallback, not a new rule. Sharing the package is not sharing the configuration: each
+user-level config beside the stub if one exists, else resolve what is left by core §0's chain —
+which is the documented behaviour, not a new rule. Sharing the package is not sharing the configuration: each
 project still keeps its own. The replacement sentence to paste is in the template itself,
 [`agents/claude.SKILL.md`](agents/claude.SKILL.md).
 

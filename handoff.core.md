@@ -27,31 +27,55 @@ the spine plus one flow, never more.
 
 Two sources feed the core:
 
-- the project **config** (one file per project; your agent's stub names its path) — see
-  `config.example.md` for the schema;
+- the project **config** (one file per project; your agent's stub names its path, or
+  `.handoff/config.md` by convention) — see `config.example.md` for the schema. **It may not exist
+  yet, and that is an ordinary starting state**, not an error;
 - your **agent's stub**, which supplies anything agent-specific (currently just `memory`,
   since memory mechanisms differ from one agent to the next).
 
-Read these keys; if one is absent, use the fallback.
+Every key resolves by the same chain, and the first step that answers wins:
 
-| Key | Source | Meaning | Fallback |
+1. **Declared** — a value in the project config. It always wins; a person chose it.
+2. **Discovered** — read from the project itself, and only where the evidence can be **named**.
+   A value that cannot say where it came from was not discovered, it was guessed.
+3. **Asked** — put the question to the user, then **record the answer**, so the next session does
+   not ask it again.
+
+Discovery looks at whatever the project has, and some projects have nothing to read — no repository,
+no instruction file, no code (§7). There the chain falls straight through to *ask*. That is a normal
+outcome, not a failure, and **discovery must never require a repository, version control, or code.**
+
+| Key | Source | Meaning | If not declared |
 |---|---|---|---|
-| `handoff_file` | project config | Path to the live handoff document | Ask the user |
-| `tracker` | project config | Active tracker binding (a file in `bindings/`), or `none` | `none` — every session is ad-hoc (§7) |
+| `handoff_file` | project config | Path to the live handoff document | **Not discovered** — a path is a choice, not a fact about the project. Default `.handoff/HANDOFF.md` |
+| `tracker` | project config | Active tracker binding (a file in `bindings/`), or `none` | Discover: the project's instruction file naming where tasks live, or a tracker-shaped folder or config. Two sources disagreeing is not a discovery — ask. Else `none` — every session is ad-hoc (§7) |
 | `tracker_*` | project config | Binding-specific settings the active binding reads | per binding |
-| `project_docs` | project config | Where durable project docs live (instructions, standards, guidelines) | Ask the user |
-| `language` | project config | Language for written artifacts | Match the task / source |
-| `reconcile_targets` | project config | **Extra** homes to sweep for staleness on Create / Close, on top of the ones the session touched — paths, globs, or named stores (tracker folder, memory files, index docs). A floor, not a ceiling (§3a) | No extras — sweep the durable homes the session touched (§3a) |
+| `project_docs` | project config | Where durable project docs live (instructions, standards, guidelines) | Discover: the instruction files the agent already loads, and what they point at. Else ask |
+| `language` | project config | Language for written artifacts | Not discovered — match the task / source |
+| `reconcile_targets` | project config | **Extra** homes to sweep for staleness on Create / Close, on top of the ones the session touched — paths, globs, or named stores (tracker folder, memory files, index docs). A floor, not a ceiling (§3a) | **Neither discovered nor asked** — it is a judgement about which homes go stale silently, and nobody knows that at setup. Absent means sweep the durable homes the session touched (§3a); sessions add to it |
 | `memory` | agent stub | The agent's persistent memory mechanism, or `none` | `none` — memory-bound items fall back to project docs |
+
+**Recording what the chain answered.** An asked answer and a discovered one are both written to the
+project config, so the chain does not re-run every session — the discovered ones **marked with where
+they came from**: `tracker: github-issues (discovered: AGENTS.md, 2026-08-16)`. A marked value is a
+**cache, not a second home**: Check (§9) re-derives it and reports drift, which is what keeps the
+project's own statement authoritative. An unmarked value is declared, and nothing re-checks it.
+Where no config exists, create one at `.handoff/config.md` — behind **one** confirmation covering
+both the file and what goes in it, because a wrong tracker is written to silently.
 
 Everything tracker-specific (how to find / read / create / update a work item) lives in
 the active binding (§8), configured by its `tracker_*` keys.
 
 **A key that is present but will not resolve is a config defect, not a session problem** — a
 `tracker` naming a binding that isn't there, a `handoff_file` under a folder that was never created.
-The fallbacks above cover an *absent* key; they do not cover a wrong one. Say what failed and point
+The chain above covers an *absent* key; it does not cover a wrong one. Say what failed and point
 at **Check** (§9), which reports the lot at once. Working around it silently mid-run leaves the
 project with the same broken config and one more session that quietly coped.
+
+**A discovery that contradicts a declared value is not resolved at run time.** The declared value
+wins and the run continues without comment. The disagreement is a **Check** finding, because it
+usually means the project moved and the config did not — a reconcile-shaped problem (§3a), not
+something to stop a Create over.
 
 ---
 

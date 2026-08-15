@@ -90,7 +90,19 @@ jobs:
           # The status field is single-valued. More than one label is not a fact, and
           # resolving it by precedence would put a finished task in the wrong column
           # behind a green run — the failure mode #72 removed for unknown values.
-          status_count=$(printf '%s' "$labels" | grep -o 'status: [a-z ]*' | wc -l)
+          #
+          # ZERO IS A VALID COUNT — it is `backlog` (see below). `grep` exits 1 when it
+          # matches nothing, `pipefail` makes that the pipeline's status, and `set -e`
+          # then kills this step ~30 lines above the branch that calls the absence
+          # legitimate. So every backlog issue failed the run, and deviation 2's own
+          # write — removing the label — could not be made without a red run. The
+          # trailing `|| true` is what makes zero reachable (#103).
+          #
+          # `grep -c` is NOT the fix: `@json` puts the whole label set on one line, so
+          # it counts lines and reports 1 for two labels — silently disabling the guard
+          # below, which is the exact defect #94 added it for. Measured: two labels give
+          # `grep -o | wc -l` = 2 and `grep -c` = 1.
+          status_count=$(printf '%s' "$labels" | grep -o 'status: [a-z ]*' | wc -l || true)
           if [ "$status_count" -gt 1 ]; then
             echo "::error::Issue #${{ github.event.issue.number }} carries $status_count status: labels — $labels. The status field holds one value. Fix with a single combined edit: gh issue edit N --add-label 'status: X' --remove-label 'status: Y' (which removes before it adds), not two separate calls."
             exit 1

@@ -95,7 +95,7 @@ Use it when the session is finished, not being handed off.
    the final state either.
 2. **Resolve any live handoff** at `handoff_file`. Since the session is being closed, not
    handed off, no live resume pointer may remain: archive it (rename to the
-   `processed_<timestamp>` form, as §6.4). Its content already lives in durable homes — the
+   `processed_<timestamp>` form, into §1's archive folder, as §6.4). Its content already lives in durable homes — the
    handoff only pointed — so nothing is lost.
 3. **Write no handoff file.** Skip *Process* steps 3–4 (handoff write + scan): there is no
    snapshot to produce.

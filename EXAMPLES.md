@@ -103,18 +103,24 @@ No tracked item exists yet, so follow core §7.1:
 1. **Offer to create one** via the active binding (e.g. append an `ITEM-<n>` section to the
    backlog) so the findings get a durable home.
 2. If the user **declines**, the otherwise-task-specific specifics may live in the handoff
-   snapshot — the single allowed exception, because there is no task home yet:
+   snapshot — the single allowed exception, because there is no task home yet. They go under
+   §7.1's named section, and nowhere else in the file:
 
    ```markdown
    # Handoff
 
    **Resume:** continue the vendor comparison (ad-hoc; no tracked item — user declined).
 
-   **Findings so far** (no durable home yet — move to a tracked item when created):
+   ## Untracked specifics (move into a task when one exists)
+
    - Vendor A meets the latency target; Vendor B is cheaper but lacks an EU region.
    - Open question: does Vendor A bill per request or per seat?
    ```
-3. Once an item **is** created, move those specifics into it and reduce the handoff to a pointer.
+
+   The heading is doing real work: it is what tells the next session that this block is the
+   exception rather than the house style, so the content does not quietly become permanent.
+3. Once an item **is** created, move those specifics into it and delete the section — the first
+   thing the resuming session does (`flows/resume.md` §6.4), not the last.
 
 ### A second project using `local-markdown`
 

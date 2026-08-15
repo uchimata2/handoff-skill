@@ -48,10 +48,11 @@ Do this before §6.3, so a mismatch reaches the user while resuming is still a d
 
 If the user's invocation asked to resume **explicitly and adjacent to the handoff keyword**
 ("resume", "resume handoff", "handoff resume"), skip this step and go straight to §6.4 — no
-prompt. The invocation *is* the consent, and the only pre-work state change is archiving the
-handoff by rename (§6.4), which is recoverable. The §6.2 summary above still prints, so the user
-sees what is being resumed. Otherwise (resume was inferred, not stated next to the keyword) ask:
-"Resume / Keep it for later / Discard?".
+prompt. The invocation *is* the consent, and §6.4's pre-work state changes are both recoverable:
+the handoff is archived by rename, and any §7.1 untracked specifics are moved into the durable
+home they were always destined for. The §6.2 summary above still prints, so the user sees what is
+being resumed. Otherwise (resume was inferred, not stated next to the keyword) ask: "Resume /
+Keep it for later / Discard?".
 
 - **Resume** → §6.4.
 - **Keep** → leave it untouched.
@@ -61,9 +62,14 @@ sees what is being resumed. Otherwise (resume was inferred, not stated next to t
 
 1. Open the pointed-to homes (task docs via the active binding, plan, project docs) and
    read them — the handoff intentionally does **not** duplicate them.
-2. Archive the handoff (rename to a `processed_<timestamp>` form) so it isn't resumed twice.
-3. Start the work as described — **as adjusted by §6.2's check**, where a claim no longer held.
-4. If the handoff is unclear on something critical, ask the user rather than guess.
+2. **If the handoff carries §7.1's named section — `## Untracked specifics …` — empty it before
+   anything else.** Where a tracked item now exists, move the content into it and drop the
+   section; where none does, make §7.1's offer to create one. This is the one part of a handoff
+   holding content with no durable home, and every session that hands it on unchanged extends how
+   long it has none — so it is the first thing to resolve, not the last.
+3. Archive the handoff (rename to a `processed_<timestamp>` form) so it isn't resumed twice.
+4. Start the work as described — **as adjusted by §6.2's check**, where a claim no longer held.
+5. If the handoff is unclear on something critical, ask the user rather than guess.
 
 ### 6.5 Status (read-only)
 

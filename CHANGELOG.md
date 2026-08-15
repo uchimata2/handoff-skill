@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Consumed handoffs are archived into `handoff-archive/` instead of beside the live one.** Since
+  archives are never deleted, the folder holding `handoff_file` only grew: one adopting repository
+  held 47 files, then 49 two days later, all in the same directory as the single live handoff. Core
+  §1 now sends `processed_` / `discarded_` renames into `handoff-archive/`, a folder beside
+  `handoff_file` created on first use, so the directory holding the live resume pointer is not
+  dominated by files that are not it. The name is deliberately not `archive/`: that folder is often
+  shared (`docs/`, a repo root) and a generic name can collide with one already in use. No config
+  key — the location is a convention, and a key is only worth its bytes if the skill acts on it.
+  **Nothing moves:** archives already sitting beside `handoff_file` stay exactly where they are, so
+  no project's existing records are relocated by an upgrade; only new archives go to the folder.
+  `README.md` install step 3 is simpler for it — one folder to track or ignore, rather than a
+  growing pile of loose files (#92).
+
 ### Added
 - **An ad-hoc handoff now names the one block with no durable home, and Resume empties it first.**
   Core §7.1 lets task specifics live in the handoff when the user declines a tracked item — the

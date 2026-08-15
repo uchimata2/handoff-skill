@@ -231,8 +231,9 @@ all the routing of a Create (core §5, *Close*) but writes **no** handoff file:
 1. Route every discovery to its home — task facts → the item (`ITEM-7`), a project-wide rule
    → project docs, a personal preference → memory — updating statuses, decisions, and results
    there.
-2. If a live handoff exists, archive it (`processed_<timestamp>`). Its content already lives
-   in those homes, so no resume pointer is left behind.
+2. If a live handoff exists, archive it — renamed `processed_<timestamp>` into `handoff-archive/`
+   beside it (core §1). Its content already lives in those homes, so no resume pointer is left
+   behind.
 3. Stop. No handoff file is written; the workspace is left consistent.
 
 **Ad-hoc caveat:** with no tracked item, Close still offers to create one (core §7.1). If you

@@ -20,7 +20,7 @@ resolve — at setup, instead of in the middle of a run.
 ## Core keys (project config)
 
 - `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md; consumed handoffs are renamed in place beside it (`processed_` / `discarded_`) and never deleted, so that directory accumulates about one file per session — decide whether they are tracked>
-- `tracker`: <binding from bindings/: notion | local-markdown | local-markdown-dir | none>
+- `tracker`: <binding from bindings/: github-issues | notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
 - `reconcile_targets`: <optional; **extra** homes to sweep for staleness on Create/Close, on top of the ones the session touched — paths, globs, or named stores. Good ones are the homes that go stale **silently**: your index, your lessons / decision files, your tracker. A floor, not a ceiling — omitting it still sweeps the homes the session touched. See `handoff.core.md` §3a>
@@ -31,6 +31,13 @@ resolve — at setup, instead of in the middle of a run.
 ## Tracker keys
 
 Include only the block matching your `tracker`.
+
+### tracker: github-issues
+- `tracker_repo`: <optional; owner/name; defaults to the repo `gh` resolves from the working directory>
+- `tracker_status`: <how this project stores status: state | label:<prefix> | label:<prefix>+state; default state. Pick by asking whether anything closes issues for you — see `bindings/github-issues.md` *Status is configured, not owned*>
+- `tracker_status_done`: <optional; the value meaning done, for the label forms; default done>
+- `tracker_status_new`: <optional; the status a new item gets; default none is set, because an unlabelled item may be a deliberate state>
+- `tracker_workflow`: <optional; project doc with the conventions to follow>
 
 ### tracker: notion
 - `tracker_database`: <URL or id of the Notion database / data source>

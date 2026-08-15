@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **A `github-issues` tracker binding** (`bindings/github-issues.md`), so a project whose tracker is
+  GitHub Issues can set `tracker: github-issues` instead of falling back to `tracker: none` and
+  running every session ad-hoc. The gap was found by using the skill on its own repository: GitHub
+  Issues is plausibly the most common tracker among likely adopters and it was the one the skill
+  could not bind to, which cost the §3a reconcile sweep the highest-value thing it could have
+  fixed — a stale issue status. The binding runs on the `gh` CLI; no server, no MCP.
+
+  **It owns one status value and no vocabulary.** A handoff writes a status in exactly one place —
+  §3a's *"mark finished work done"* — so `tracker_status` tells the binding where "done" is stored,
+  and the binding writes through that and nothing else. Three answers exist and each makes the other
+  two wrong: `state` for plain GitHub, `label:<prefix>` where a label is the one stored fact and
+  open/closed is **rendered** from it, and `label:<prefix>+state` where a label vocabulary exists but
+  nothing renders state. The middle case is why this is configured rather than assumed: closing the
+  issue there changes the rendering while the fact stays put, the item contradicts itself, and no
+  view flags it — every view is computed from the fact that did not change. The 30-second question is
+  *does anything close issues for you?* `tracker_status_new` defaults to setting **no** status on a
+  new item, because an unlabelled item can be a deliberate state and a helpful default would
+  overwrite it silently.
+
+  Four traps are stated rather than left to be rediscovered: report the status from the label and not
+  from `state`; change a status with **one** combined `--add-label … --remove-label …`, since two
+  calls leave a window where both exist; prefer a **comment** to a body edit, because `--body-file`
+  replaces the whole body and `gh` exits 0 for the destructive edit exactly as for the correct one;
+  and round-trip a body with `--template`, never `--jq .body`, which appends a newline and grows the
+  stored body a byte at a time. Two more are handoff's own: a reference is the **full URL**, since a
+  bare `#41` resolves to nothing outside the repository, and every lookup passes `--state all`,
+  because `gh issue list` defaults to open and hides exactly the finished items a sweep is
+  looking for (#67).
+
 ## [0.8.0] - 2026-08-16
 
 ### Changed

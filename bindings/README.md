@@ -7,6 +7,7 @@ tracker-agnostic; each file here implements the **binding contract** (see
 
 ## Available bindings
 
+- `github-issues.md` — a repository's GitHub issues, via the `gh` CLI.
 - `notion.md` — a Notion database / data source as the tracker.
 - `local-markdown.md` — a plain Markdown backlog file in the repo (zero dependencies).
 - `local-markdown-dir.md` — a folder of one-file-per-task Markdown files with frontmatter, "open"

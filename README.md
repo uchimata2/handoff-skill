@@ -22,7 +22,7 @@ done, and no doc, memory, or index line is left contradicting a newer verified f
 - `flows/` — the three on-demand flow files the spine loads per run: `create.md` (Create / Close),
   `resume.md` (Resume / Status), and `check.md` (Check — validate the config).
 - `config.example.md` — the per-project config schema.
-- `bindings/` — tracker bindings (`notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
+- `bindings/` — tracker bindings (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
   optional Claude Code hook reminders (`claude.hooks.md`).
 - `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.

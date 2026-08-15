@@ -22,6 +22,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   skill follows whatever the checkout has checked out**, for every project on that machine at once,
   with no signal (#109).
 
+### Fixed
+- **Archiving no longer moves a consumed handoff into a subfolder — that broke every relative
+  pointer inside it.** `0.7.0` sent archives into `handoff-archive/`, one directory deeper than the
+  file they were written in. A handoff's body is written against its own directory: core §3 asks for
+  repo-relative pointers, so a handoff at `.handoff/HANDOFF.md` reaches its project docs as
+  `../docs/…`. The move silently redirected all of them — an adopting project's link checker
+  reported 12 broken links in one archived file and failed the build, and moving that file back
+  cleared all 12 with no other edit, which isolated the cause to the depth change alone. §1 now
+  states the reason as an invariant rather than a path, so a later tidy-up cannot reintroduce it:
+  **archiving preserves the file's depth; it is a rename, never a move.** The rename happens in
+  place beside `handoff_file`, which still keeps `processed_` and `discarded_` sorted together —
+  most of what the folder was for. **Nothing moves:** archives a project already collected in a
+  folder of their own stay exactly where they are, so no upgrade relocates existing records (#112).
+
 ## [0.7.0] - 2026-08-15
 
 ### Changed

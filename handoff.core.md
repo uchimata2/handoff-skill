@@ -71,17 +71,19 @@ Every piece of information from a session belongs to exactly one of these. A sin
 (`processed_` / `discarded_`, §6.4) rather than deleting it, so archives accumulate — roughly one per
 session, which is expected and not a leak. Three rules follow:
 
-- **They go in `handoff-archive/`**, a folder beside `handoff_file`, created on first use — so the
-  directory holding the live resume pointer is not dominated by files that are not it. Archives
-  already sitting beside `handoff_file` **stay there**: nothing moves records a project already has.
-  The name is deliberately not `archive/`, because that folder is often shared (`docs/`, a repo
-  root) and a generic name can collide with one already in use.
+- **Archiving preserves the file's depth — it is a rename, never a move.** A handoff's body is
+  written against the directory it sits in: §3 asks for repo-relative pointers, so a handoff at
+  `.handoff/HANDOFF.md` reaches its project docs as `../docs/…`. Move it one level deeper and every
+  such pointer resolves somewhere else — at the exact moment the document stops being editable and
+  becomes a record. So the rename happens **in place, beside `handoff_file`**, which also keeps
+  `processed_` and `discarded_` sorted together. Archives a project already collected in a folder
+  of their own **stay there**: nothing moves records a project already has.
 - **Only `handoff_file` is live.** An archive is never a resume candidate, however recent.
 - **Never delete one.** They are the project's records and the only evidence of what a past session
   claimed. Pruning is the project's decision, taken outside a handoff run; whether they are tracked
   at all is a setup choice made where `handoff_file` is chosen.
 
-The location is defined here rather than in a flow because `create.md` archives on Close and
+The rule is defined here rather than in a flow because `create.md` archives on Close and
 `resume.md` archives on Resume and Discard, and the two never load in the same run (§4).
 
 ---

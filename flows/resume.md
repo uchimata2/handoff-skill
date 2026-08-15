@@ -56,7 +56,7 @@ Keep it for later / Discard?".
 
 - **Resume** → §6.4.
 - **Keep** → leave it untouched.
-- **Discard** → archive it (rename to a `discarded_<timestamp>` form, into §1's archive folder).
+- **Discard** → archive it (rename to a `discarded_<timestamp>` form, in place — §1).
 
 ### 6.4 Continue
 
@@ -67,7 +67,7 @@ Keep it for later / Discard?".
    section; where none does, make §7.1's offer to create one. This is the one part of a handoff
    holding content with no durable home, and every session that hands it on unchanged extends how
    long it has none — so it is the first thing to resolve, not the last.
-3. Archive the handoff (rename to a `processed_<timestamp>` form, into §1's archive folder) so it
+3. Archive the handoff (rename to a `processed_<timestamp>` form, in place — §1) so it
    isn't resumed twice.
 4. Start the work as described — **as adjusted by §6.2's check**, where a claim no longer held.
 5. If the handoff is unclear on something critical, ask the user rather than guess.

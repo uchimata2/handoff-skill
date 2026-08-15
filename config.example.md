@@ -13,7 +13,7 @@ resolve — at setup, instead of in the middle of a run.
 
 ## Core keys (project config)
 
-- `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md; consumed handoffs are renamed into `handoff-archive/` beside it (`processed_` / `discarded_`) and never deleted, so that folder accumulates about one file per session — decide whether it is tracked>
+- `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md; consumed handoffs are renamed in place beside it (`processed_` / `discarded_`) and never deleted, so that directory accumulates about one file per session — decide whether they are tracked>
 - `tracker`: <binding from bindings/: notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>

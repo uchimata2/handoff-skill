@@ -42,10 +42,11 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    Create/Close, on top of the ones the session touched: the index, lessons and tracker files
    that go stale silently. A floor, not a ceiling. See core §3a.) Nothing parses this file, so
    nothing will reject a mistake in it — step 6 is where you confirm it resolves.
-3. **Decide whether archives are tracked.** A consumed handoff is renamed into
-   `handoff-archive/` beside `handoff_file`, never deleted (core §1), so that folder gains roughly
-   one file per session. Ignore the folder if you want the records out of the way, or track it if
-   you want them — but choose now, because the decision is cheap today and a large diff later. The
+3. **Decide whether archives are tracked.** A consumed handoff is renamed in place beside
+   `handoff_file` — `processed_…` / `discarded_…`, never deleted (core §1) — so that directory gains
+   roughly one file per session. Ignore the two patterns if you want the records out of the way, or
+   track them if you want them — but choose now, because the decision is cheap today and a large
+   diff later. The
    skill will not prune them for you: they are your records, and it is the wrong tool to be
    deleting them.
 4. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its

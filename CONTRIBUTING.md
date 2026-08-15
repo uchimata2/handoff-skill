@@ -88,18 +88,23 @@ only the bottom PR and the upper PRs' issues still open.
 ## Adding a mode
 
 A mode's steps live in a new `flows/<mode>.md`, but the mode also has to be **reachable**, and
-reachability is spread across seven files. Adding **Check** touched every one of them
-([PR #100](https://github.com/uchimata2/handoff-skill/pull/100)); this list is that file set.
+reachability is spread across eight files. Adding **Check** touched seven of them
+([PR #100](https://github.com/uchimata2/handoff-skill/pull/100)); adding **Reconcile** found the
+eighth ([PR #122](https://github.com/uchimata2/handoff-skill/pull/122)).
 
 | File | What the new mode has to reach |
 | :--- | :--- |
 | `flows/<mode>.md` | the mode's own steps — the new file |
+| the **other** `flows/*.md` | each one's header names its siblings, so every existing flow file gains the new one |
 | `handoff.core.md` | §4 *Triggers*; the mode list in the §4 subsection heading; §4 *Explicit invocation and its argument*; §4 *Load the relevant flow*; the flow-file list near the top of the spine |
-| `config.example.md` | only if the mode reads or writes a config key — Check did, most won't |
-| `README.md` | the *What's in here* flow list, and install step 5's mode list |
+| `config.example.md` | only if the mode reads or writes a config key — Check and Reconcile both did |
+| `README.md` | the *What's in here* flow list, install step 5's mode list, and the modes diagram with its caption |
 | `agents/claude.SKILL.md` | the `description:` frontmatter, the flow-file list, the mode list, the distinct-commands paragraph |
 | `agents/copilot.agent.md` | the `description:` frontmatter, the flow-file list, the mode-word parenthetical |
 | `CHANGELOG.md` | `[Unreleased]` — a mode changes the shipped package |
+
+`scripts/build-skill.ps1` needs **no** change: `$items` names the `flows` directory, not its
+contents, so a new flow file ships automatically.
 
 **The `description:` frontmatter is the one that fails silently.** Core §4 lists a mode's trigger
 words, but §4 is only read once the skill has already activated, and it is the `description:` that

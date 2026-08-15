@@ -23,7 +23,7 @@ resolve — at setup, instead of in the middle of a run.
 - `tracker`: <binding from bindings/: github-issues | notion | local-markdown | local-markdown-dir | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
-- `reconcile_targets`: <optional; **extra** homes to sweep for staleness on Create/Close, on top of the ones the session touched — paths, globs, or named stores. Good ones are the homes that go stale **silently**: your index, your lessons / decision files, your tracker. A floor, not a ceiling — omitting it still sweeps the homes the session touched. See `handoff.core.md` §3a>
+- `reconcile_targets`: <optional; **extra** homes to sweep for staleness on Create/Close, and on a standalone Reconcile (§10), on top of the ones the session touched — paths, globs, or named stores. Good ones are the homes that go stale **silently**: your index, your lessons / decision files, your tracker. A floor, not a ceiling — omitting it still sweeps the homes the session touched. See `handoff.core.md` §3a>
 
 `memory` is not a project key — it's agent-specific, so each agent's stub supplies it
 (`memory: <agent> | none`). See `handoff.core.md` §0.

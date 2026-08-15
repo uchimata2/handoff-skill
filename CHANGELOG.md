@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **A sixth mode, `Reconcile` (§10, `flows/reconcile.md`)** — the §3a backward sweep asked for on
+  its own, mid-session. Until now the sweep ran only inside Create and Close, so correcting a stale
+  tracker status meant wrapping up work that was not finished. Reconcile scopes the sweep the same
+  way Create does (the homes the session touched, plus `reconcile_targets` if declared), runs it,
+  and stops.
+
+  **It sits between Status and Create, and the difference is which thing it writes.** Status changes
+  nothing; Reconcile changes the **durable homes** and leaves `handoff_file` untouched — never
+  written, never archived, never consumed; Create and Close change both. Where the sweep finds that
+  a *live* handoff's claims have become false, it reports that and stops rather than repairing it,
+  because repairing it means writing a new snapshot and that is Create. Without that boundary the
+  mode drifts into a half-Create with none of Create's checks.
+
+  Two rules follow from having no document to leave behind. It **asks no permission before writing**
+  — the invocation is the consent, the same reasoning that removed the confirm prompt for an
+  explicit resume — and it **itemises every change it made**, which is what makes the first rule
+  safe. Finding nothing is a result, stated plainly, not a prompt to invent work (#60).
 - **A `github-issues` tracker binding** (`bindings/github-issues.md`), so a project whose tracker is
   GitHub Issues can set `tracker: github-issues` instead of falling back to `tracker: none` and
   running every session ad-hoc. The gap was found by using the skill on its own repository: GitHub

@@ -19,8 +19,9 @@ done, and no doc, memory, or index line is left contradicting a newer verified f
 
 - `handoff.core.md` — the always-loaded **spine**: configuration, the routing model, detection,
   session types, and the binding contract.
-- `flows/` — the three on-demand flow files the spine loads per run: `create.md` (Create / Close),
-  `resume.md` (Resume / Status), and `check.md` (Check — validate the config).
+- `flows/` — the four on-demand flow files the spine loads per run: `create.md` (Create / Close),
+  `resume.md` (Resume / Status), `reconcile.md` (Reconcile — the staleness sweep on its own), and
+  `check.md` (Check — validate the config).
 - `config.example.md` — the per-project config schema.
 - `bindings/` — tracker bindings (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
 - `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
@@ -41,9 +42,9 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    project already says, then **asked** — and records what it discovered or asked at
    `.handoff/config.md`, behind one confirmation. Write a config yourself only to override what it
    would find, or to set what it never guesses: `handoff_file` (default `.handoff/HANDOFF.md`) and
-   `reconcile_targets` — *extra* homes to sweep for staleness on Create/Close, on top of the ones
-   the session touched: the index, lessons and tracker files that go stale silently. A floor, not a
-   ceiling; see core §3a. Nothing parses the file, so nothing will reject a mistake in it — step 6
+   `reconcile_targets` — *extra* homes to sweep for staleness on Create/Close and on a standalone
+   Reconcile, on top of the ones the session touched: the index, lessons and tracker files that go
+   stale silently. A floor, not a ceiling; see core §3a. Nothing parses the file, so nothing will reject a mistake in it — step 6
    is where you confirm it resolves.
 3. **Decide whether archives are tracked.** A consumed handoff is renamed in place beside
    `handoff_file` — `processed_…` / `discarded_…`, never deleted (core §1) — so that directory gains
@@ -63,13 +64,14 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    - **Claude Code** → `.claude/skills/handoff/SKILL.md`. That one skill is enough: invoke it
      with `/handoff` (or just say "handoff" / "resume" — its description lets Claude trigger it
      automatically), and the core's §4 detection routes to Create (§5), Resume (§6), Status
-     (§6.5, a read-only preview), Close (§5 *Close*, wrap up with no handoff), or Check (§9,
-     validate the config), then loads the matching on-demand flow file (`flows/create.md`,
-     `flows/resume.md`, or `flows/check.md`).
+     (§6.5, a read-only preview), Close (§5 *Close*, wrap up with no handoff), Reconcile (§10, the
+     staleness sweep on its own, mid-session), or Check (§9, validate the config), then loads the
+     matching on-demand flow file (`flows/create.md`, `flows/resume.md`, `flows/reconcile.md`, or
+     `flows/check.md`).
      - *Optional — distinct commands:* to expose each mode as its own command, add separate
-       skills `.claude/skills/handoff-{create,resume,status,close,check}/SKILL.md` (each pointing
-       straight at its flow file) → `/handoff-create`, `/handoff-resume`, `/handoff-status`,
-       `/handoff-close`, `/handoff-check`.
+       skills `.claude/skills/handoff-{create,resume,status,close,reconcile,check}/SKILL.md` (each
+       pointing straight at its flow file) → `/handoff-create`, `/handoff-resume`,
+       `/handoff-status`, `/handoff-close`, `/handoff-reconcile`, `/handoff-check`.
      - *Optional — reminders:* wire Claude Code hooks to nudge you to handoff/close at session
        start or before a compaction — see [`agents/claude.hooks.md`](agents/claude.hooks.md).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
@@ -163,8 +165,9 @@ flowchart TD
   q4 -- no --> pt["Already has a home —<br/>handoff only points to it"]
 ```
 
-The four modes that consume this model — **Create** (§5) and **Close** (§5, *Close*) on the
-write side, **Resume** (§6) and **Status** (§6.5) on the read side:
+The five modes that consume this model — **Create** (§5) and **Close** (§5, *Close*) on the
+write side, **Resume** (§6) and **Status** (§6.5) on the read side, and **Reconcile** (§10) on its
+own:
 
 ```mermaid
 flowchart LR
@@ -179,11 +182,17 @@ flowchart LR
     r2 --> r3["Resume: open homes,<br/>archive, then continue"]
     r2 --> r4["Status: stop —<br/>no changes"]
   end
+  subgraph "Reconcile"
+    direction TB
+    n1["Sweep stale homes (§3a)"] --> n2["Report what changed —<br/>handoff untouched"]
+  end
 ```
 
 Both write-side modes reconcile first (core §3a): they don't just record new work, they fix the
-durable homes the session made stale before finishing. See [`EXAMPLES.md`](EXAMPLES.md) for
-annotated good-vs-bad handoffs that put this into practice.
+durable homes the session made stale before finishing. **Reconcile** is that same sweep asked for on
+its own, mid-session — it corrects the durable homes and leaves `handoff_file` alone, which is what
+sits it between Status (changes nothing) and Create (changes both). See
+[`EXAMPLES.md`](EXAMPLES.md) for annotated good-vs-bad handoffs that put this into practice.
 
 ## Degrades gracefully
 

@@ -1,7 +1,8 @@
 # Handoff Skill — Resume / Status flow
 
 > On-demand flow file for the handoff **core**. Load this when the spine's §4 detection
-> selects **Resume** or **Status**; the write path (Create / Close) lives in `create.md`.
+> selects **Resume** or **Status**; the write path (Create / Close) lives in `create.md`, and the
+> staleness sweep asked for on its own (Reconcile) in `reconcile.md`.
 > Section references below (§2, §3, §7.1, §8) point to the spine, `../handoff.core.md` — the
 > routing model, session types, and binding contract stay there; this file follows them, it
 > does not restate them. (§5 is in `create.md`.)

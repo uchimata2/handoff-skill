@@ -71,7 +71,9 @@ item, resolve it via the binding's *find* / *reference* for the pointer, but sta
    If the project ships a security policy with its own handoff checklist, apply that too
    (if present).
 5. If the session was **ad-hoc** (no task), follow §7.1 first (offer to create a tracked
-   item; only if declined may task-like specifics live in the handoff snapshot).
+   item; only if declined may task-like specifics live in the handoff snapshot). Where they do,
+   write them under §7.1's named section and nowhere else in the file, so the next session can
+   see at a glance which part of this handoff is on loan from a task that does not exist yet.
 
 ### What a good handoff looks like
 

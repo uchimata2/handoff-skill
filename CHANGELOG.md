@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **An ad-hoc handoff now names the one block with no durable home, and Resume empties it first.**
+  Core §7.1 lets task specifics live in the handoff when the user declines a tracked item — the
+  single allowed exception to §2 — and said they move out "once a tracked item is created". Nothing
+  carried that obligation forward: the next session read a handoff holding task content with no
+  signal that it was the exception rather than the house style, so the shape propagated and the
+  content stayed homeless for as long as anyone kept handing it on. Those specifics now go under one
+  section named exactly `## Untracked specifics (move into a task when one exists)`, and nowhere
+  else in the file; `flows/resume.md` §6.4 makes emptying it **step 2 — before archiving, before any
+  work starts** — rather than something to notice later. The name is defined in the spine rather
+  than in a flow because `create.md` writes the section and `resume.md` empties it, and the two
+  never load in the same run, so a name defined in either would be invisible to the other (#55).
 - **The install now ends with a step that proves the install.** An adopter reached the end of it with
   no way to tell a sound config from a plausible-looking one, so the first feedback arrived from a
   real run — usually a Create, at the moment they were trying to stop work. `README.md` step 6 is now

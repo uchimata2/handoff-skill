@@ -347,7 +347,15 @@ When there is no tracked work item (or `tracker: none`):
 1. **Offer to create one** via the active binding, so task facts get a durable home.
 2. If the user **declines**, the otherwise-task-specific specifics may be captured in the
    handoff snapshot — the **single allowed exception** to §2, because no task home exists yet.
-3. Once a tracked item is created, move those specifics into it and out of the handoff.
+3. **They go under one section, named exactly** `## Untracked specifics (move into a task when
+   one exists)`, and nowhere else in the file. That heading is the only thing carrying the
+   obligation forward: without it the next session reads a handoff holding task content with no
+   signal that it is the exception, and passes the shape on to the session after that.
+4. Once a tracked item exists, move those specifics into it and delete the section.
+
+The name is defined here rather than in a flow because `create.md` writes the section and
+`resume.md` empties it, and the two never load in the same run (§4) — a name defined in either
+would be invisible to the other.
 
 Bindings, examples, and project docs must not assume code, version control, or any
 specific domain — that's what keeps the skill usable for non-development work.

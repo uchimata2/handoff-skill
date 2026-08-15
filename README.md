@@ -82,6 +82,32 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    there is nothing to resume until a session writes one. Once the check reads clean the install is
    done — trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
 
+## Other install shapes
+
+The steps above are the default and fit most projects: one copy of the package per project, one
+config, one stub. Two variations are worth knowing. Each replaces only the steps named, so the
+procedure above stays the single procedure — if the default suits you, stop at step 6 and skip this.
+
+**One install, several projects** — *replaces step 1 and the `{{config}}` half of step 5.* Install
+the package once in your agent's user-level location (for Claude Code, `~/.claude/skills/`) and put a
+single stub beside it, and that one stub answers for every project on the machine. A shared stub has
+no single `{{config}}`, so the config becomes **discovery** rather than a path: look first for a
+project-local config in the current project (commonly `.handoff/config.md`), else fall back to a
+user-level config beside the stub if one exists, else ask for the missing keys — which is core §0's
+documented fallback, not a new rule. Sharing the package is not sharing the configuration: each
+project still keeps its own. The replacement sentence to paste is in the template itself,
+[`agents/claude.SKILL.md`](agents/claude.SKILL.md).
+
+**Link instead of copy** — *replaces step 1.* If you are working *on* this package rather than only
+using it, point the install location at a checkout with a directory link — a symlink, or a junction
+on Windows — instead of copying the files. Nothing then has to be kept in sync, which matters because
+a stale copy is silent: nothing announces that the checkout moved on.
+
+The cost is why this is not the default. **The installed skill follows whatever the checkout has
+checked out**, and every project on that machine sees that same skill — so a feature branch, or a
+working tree in the middle of an edit, changes the skill for all of them at once, with no signal.
+That is fine when the package is what you are working on, and wrong otherwise.
+
 ## Build an installable artifact (optional)
 
 The package is plain Markdown and needs no build to use — just copy it per the steps above.

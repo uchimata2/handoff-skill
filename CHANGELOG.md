@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **The install steps now name the two other shapes people actually use.** `README.md` documented
+  exactly one install — a copy of the package per project, one config, one stub — so both variations
+  were reachable only by working them out for yourself, and one of them only by hand-editing the
+  installed stub. A new *Other install shapes* section covers **one install serving several
+  projects**, where a shared stub has no single `{{config}}` and the config must instead be
+  *discovered* (project-local first, a user-level config next, then core §0's ask), and **a directory
+  link instead of a copy**, which is how you work on the package without a copy going quietly stale.
+  Each shape says which of steps 1–6 it replaces, so the default stays one procedure rather than
+  becoming a fork. `agents/claude.SKILL.md` carries the discovery sentence verbatim, which is what
+  turns a shared stub from a private hand-edit — re-applied by hand at every release — into a
+  documented variation. The linked shape states its cost where it cannot be missed: **the installed
+  skill follows whatever the checkout has checked out**, for every project on that machine at once,
+  with no signal (#109).
+
 ## [0.7.0] - 2026-08-15
 
 ### Changed

@@ -66,7 +66,12 @@ task's record false; a dropped observation is lost the moment the session ends.
 - Work the backlog **one-by-one, specify-then-implement**: agree the spec on the issue, then
   implement on a branch off `main` — not off another feature branch — then PR with `Refs #N`,
   squash-merge, `--delete-branch`, then set `status: done`, which closes the issue.
-- Update `CHANGELOG.md` `[Unreleased]` with every change.
+- Update `CHANGELOG.md` `[Unreleased]` with every change **to the shipped package** — the files in
+  the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1), which is what the
+  release asset is built from. Repo infrastructure gets **no** entry: CI, workflows, issue and PR
+  templates, board tooling, this file, `CONTRIBUTING.md`, `control/`. The changelog is read by
+  someone deciding whether to update the copy they installed, and a change they cannot observe in
+  that copy is noise to them (#76).
 - CI ([`.github/workflows/checks.yml`](.github/workflows/checks.yml)) must be green: portability
   guard and offline link check.
 - This repo is public and agent-neutral. Never introduce origin-internal names — source ticket ids,

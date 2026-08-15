@@ -8,7 +8,9 @@ description: "Transfers working context between AI sessions — any work, not ju
 
 Transfers working context between sessions. The authoritative workflow is the portable
 core at `{{package}}/handoff.core.md` — the always-loaded spine; open and follow it, reading
-the project config at `{{config}}` (handoff-file path, tracker, project docs). Its §4
+the project config at `{{config}}` (handoff-file path, tracker, project docs). A key that is not
+there is not a blocker: resolve it by §0's chain — discover it from the project, ask only what is
+left, then record what you discovered or asked. Its §4
 detection then points you to the on-demand flow file for the chosen mode
 (`{{package}}/flows/create.md`, `{{package}}/flows/resume.md`, or `{{package}}/flows/check.md`);
 load just that one.

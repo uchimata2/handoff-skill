@@ -13,12 +13,14 @@ argument-hint: "What will the next session be used for?"
 > clause below with discovery — see *Other install shapes* in `{{package}}/README.md`:
 > "reading the project config for the handoff-file path, tracker, and project docs. Look first for a
 > project-local config in the current project (commonly `.handoff/config.md`); if none exists, fall
-> back to `{{shared-config}}` if present, otherwise ask the user for the missing keys per the core's
-> §0 fallback rules."
+> back to `{{shared-config}}` if present, otherwise resolve the missing keys by the core's §0 chain —
+> discover them from the project, ask only what is left, and record the result."
 
 The authoritative workflow is the portable core at `{{package}}/handoff.core.md` — the
 always-loaded spine. Open and follow it, reading the project config at `{{config}}` for the
-handoff-file path, tracker, and project docs. Its §4 detection then points you to the
+handoff-file path, tracker, and project docs. **A key that is not there is not a blocker** — resolve
+it by §0's chain: discover it from the project, ask only what is left, then record what you
+discovered or asked, so the next session does not repeat it. Its §4 detection then points you to the
 on-demand flow file for the chosen mode (`{{package}}/flows/create.md`,
 `{{package}}/flows/resume.md`, or `{{package}}/flows/check.md`); load just that one.
 

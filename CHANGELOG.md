@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **A config key is now discovered before it is asked for, and the answer is written down.** The
+  config asked projects to declare facts they had usually already stated — `tracker: github-issues`
+  restates a sentence the project's own instruction file carries, and by core §1's rule that second
+  home is a defect, not a convenience. Meanwhile §0's chain ended at *"ask the user"*, so a missing
+  key was asked for again every session and nothing ever learned. §0 now resolves every key by
+  **declared → discovered → asked**: a declared value always wins, discovery only counts where the
+  evidence can be **named**, and what was discovered or asked is recorded — the discovered values
+  marked with their source, `tracker: github-issues (discovered: AGENTS.md, 2026-08-16)`, which makes
+  them a **cache** that Check re-derives rather than a second home. `handoff_file` and
+  `reconcile_targets` are deliberately never discovered: a path is a choice, and which homes go stale
+  silently is a judgement nobody can make at setup. Two defaults remove most of the remaining setup —
+  `.handoff/HANDOFF.md` for the handoff and `.handoff/config.md` for the config the skill writes,
+  created behind **one** confirmation because a wrong tracker is written to silently. Discovery never
+  requires a repository, version control, or code: a project with nothing to read falls straight
+  through to *ask*, which is the ordinary outcome for the research, writing and ops sessions §7
+  exists for. **Check** gained a step for it — it says how each key resolved and re-derives the
+  cached ones to report drift, including a declared value a discovery contradicts. Existing installs
+  need no edit: a declared config still wins, unchanged (#117).
+
 ### Added
 - **The install steps now name the two other shapes people actually use.** `README.md` documented
   exactly one install — a copy of the package per project, one config, one stub — so both variations

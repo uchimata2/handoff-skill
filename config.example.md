@@ -1,9 +1,15 @@
 # Handoff config (template)
 
-Copy this file to your project's config location and fill it in. The handoff core
-(`handoff.core.md`) reads these keys; the active tracker binding reads the `tracker_*`
-keys. It's plain Markdown read by the agent — no parser — so keep the `key: value` shape
-simple.
+**You may not need this file.** Core §0 resolves every key by a chain — **declared** here, then
+**discovered** from what your project already says, then **asked** — and records what it discovered
+or asked at `.handoff/config.md` on the first run. A discovered value is written with its source,
+`tracker: github-issues (discovered: AGENTS.md, 2026-08-16)`, which marks it as a cache that Check
+re-derives rather than a second home for the fact.
+
+Write this file yourself to **override** what discovery would find, or to set the two keys it never
+guesses: `handoff_file` and `reconcile_targets`. The handoff core (`handoff.core.md`) reads these
+keys; the active tracker binding reads the `tracker_*` keys. It's plain Markdown read by the agent —
+no parser — so keep the `key: value` shape simple.
 
 **Nothing validates this file automatically**, which is why a typo here surfaces mid-session rather
 than now. When you have filled it in, ask the skill to **check** it (`handoff.core.md` §9,

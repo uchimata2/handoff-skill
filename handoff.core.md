@@ -76,8 +76,11 @@ session, which is expected and not a leak. Three rules follow:
   `.handoff/HANDOFF.md` reaches its project docs as `../docs/…`. Move it one level deeper and every
   such pointer resolves somewhere else — at the exact moment the document stops being editable and
   becomes a record. So the rename happens **in place, beside `handoff_file`**, which also keeps
-  `processed_` and `discarded_` sorted together. Archives a project already collected in a folder
-  of their own **stay there**: nothing moves records a project already has.
+  `processed_` and `discarded_` sorted together. **The skill never relocates records**: archives a
+  project already keeps in a folder of their own stay exactly where they are, and no upgrade moves
+  them. That is a limit on the skill, not an instruction to the project — moving such an archive
+  back beside `handoff_file` restores the pointers that broke when it was moved there, and that
+  repair is the project's to make.
 - **Only `handoff_file` is live.** An archive is never a resume candidate, however recent.
 - **Never delete one.** They are the project's records and the only evidence of what a past session
   claimed. Pruning is the project's decision, taken outside a handoff run; whether they are tracked

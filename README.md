@@ -46,9 +46,10 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    `handoff_file` — `processed_…` / `discarded_…`, never deleted (core §1) — so that directory gains
    roughly one file per session. Ignore the two patterns if you want the records out of the way, or
    track them if you want them — but choose now, because the decision is cheap today and a large
-   diff later. The
-   skill will not prune them for you: they are your records, and it is the wrong tool to be
-   deleting them.
+   diff later. The skill will not prune them for you: they are your records, and it is the wrong
+   tool to be deleting them. *Upgrading from `0.7.0`?* Archives went into a `handoff-archive/`
+   folder then, so a rule written to ignore or track that folder no longer covers anything new —
+   and moving those archives back beside `handoff_file` repairs the relative pointers inside them.
 4. **Choose a tracker.** Set `tracker` to a binding in `bindings/` and fill its
    `tracker_*` keys — or `tracker: none`. Need a different tracker? See
    `bindings/README.md`.
@@ -77,7 +78,8 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    A good result is every key **resolved or on a documented fallback** — `tracker: none` and an
    absent `memory` are ordinary configurations, not faults — the **binding file found**, and
    **`handoff_file` writable**. Whatever doesn't resolve is reported all at once, so one run tells
-   you everything to fix.
+   you everything to fix. On an upgraded install Check may additionally report a `handoff-archive/`
+   folder — that is the step 3 repair, not a broken config.
 
    **No handoff exists yet, and that's expected.** Check verifies the *path*, never the file:
    there is nothing to resume until a session writes one. Once the check reads clean the install is

@@ -34,7 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **archiving preserves the file's depth; it is a rename, never a move.** The rename happens in
   place beside `handoff_file`, which still keeps `processed_` and `discarded_` sorted together —
   most of what the folder was for. **Nothing moves:** archives a project already collected in a
-  folder of their own stay exactly where they are, so no upgrade relocates existing records (#112).
+  folder of their own stay exactly where they are, so no upgrade relocates existing records.
+  **Upgrading is not sufficient on its own.** The archives `0.7.0` already moved keep their broken
+  pointers until they are moved back beside `handoff_file`, which restores them with no other edit.
+  §1 now says so in as many words — the skill relocating nothing is a limit on the skill, not an
+  instruction to you — and **Check** (§9) reports a `handoff-archive/` folder when it finds one, so
+  the repair is offered at setup instead of waiting for a link checker to go red. The first wording
+  said only "nothing moves", which read as *these records must stay put*: the opposite of the repair
+  that the report demonstrated (#112, #114).
 
 ## [0.7.0] - 2026-08-15
 

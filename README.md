@@ -41,8 +41,7 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    and `language`. (Optional: `reconcile_targets` — *extra* homes to sweep for staleness on
    Create/Close, on top of the ones the session touched: the index, lessons and tracker files
    that go stale silently. A floor, not a ceiling. See core §3a.) Nothing parses this file, so
-   once it's filled in, ask the skill to **check** it (core §9) — it reports what doesn't resolve
-   before a session depends on it.
+   nothing will reject a mistake in it — step 6 is where you confirm it resolves.
 3. **Decide whether archives are tracked.** A consumed handoff is renamed alongside
    `handoff_file`, never deleted (core §1), so that folder gains roughly one file per session.
    Ignore them if you want them out of the way, or track them if you want the record — but choose
@@ -69,7 +68,18 @@ the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
    - **GitHub Copilot CLI** → `.github/agents/handoff.agent.md`.
    - **Another agent** → copy the closest template, point it at the core + config, and set
      its `memory` value (its store, or `none`).
-6. **Done.** Trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
+6. **Confirm it works.** Ask the skill to **check** the config — say "check the config" or
+   "handoff doctor" (core §9). Check changes nothing: it resolves every key in your config, opens
+   the binding `tracker` names, and confirms `handoff_file` can be written.
+
+   A good result is every key **resolved or on a documented fallback** — `tracker: none` and an
+   absent `memory` are ordinary configurations, not faults — the **binding file found**, and
+   **`handoff_file` writable**. Whatever doesn't resolve is reported all at once, so one run tells
+   you everything to fix.
+
+   **No handoff exists yet, and that's expected.** Check verifies the *path*, never the file:
+   there is nothing to resume until a session writes one. Once the check reads clean the install is
+   done — trigger it by saying "handoff", "resume", "hand off", etc. (see core §4).
 
 ## Build an installable artifact (optional)
 

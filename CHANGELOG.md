@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **The install now ends with a step that proves the install.** An adopter reached the end of it with
+  no way to tell a sound config from a plausible-looking one, so the first feedback arrived from a
+  real run — usually a Create, at the moment they were trying to stop work. `README.md` step 6 is now
+  **"Confirm it works"**: run **Check** (§9) and read the result against what a good one looks like —
+  every key resolved or on a documented fallback, the binding file found, `handoff_file` writable. It
+  says plainly that **no handoff existing yet is expected**, because Check verifies the path and
+  never the file; without that line the honest result reads like a broken install. The step was
+  re-specced onto Check from Status, which reads only the handoff file and, on a fresh install, has
+  nothing to read at all (#54).
 - **A config can now be checked before a session depends on it.** A config is prose read by an
   agent, not a parsed file, so nothing rejects a misspelled key, a `tracker` naming a binding that
   does not exist, or a `handoff_file` under a folder nobody created. All three surfaced **during** a

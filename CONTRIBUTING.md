@@ -15,6 +15,12 @@ README describe the package rather than keeping their own copies of the file lis
 
 The package is plain Markdown — there is no build step for the package itself.
 
+`tests/` is repo infrastructure and is **not** in that manifest, so nothing under it ships. Today it
+holds one thing: [`tests/handoff-fixture/`](tests/handoff-fixture/README.md), a handoff-shaped
+document and its archived rename, both written with repo-relative pointers so the link check has an
+artifact whose links depend on its depth. **If you change where archives go, move those two files
+with it** — that is the whole point of them, and its README says so.
+
 ## Ground rules
 
 - **Keep the core generic.** The core — the `handoff.core.md` spine **and** the `flows/` files —

@@ -8,6 +8,13 @@ argument-hint: "What will the next session be used for?"
 
 > Template — copy to `.claude/skills/handoff/SKILL.md` in your project and replace the
 > `{{...}}` placeholders. See `{{package}}/README.md` for the full install steps.
+>
+> **One stub for several projects?** A shared stub has no single `{{config}}`, so replace that
+> clause below with discovery — see *Other install shapes* in `{{package}}/README.md`:
+> "reading the project config for the handoff-file path, tracker, and project docs. Look first for a
+> project-local config in the current project (commonly `.handoff/config.md`); if none exists, fall
+> back to `{{shared-config}}` if present, otherwise ask the user for the missing keys per the core's
+> §0 fallback rules."
 
 The authoritative workflow is the portable core at `{{package}}/handoff.core.md` — the
 always-loaded spine. Open and follow it, reading the project config at `{{config}}` for the

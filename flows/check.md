@@ -1,8 +1,9 @@
 # Handoff Skill — Check flow
 
 > On-demand flow file for the handoff **core**. Load this when the spine's §4 detection
-> selects **Check**; the write path (Create / Close) lives in `create.md` and the read path
-> (Resume / Status) in `resume.md`. Section references below (§0, §7.1, §8) point to the spine,
+> selects **Check**; the write path (Create / Close) lives in `create.md`, the read path
+> (Resume / Status) in `resume.md`, and the standalone staleness sweep (Reconcile) in
+> `reconcile.md`. Section references below (§0, §7.1, §8) point to the spine,
 > `../handoff.core.md` — the configuration table and the binding contract stay there; this file
 > follows them, it does not restate them.
 

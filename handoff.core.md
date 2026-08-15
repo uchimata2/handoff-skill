@@ -10,16 +10,16 @@ Handoffs let any working session — a later session, another agent, or another 
 pick up work seamlessly, while upholding a strict **single source of truth**: every
 fact has exactly one home, and the handoff only *points* to those homes.
 
-This core is consumed five ways — **Create** (wrapping up / switching agents, §5), **Resume**
+This core is consumed six ways — **Create** (wrapping up / switching agents, §5), **Resume**
 (starting fresh, §6), **Status** (preview without changing anything, §6.5), **Close** (wrap
-up leaving no handoff, §5 *Close*), and **Check** (validate the config before a session depends
-on it, §9).
+up leaving no handoff, §5 *Close*), **Reconcile** (the §3a sweep on its own, mid-session, §10), and
+**Check** (validate the config before a session depends on it, §9).
 
 It is split for **progressive disclosure**: this file is the always-loaded **spine** (§0–§4,
 §7–§8 — configuration, routing model, detection, session types, binding contract). Each mode's
 *steps* live in an on-demand **flow file** that §4 directs you to load — `flows/create.md`
-(Create / Close), `flows/resume.md` (Resume / Status), or `flows/check.md` (Check); a run loads
-the spine plus one flow, never more.
+(Create / Close), `flows/resume.md` (Resume / Status), `flows/reconcile.md` (Reconcile), or
+`flows/check.md` (Check); a run loads the spine plus one flow, never more.
 
 ---
 
@@ -52,7 +52,7 @@ outcome, not a failure, and **discovery must never require a repository, version
 | `tracker_*` | project config | Binding-specific settings the active binding reads | per binding |
 | `project_docs` | project config | Where durable project docs live (instructions, standards, guidelines) | Discover: the instruction files the agent already loads, and what they point at. Else ask |
 | `language` | project config | Language for written artifacts | Not discovered — match the task / source |
-| `reconcile_targets` | project config | **Extra** homes to sweep for staleness on Create / Close, on top of the ones the session touched — paths, globs, or named stores (tracker folder, memory files, index docs). A floor, not a ceiling (§3a) | **Neither discovered nor asked** — it is a judgement about which homes go stale silently, and nobody knows that at setup. Absent means sweep the durable homes the session touched (§3a); sessions add to it |
+| `reconcile_targets` | project config | **Extra** homes to sweep for staleness on Create / Close / Reconcile, on top of the ones the session touched — paths, globs, or named stores (tracker folder, memory files, index docs). A floor, not a ceiling (§3a) | **Neither discovered nor asked** — it is a judgement about which homes go stale silently, and nobody knows that at setup. Absent means sweep the durable homes the session touched (§3a); sessions add to it |
 | `memory` | agent stub | The agent's persistent memory mechanism, or `none` | `none` — memory-bound items fall back to project docs |
 
 **Recording what the chain answered.** An asked answer and a discovered one are both written to the
@@ -231,8 +231,9 @@ resolved, a project-doc or memory line the session made false, a pointer that no
 file. These are **undocumented regressions** — the mirror image of undocumented progress, and just
 as much a single-source-of-truth failure.
 
-So before writing (Create) or closing (Close) a handoff, **sweep the durable homes the session
-touched and reconcile them with the new state**:
+So before writing (Create) or closing (Close) a handoff — or whenever **Reconcile** (§10) is asked
+for on its own, mid-session — **sweep the durable homes the session touched and reconcile them with
+the new state**:
 
 - **statuses** — mark finished work done and move it per the tracker binding; close umbrella /
   review items whose parts are all resolved; leave genuinely-paused work open (don't close what's
@@ -280,10 +281,11 @@ Activate when the user says things like: "handoff", "hand off", "pass this to",
 "take over". Read-only previews also activate: "what's in the handoff", "show /
 preview / summarize the handoff", "status of the handoff", "is there a handoff".
 Closing words also activate: "handoff close", "close out", "wrap up — no handoff",
-"done for good". So do setup words: "check the config", "validate the config", "handoff
-doctor", "is my config right", "did I set this up correctly".
+"done for good". So do sweep words: "reconcile", "sweep for stale", "tidy up stale statuses",
+"make the tracker match reality". So do setup words: "check the config", "validate the config",
+"handoff doctor", "is my config right", "did I set this up correctly".
 
-### Create, resume, status, close, or check
+### Create, resume, status, close, reconcile, or check
 
 - User is **wrapping up**, stopping, or switching agents → **Create** (§5).
 - User is **starting fresh** and a handoff exists at `handoff_file` → **Resume** (§6).
@@ -291,9 +293,18 @@ doctor", "is my config right", "did I set this up correctly".
   summarize / status) → **Status** (§6.5) — read-only, no changes.
 - User wants to **wrap up without leaving a handoff** (explicit "close out", "done for
   good", "wrap up — no handoff") → **Close** (§5, *Close*).
+- User wants the **durable homes corrected now**, mid-session, without wrapping up — stale statuses
+  swept, docs and index lines brought back into line → **Reconcile** (§10). It runs the §3a sweep
+  and stops.
 - User wants to know whether the **config itself** is sound — at setup, after editing it, or
   because a run just failed on it → **Check** (§9). Read-only, like Status, but over the config
   rather than over the handoff.
+
+**Reconcile sits between Status and Create, and the difference is which thing it writes.** Status
+changes nothing. Reconcile changes the **durable homes** and leaves `handoff_file` untouched —
+never written, never archived, never consumed. Create and Close change both. So a request to tidy
+the tracker is not a reason to write a handoff, and a request to hand off is not satisfied by a
+sweep.
 
 When intent is ambiguous between resume and status, default to the **non-mutating**
 path: summarize (Status), then offer to resume — never archive on a maybe.
@@ -305,33 +316,34 @@ different end states (a resume pointer vs none), so **ask** ("leave a resume poi
 ### Explicit invocation and its argument
 
 Note whether the mode was **explicitly requested** — the handoff keyword, or a mode word
-(`create` / `resume` / `status` / `close` / `check`), appears in the command or arguments the user
-typed — or **inferred** from context. Flows may branch on this: an explicitly requested action may skip a
+(`create` / `resume` / `status` / `close` / `reconcile` / `check`), appears in the command or
+arguments the user typed — or **inferred** from context. Flows may branch on this: an explicitly requested action may skip a
 confirmation that exists only to check an inferred intent (see `flows/resume.md` §6.3).
 
 When the skill is invoked **explicitly with trailing text** after the handoff keyword — e.g.
 `handoff <text>`:
 
 **A leading mode word always selects the mode** (`create` / `resume` / `status` / `close` /
-`check`), whether it stands alone or is followed by more text. What the remainder means depends on
-which mode it opened:
+`reconcile` / `check`), whether it stands alone or is followed by more text. What the remainder
+means depends on which mode it opened:
 
 - **after `create`** — the remainder is the **subject of the handoff to write**: a description of
   what the **next** session should do. Record it as the intended next action / resume target (the
   Create flow's write step) and **do not carry it out now** — `handoff create <text>` asks you to
   *write a handoff about* that work, not to do it. If the text names a work item, resolve it via the
   binding's *find* / *reference* (§8) for the pointer, but start no work on it;
-- **after `resume`, `status`, `close` or `check`** — the remainder is a **qualifier on this run**:
-  how to do the thing, not a thing to do later. `resume, full lifecycle` is Resume, carried out with
-  that instruction. These modes act on something that already exists — a handoff, or the config — so
-  there is no subject for them to take;
+- **after `resume`, `status`, `close`, `reconcile` or `check`** — the remainder is a **qualifier on
+  this run**: how to do the thing, not a thing to do later. `resume, full lifecycle` is Resume,
+  carried out with that instruction; `reconcile the tracker only` is Reconcile, scoped that way.
+  These modes act on something that already exists — a handoff, the durable homes, or the config —
+  so there is no subject for them to take;
 - **with no leading mode word** — the whole argument is the subject, and the mode is **Create**, as
-  above. A phrase that merely *mentions* `resume` / `status` / `close` / `check` part-way through is
-  a subject, not a mode switch.
+  above. A phrase that merely *mentions* `resume` / `status` / `close` / `reconcile` / `check`
+  part-way through is a subject, not a mode switch.
 
-**Ask when the qualifier is really a subject.** Text after `resume` / `status` / `close` / `check`
-that plainly describes work for a **later** session rather than guidance for this one — `resume the
-migration next week` — fits both readings. Ask which was meant rather than guessing; this is the same rule the
+**Ask when the qualifier is really a subject.** Text after `resume` / `status` / `close` /
+`reconcile` / `check` that plainly describes work for a **later** session rather than guidance for
+this one — `resume the migration next week` — fits both readings. Ask which was meant rather than guessing; this is the same rule the
 ambiguity paragraph above applies to a bare *wrap up*, and it is the only case in this section that
 warrants a question.
 
@@ -353,6 +365,7 @@ needs more than one:
 
 - **Create** (§5) or **Close** (§5, *Close*) → `flows/create.md`.
 - **Resume** (§6) or **Status** (§6.5) → `flows/resume.md`.
+- **Reconcile** (§10) → `flows/reconcile.md`.
 - **Check** (§9) → `flows/check.md`.
 
 The routing model (§1–§3), session types (§7), and binding contract (§8) stay here in the

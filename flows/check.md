@@ -21,7 +21,7 @@ gives, over the config rather than over the handoff.
 
 ### Process
 
-Work through all five and collect the results. **Do not stop at the first failure** — a config that
+Work through all six and collect the results. **Do not stop at the first failure** — a config that
 has one thing wrong with it usually has two, and reporting them one per run is the slow way to fix
 a setup.
 
@@ -43,7 +43,16 @@ a setup.
    the active binding defines such a hook **and** the config sets it, run it once and report what it
    says. Where the binding defines no hook, there is nothing to run and nothing to report — most do
    not, and its absence is not a finding.
-5. **Report, in the order above.** One line per key or check: what resolved, what fell back to a
+5. **Note any archives that are not where archiving would put them.** Archived handoffs are renamed
+   in place, so they sit beside `handoff_file` (§1). A separate folder of them — most often
+   `handoff-archive/`, which a `0.7.0` install created — means those records were moved a level
+   deeper than the file they were written in, and the relative pointers in their bodies have not
+   resolved since. Report the folder, say what it costs, and name the repair: moving them back
+   beside `handoff_file` restores the pointers. **Report only** — Check never moves a file. This is
+   the one step that lists a directory rather than only resolving a path; it still opens nothing,
+   and it earns the extra look because the projects it warns are the ones that cannot know to look
+   for themselves.
+6. **Report, in the order above.** One line per key or check: what resolved, what fell back to a
    documented default, and what could not be resolved at all. Finish with the only conclusion the
    user asked for — whether the config is usable as it stands.
 

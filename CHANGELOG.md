@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-08-16
+
 ### Added
 - **A sixth mode, `Reconcile` (§10, `flows/reconcile.md`)** — the §3a backward sweep asked for on
   its own, mid-session. Until now the sweep ran only inside Create and Close, so correcting a stale
@@ -441,7 +443,8 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/uchimata2/handoff-skill/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/uchimata2/handoff-skill/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/uchimata2/handoff-skill/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/uchimata2/handoff-skill/compare/v0.5.0...v0.6.0

@@ -11,8 +11,22 @@
 
 ### 6.1 Find and read
 
-Look for the handoff at `handoff_file`. If absent, tell the user there's no prepared
-session to continue. Read it fully.
+Look for the handoff at `handoff_file` and read it fully.
+
+**If it is absent, say so — then ask whether the durable homes still answer *what to continue*
+before stopping.** A handoff is a pointer to work, not the only one: the tracker may hold an item
+already in progress, and the invocation may have carried a qualifier saying how to proceed (§4).
+Where either does, report that no handoff was found, name what you are resuming from instead, and
+go to §6.4 — whose archive step has nothing to rename. Where neither does, tell the user there is
+no prepared session to continue, and stop.
+
+**Resuming without a handoff skips §6.2 entirely**, and that is the point of saying so here. The
+arrival check tests the handoff's claims about the workspace; with no handoff there are none, and a
+run that reports *nothing has changed since it was written* about a document that does not exist has
+invented its own subject.
+
+**Never invent the work.** Resuming from the durable homes means reading what they already say — not
+choosing a task on the user's behalf. Where the tracker offers several and nothing ranks them, ask.
 
 ### 6.2 Summarize — and check what arrived
 

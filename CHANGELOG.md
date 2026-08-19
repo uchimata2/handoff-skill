@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Resume no longer stops merely because `handoff_file` is absent (§6.1).** It said *tell the user
+  there's no prepared session to continue* and nothing else, which treats the handoff as the only
+  thing that can say what to continue. It is not: the tracker is a first-class store in this skill's
+  own routing model (§1), and an explicit `resume` invocation may itself carry a qualifier saying how
+  to proceed (§4). A user who asks to resume in a project whose tracker holds work in progress gets a
+  refusal, and the durable homes that could have answered were never consulted.
+
+  §6.1 now says: report the absence, check whether the durable homes still answer *what to continue*,
+  and where they do, name what is being resumed from instead and go on. Where they do not, the old
+  behaviour is unchanged — say there is nothing to continue, and stop.
+
+  Two guards come with it, because the failure modes are opposite. **§6.2 is skipped**, since the
+  arrival check tests a handoff's claims about the workspace and there are none — a run reporting
+  *nothing has changed since it was written* about a document that does not exist has invented its
+  own subject. And **the work is never invented**: resuming from the durable homes means reading what
+  they already say, not picking a task on the user's behalf, so where several are open and nothing
+  ranks them, ask.
+
 ## [0.9.0] - 2026-08-16
 
 ### Added

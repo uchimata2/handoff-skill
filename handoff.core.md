@@ -93,7 +93,7 @@ Every piece of information from a session belongs to exactly one of these. A sin
 
 **Archived handoffs are records, not handoffs.** Consuming or discarding one **renames** it
 (`processed_` / `discarded_`, §6.4) rather than deleting it, so archives accumulate — roughly one per
-session, which is expected and not a leak. Three rules follow:
+session, which is expected and not a leak. Four rules follow:
 
 - **Archiving preserves the file's depth — it is a rename, never a move.** A handoff's body is
   written against the directory it sits in: §3 asks for repo-relative pointers, so a handoff at
@@ -105,6 +105,16 @@ session, which is expected and not a leak. Three rules follow:
   them. That is a limit on the skill, not an instruction to the project — moving such an archive
   back beside `handoff_file` restores the pointers that broke when it was moved there, and that
   repair is the project's to make.
+- **Archiving is a plain rename — never one that carries the file's tracking with it.** A project
+  that keeps its archives out of version control does it with an ignore rule, and ignore rules
+  govern only paths that are **not already tracked**. The live handoff and its archives are usually
+  on opposite sides of that line: `handoff_file` has one fixed name, the archives match a pattern,
+  so a project can end up ignoring `processed_*` while the live file is tracked and committable. A
+  tracking-aware rename (`git mv`) then stages the archive under its new name, the ignore rule never
+  gets a say, and the record is committed in spite of the rule written to keep it out. A plain
+  filesystem rename leaves the new path untracked, so the rule applies — and a live handoff that had
+  been committed archives as a **deletion**, which is the correct end state. The invariant holds in
+  any environment: **rename the file; do not ask the tracking system to rename it.**
 - **Only `handoff_file` is live.** An archive is never a resume candidate, however recent.
 - **Never delete one.** They are the project's records and the only evidence of what a past session
   claimed. Pruning is the project's decision, taken outside a handoff run; whether they are tracked

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Core §1 now says *how* the archive rename is performed, not only where it lands.** A project that
+  keeps its archives out of version control does it with an ignore rule, and ignore rules govern only
+  paths that are **not already tracked**. The live handoff and its archives sit on opposite sides of
+  that line more often than not — `handoff_file` has one fixed name, the archives match a pattern — so
+  a project can ignore `processed_*` while the live file stays tracked and committable. A
+  tracking-aware rename (`git mv`) then stages the archive under its new name, the ignore rule never
+  gets a say, and the record is committed in spite of the rule written to keep it out. Nothing reports
+  it: the commit reads as an ordinary rename, and the next one looks the same. §1 gains a fourth rule
+  stating the invariant — **rename the file; do not ask the tracking system to rename it** — and names
+  the correct end state, a previously committed live handoff archiving as a **deletion**. Found in an
+  adopting project holding 184 archives under such an ignore rule, one of which had been committed.
+
 ## [0.9.0] - 2026-08-16
 
 ### Added

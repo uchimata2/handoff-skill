@@ -66,3 +66,22 @@ jobs:
             exit 1
           fi
           echo "Plugin shape is in step with its sources."
+
+  package-link-check:
+    name: Packaged links resolve
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The link-check job above reads the checkout, where a repo-only link resolves and
+      # an adopter's copy is never seen. This one checks what they actually unzip (#131).
+      - name: Build the package
+        run: pwsh scripts/build-skill.ps1
+      - name: Expand it outside the checkout
+        run: unzip -q dist/handoff.skill -d "${{ runner.temp }}/pkg"
+      - name: Check the links an adopter would get
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # --offline skips the absolute URLs into this repository and checks only what
+          # must resolve inside the package itself.
+          args: --offline --no-progress '${{ runner.temp }}/pkg/**/*.md'
+          fail: true

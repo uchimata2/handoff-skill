@@ -1,7 +1,7 @@
 # Handoff skill — portable package
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/uchimata2/handoff-skill/blob/main/CONTRIBUTING.md)
 [![Latest release](https://img.shields.io/github/v/release/uchimata2/handoff-skill?sort=semver)](https://github.com/uchimata2/handoff-skill/releases)
 
 A drop-in **handoff** skill: it lets any AI working session — a later session, another
@@ -31,7 +31,7 @@ done, and no doc, memory, or index line is left contradicting a newer verified f
 
 Nothing here is project-specific; all specifics live in the config you create. The above is a
 conceptual overview; the authoritative list of files bundled into the `handoff.skill` artifact is
-the `$items` manifest in [`scripts/build-skill.ps1`](scripts/build-skill.ps1).
+the `$items` manifest in [`scripts/build-skill.ps1`](https://github.com/uchimata2/handoff-skill/blob/main/scripts/build-skill.ps1).
 
 ## Install in a new project
 
@@ -144,7 +144,7 @@ pwsh scripts/build-skill.ps1
 
 This writes `dist/handoff.skill` — a zip of the package under a top-level `handoff/` folder.
 Unzip it into your project and follow the install steps above. The artifact is regenerated on
-demand and is git-ignored. See [CHANGELOG](CHANGELOG.md) for release history.
+demand and is git-ignored. See [CHANGELOG](https://github.com/uchimata2/handoff-skill/blob/main/CHANGELOG.md) for release history.
 
 ## How it works (one paragraph)
 
@@ -225,9 +225,9 @@ For a one-minute conceptual overview of the skill, the four stores, and the mode
 ## Roadmap
 
 Planned work is tracked on the [project board](https://github.com/users/uchimata2/projects/1) —
-a kanban auto-synced from issue `status:` labels. See [`PROJECT_BOARD.md`](PROJECT_BOARD.md) for
-how it works, and [`CONTRIBUTING.md`](CONTRIBUTING.md) (with our
-[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)) to get involved.
+a kanban auto-synced from issue `status:` labels. See [`PROJECT_BOARD.md`](https://github.com/uchimata2/handoff-skill/blob/main/PROJECT_BOARD.md) for
+how it works, and [`CONTRIBUTING.md`](https://github.com/uchimata2/handoff-skill/blob/main/CONTRIBUTING.md) (with our
+[`CODE_OF_CONDUCT.md`](https://github.com/uchimata2/handoff-skill/blob/main/CODE_OF_CONDUCT.md)) to get involved.
 
 ## License
 

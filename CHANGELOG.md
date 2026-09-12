@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Installable as a Claude Code plugin, alongside every existing install shape.** This repository is
+  now also a plugin marketplace: `/plugin marketplace add uchimata2/handoff-skill` then
+  `/plugin install handoff@handoff` places the package and its skill in one step, namespaced as
+  `handoff:handoff`. Nothing about the agent-neutral distribution changes — `README.md` gains the
+  shape as a third variation under *Other install shapes*, and the other agents' stubs are untouched.
+  The plugin is **generated** by `scripts/build-plugin.ps1` from the homes those facts already have —
+  the stub's frontmatter, this file's latest version heading, `LICENSE` — and its payload is the
+  release asset itself, expanded, so the two distributions cannot ship different files. CI
+  regenerates the shape on every run and fails if the committed one differs.
 ## [0.10.0] - 2026-09-11
 
 ### Added

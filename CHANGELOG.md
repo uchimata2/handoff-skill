@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the stub's frontmatter, this file's latest version heading, `LICENSE` — and its payload is the
   release asset itself, expanded, so the two distributions cannot ship different files. CI
   regenerates the shape on every run and fails if the committed one differs.
+
+### Fixed
+- **The packaged `README.md` no longer carries links that only resolve inside this repository.** Six
+  of them pointed at files deliberately kept out of the package — CONTRIBUTING, CHANGELOG,
+  PROJECT_BOARD, CODE_OF_CONDUCT and the build script — so anyone who unzipped `handoff.skill`, at
+  any version, got six dead links. They are absolute URLs into the repository now, which resolve from
+  both homes. CI gained a job that builds the package and link-checks **that**, rather than the
+  checkout where every such link resolves: the instance is fixed and the class is now guarded (#131).
+
 ## [0.10.0] - 2026-09-11
 
 ### Added

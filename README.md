@@ -229,9 +229,6 @@ a kanban auto-synced from issue `status:` labels. See [`PROJECT_BOARD.md`](https
 how it works, and [`CONTRIBUTING.md`](https://github.com/uchimata2/handoff-skill/blob/main/CONTRIBUTING.md) (with our
 [`CODE_OF_CONDUCT.md`](https://github.com/uchimata2/handoff-skill/blob/main/CODE_OF_CONDUCT.md)) to get involved.
 
-<!-- drift probe: resolves in the checkout, not in the package -->
-[probe](CONTRIBUTING.md)
-
 ## License
 
 [MIT](LICENSE) © 2026 uchimata2

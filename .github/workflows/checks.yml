@@ -44,5 +44,25 @@ jobs:
           # --offline checks that local link targets exist without any network
           # requests (no external-URL flakiness). Respects .gitignore, so the
           # local-only control/ scratch is skipped.
-          args: --offline --no-progress '*.md' '**/*.md'
+          # plugin/ is excluded: it holds generated copies of files checked at their own
+          # home, and a copy sits at a different depth than the original it duplicates
+          # (the failure #112 was about), so checking it again reports depth, not defects.
+          args: --offline --no-progress --exclude-path plugin '*.md' '**/*.md'
           fail: true
+
+  plugin-in-step:
+    name: Plugin shape matches its sources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate the plugin shape
+        run: pwsh scripts/build-plugin.ps1
+      - name: Fail if the committed plugin shape drifted
+        run: |
+          if [ -n "$(git status --porcelain -- plugin .claude-plugin)" ]; then
+            echo "::error::plugin/ or .claude-plugin/ no longer matches its sources. Regenerate with: pwsh scripts/build-plugin.ps1"
+            git status --short -- plugin .claude-plugin
+            git --no-pager diff -- plugin .claude-plugin
+            exit 1
+          fi
+          echo "Plugin shape is in step with its sources."

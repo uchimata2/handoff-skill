@@ -1,6 +1,6 @@
 {
   "name": "handoff",
-  "version": "0.10.0",
+  "version": "1.0.0",
   "description": "Transfers working context between AI sessions — any work, not just coding — so a later session, another agent, or another person can continue seamlessly. Creating or closing a handoff also reconciles your durable homes — a backward sweep that fixes stale tracker statuses, project docs, memory, and index lines the session made out of date — and that sweep can be run on its own, mid-session, without writing a handoff. Use it when wrapping up or pausing significant work, switching agents or sessions, before a context compaction, when a handoff file exists, or when the user says handoff, hand off, resume, continue later, pick up where we left off, take over, save state, reconcile, sweep for stale statuses, tidy up stale statuses, make the tracker match reality, check or validate the handoff config, close out, or wrap up — even if they don't name the skill explicitly.",
   "author": {
     "name": "the handoff maintainers",

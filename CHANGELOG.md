@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-19
+
 ### Added
 - **A claude.ai chat stub, and a binding for task records in a Claude Project.**
   `agents/claude-ai.SKILL.md` keeps the config, the handoff and the durable homes in the docs of the
@@ -513,7 +515,8 @@ Initial public release of the portable Handoff skill.
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, an MIT `LICENSE`, a `CHANGELOG.md`, issue templates
   (bug, feature, new tracker binding or agent) and a pull-request template under `.github/`.
 
-[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/uchimata2/handoff-skill/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/uchimata2/handoff-skill/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/uchimata2/handoff-skill/compare/v0.10.0...v1.0.0
 [0.10.0]: https://github.com/uchimata2/handoff-skill/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/uchimata2/handoff-skill/compare/v0.8.0...v0.9.0

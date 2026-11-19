@@ -101,6 +101,7 @@ eighth ([PR #122](https://github.com/uchimata2/handoff-skill/pull/122)).
 | `README.md` | the *What's in here* flow list, install step 5's mode list, and the modes diagram with its caption |
 | `agents/claude.SKILL.md` | the `description:` frontmatter, the flow-file list, the mode list, the distinct-commands paragraph |
 | `agents/copilot.agent.md` | the `description:` frontmatter, the flow-file list, the mode-word parenthetical |
+| `agents/claude-ai.SKILL.md` | the `description:` frontmatter, the flow-file list, the mode-word parenthetical |
 | `CHANGELOG.md` | `[Unreleased]` — a mode changes the shipped package |
 
 `scripts/build-skill.ps1` needs **no** change: `$items` names the `flows` directory, not its

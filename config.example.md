@@ -61,6 +61,7 @@ Include only the block matching your `tracker`.
 - `tracker_template`: <optional; doc path of the record template>
 - `tracker_status_done`: <optional; the status value meaning done; default Done>
 - `tracker_history_section`: <optional; the record section where updates are appended; default History>
+- `tracker_index_notes_section`: <optional; the index section that holds history for tasks with no record; default Notes>
 
 ### tracker: none
 - (no tracker keys; every session is treated as ad-hoc — see `handoff.core.md` §7.1)

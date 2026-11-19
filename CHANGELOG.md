@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **A claude.ai chat stub, and a binding for task records in a Claude Project.**
+  `agents/claude-ai.SKILL.md` keeps the config, the handoff and the durable homes in the docs of the
+  Claude Project attached to the chat, through the Projects tool, and deletes a consumed handoff
+  instead of renaming it, because every project doc loads into every chat.
+  `bindings/claude-project.md` keeps task records there as an index table plus optional record docs.
+  `pwsh scripts/build-skill.ps1 -Stub claude-ai` builds the package to upload, with that stub as its
+  `SKILL.md`.
+- **The claude.ai stub steps aside outside claude.ai.** A skill uploaded to claude.ai also loads in
+  the Claude desktop app's Code tab, where the stub's delete rule would destroy a handoff that the
+  core keeps. The stub's first step now sends every harness that is not a claude.ai chat to
+  `agents/claude.SKILL.md`, which archives by rename. CI checks that this guard comes before the
+  delete rule, that the package carries the stub unchanged, and that the plugin's `SKILL.md` never
+  names the delete tool.
+
 ## [1.0.0] - 2026-09-12
 
 ### Added

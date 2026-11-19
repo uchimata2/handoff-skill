@@ -18,7 +18,7 @@ What you expected the skill or docs to say or do.
 
 **Context**
 Anything that helps reproduce or understand it — which agent (Claude Code, Copilot CLI, other),
-which tracker binding (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`, `none`),
+which tracker binding (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`, `claude-project`, `none`),
 and whether it's development or non-development work.
 
 **Anything else**

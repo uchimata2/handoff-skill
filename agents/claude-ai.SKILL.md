@@ -9,7 +9,22 @@ description: "Transfers working context between AI sessions — any work, not ju
 > the package, copy this file to `SKILL.md` at the top of the skill folder. It adds only what is
 > specific to this environment; the workflow stays in the core.
 
-## 0. Resolve `$HANDOFF` first
+## 0. Check that this is a claude.ai chat, then resolve `$HANDOFF`
+
+**This file applies only in a claude.ai chat.** Section 1 replaces the core's archive rule with a
+delete, which is right only for docs in a Claude Project. A skill uploaded to claude.ai also loads in
+other harnesses (the Claude desktop app's Code tab is one), and there that rule would destroy a
+handoff the core keeps. Decide first:
+
+- **The Projects tool is present** (`project_read`, `project_write`): this is a claude.ai Project
+  chat. Go on with this file.
+- **There is no Projects tool, and you are a claude.ai chat:** go on with this file. Section 1's *No
+  project attached* applies.
+- **Anywhere else**, for example Claude Code working in a local project: stop reading this file.
+  Follow `$HANDOFF/agents/claude.SKILL.md` instead, and skip its template banner. Read its package
+  path as `$HANDOFF`. For its config path, look first for a config in the current project (commonly
+  `.handoff/config.md`), then use core §0's chain. Archive handoffs by plain rename, as the core says.
+  Nothing below applies.
 
 Every path to the skill's own files is written from `$HANDOFF`, the folder this file sits in. In a
 claude.ai chat the whole skill folder is copied into the code-execution sandbox when the skill loads;

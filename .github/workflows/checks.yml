@@ -67,6 +67,16 @@ jobs:
           fi
           echo "Plugin shape is in step with its sources."
 
+  claude-ai-stub:
+    name: claude.ai stub stays in claude.ai
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The claude.ai stub deletes consumed handoffs; any other harness that loads the upload
+      # must be sent to the Claude Code stub first. The script names the three rules.
+      - name: Check the stub's guard and both packages
+        run: pwsh tests/claude-ai-stub.ps1
+
   package-link-check:
     name: Packaged links resolve
     runs-on: ubuntu-latest

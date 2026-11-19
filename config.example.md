@@ -20,7 +20,7 @@ resolve — at setup, instead of in the middle of a run.
 ## Core keys (project config)
 
 - `handoff_file`: <path to the live handoff document, e.g. .agents/handoff/HANDOFF.md; consumed handoffs are renamed in place beside it (`processed_` / `discarded_`) and never deleted, so that directory accumulates about one file per session — decide whether they are tracked>
-- `tracker`: <binding from bindings/: github-issues | notion | local-markdown | local-markdown-dir | none>
+- `tracker`: <binding from bindings/: github-issues | notion | local-markdown | local-markdown-dir | claude-project | none>
 - `project_docs`: <where durable project docs live, e.g. AGENTS.md, docs/>
 - `language`: <optional; language for written artifacts; omit to match the task / source>
 - `reconcile_targets`: <optional; **extra** homes to sweep for staleness on Create/Close, and on a standalone Reconcile (§10), on top of the ones the session touched — paths, globs, or named stores. Good ones are the homes that go stale **silently**: your index, your lessons / decision files, your tracker. A floor, not a ceiling — omitting it still sweeps the homes the session touched. See `handoff.core.md` §3a>
@@ -53,6 +53,14 @@ Include only the block matching your `tracker`.
 - `tracker_id_prefix`: <optional; id scheme prefix, e.g. TASK; default ITEM>
 - `tracker_template`: <optional; path to a task-file template to seed new files>
 - `tracker_lint`: <optional; command that validates the folder **and any central index** after a write, exiting non-zero on drift — the invariant hook. If this project keeps a central index, declare how it's produced (generated vs maintained); see `bindings/local-markdown-dir.md` *Index topology*>
+
+### tracker: claude-project
+- `tracker_index`: <doc path of the maintained task index table, e.g. 02-tasks/task-register.md>
+- `tracker_dir`: <doc-path prefix of the task records, e.g. 02-tasks/>
+- `tracker_id_prefix`: <optional; default T->
+- `tracker_template`: <optional; doc path of the record template>
+- `tracker_status_done`: <optional; the status value meaning done; default Done>
+- `tracker_history_section`: <optional; the record section where updates are appended; default History>
 
 ### tracker: none
 - (no tracker keys; every session is treated as ad-hoc — see `handoff.core.md` §7.1)

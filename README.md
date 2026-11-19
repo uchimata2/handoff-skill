@@ -23,9 +23,9 @@ done, and no doc, memory, or index line is left contradicting a newer verified f
   `resume.md` (Resume / Status), `reconcile.md` (Reconcile — the staleness sweep on its own), and
   `check.md` (Check — validate the config).
 - `config.example.md` — the per-project config schema.
-- `bindings/` — tracker bindings (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`) + how to write your own.
-- `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), plus
-  optional Claude Code hook reminders (`claude.hooks.md`).
+- `bindings/` — tracker bindings (`github-issues`, `notion`, `local-markdown`, `local-markdown-dir`, `claude-project`) + how to write your own.
+- `agents/` — per-agent stub templates (`claude.SKILL.md`, `copilot.agent.md`), the claude.ai
+  chat stub (`claude-ai.SKILL.md`), plus optional Claude Code hook reminders (`claude.hooks.md`).
 - `EXAMPLES.md` — annotated good-vs-bad handoffs and walkthroughs by session type.
 - `README.md` — this file.
 
@@ -133,6 +133,16 @@ config is still per project and still resolves by core §0's chain, looking firs
 repository's sources, so it ships exactly the files the release asset ships. Every other agent uses
 the shapes above.
 
+**As a claude.ai skill** — *replaces steps 1 and 5, for chats in a Claude Project.* Build the
+claude.ai package (see *Build an installable artifact* below) and upload it to claude.ai as a skill.
+Its `SKILL.md` is [`agents/claude-ai.SKILL.md`](agents/claude-ai.SKILL.md), unchanged: the config,
+the handoff and the durable homes live in the project's docs, reached with the Projects tool, and the
+[`claude-project`](bindings/claude-project.md) binding keeps task records there too. That stub
+deletes a consumed handoff instead of renaming it, because every project doc loads into every chat.
+A skill uploaded to claude.ai also loads in other harnesses, the Claude desktop app's Code tab among
+them, so the stub's first step sends any harness that is not a claude.ai chat to the Claude Code stub,
+which archives by rename.
+
 ## Build an installable artifact (optional)
 
 The package is plain Markdown and needs no build to use — just copy it per the steps above.
@@ -144,7 +154,10 @@ pwsh scripts/build-skill.ps1
 
 This writes `dist/handoff.skill` — a zip of the package under a top-level `handoff/` folder.
 Unzip it into your project and follow the install steps above. The artifact is regenerated on
-demand and is git-ignored. See [CHANGELOG](https://github.com/uchimata2/handoff-skill/blob/main/CHANGELOG.md) for release history.
+demand and is git-ignored.
+
+For claude.ai, `pwsh scripts/build-skill.ps1 -Stub claude-ai` writes `dist/handoff-claude-ai.skill`:
+the same package with `agents/claude-ai.SKILL.md` copied to the top as `SKILL.md`, ready to upload. See [CHANGELOG](https://github.com/uchimata2/handoff-skill/blob/main/CHANGELOG.md) for release history.
 
 ## How it works (one paragraph)
 

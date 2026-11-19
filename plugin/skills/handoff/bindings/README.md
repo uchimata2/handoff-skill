@@ -12,6 +12,8 @@ tracker-agnostic; each file here implements the **binding contract** (see
 - `local-markdown.md` — a plain Markdown backlog file in the repo (zero dependencies).
 - `local-markdown-dir.md` — a folder of one-file-per-task Markdown files with frontmatter, "open"
   vs "done" signalled by folder location (zero dependencies).
+- `claude-project.md` — task docs in the Claude Project attached to a claude.ai chat: a maintained index
+  table plus optional per-task record docs, read and written with the Projects tool.
 
 ## The contract (summary)
 
